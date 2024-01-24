@@ -7,15 +7,18 @@
         <h1>NPC Gachapon</h1>
         
         <form action="/" method="post">
-            <button type="submit">Reroll Character</button>
+            <button type="submit" name="roll_character" value="roll_character">Reroll Character</button>
         </form>
 
-        <p>First Name: {{ first }}</p>
+        <p>First Name: {{ character['first_name'] }}</p>
         
-        <p>Last Name: {{ last }}</p>
+        <p>Last Name: {{ character['last_name'] }}</p>
         
-        <p>Alignment: {{ alignment }}</p>
+        <p>Alignment: {{ character['alignment'] }}</p>
         
-        <p>Race: {{ race }}</p>
+        <p>Race: {{ character['race'] }}</p>
+        <form action="/" method="post">
+            <button type="submit" name="roll_race" value="roll_race">Reroll Race</button>
+        </form>
     </body>
 </html>
