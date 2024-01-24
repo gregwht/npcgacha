@@ -4,6 +4,14 @@ from flask import Flask, render_template, request, session
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'
 
+## Initialise Variables
+character = {
+    "first_name" : "None",
+    "last_name": "None",
+    "alignment": "None",
+    "race": "None"
+}
+
 ## Roll First Name
 def roll_first_name():
     # Generate a random uppercase letter for first name
@@ -79,6 +87,7 @@ def roll_race():
 
 ## Roll Full Character
 def roll_character():
+
     return {
         'first_name': roll_first_name(),
         'last_name': roll_last_name(),
@@ -95,20 +104,37 @@ def index():
     if 'character' not in session:
         session['character'] = roll_character()
 
-    character = session['character']
+    # character = session['character']
 
     # If a button is clicked...
     if request.method == 'POST':
         # ...check which button was clicked
-        if request.form.get('roll_character'):
-            session['character'] = roll_character()
-            character = session['character']
-            
-        elif request.form.get('roll_race'):
+        if request.form.get('reroll_attribute') == 'character':
+            character['first_name'] = roll_first_name()
+            character['last_name'] = roll_last_name() 
+            character['alignment'] = roll_alignment()
             character['race'] = roll_race()
-            
+            print(character)
+        
+        elif request.form.get('reroll_attribute') == 'first_name':
+            character['first_name'] = roll_first_name()
+            print(character)
+
+        elif request.form.get('reroll_attribute') == 'last_name':
+            character['last_name'] = roll_last_name()    
+            print(character)
+
+        elif request.form.get('reroll_attribute') == 'alignment':
+            character['alignment'] = roll_alignment()
+            print(character)
+
+        elif request.form.get('reroll_attribute') == 'race':
+            character['race'] = roll_race()
+            print(character)
+
     return render_template("index.html", character=character)
 
 
 if __name__ == '__main__':
     app.run(debug=True)
+
