@@ -1,43 +1,76 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>NPC Gachapon</title>
-    </head>    
-    <body>
-        <h1>NPC Gachapon</h1>
+<head>
+    <title>NPC Gachapon</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <!-- Bootstrap JS, Popper.js, and jQuery -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</head>    
+<body>
+    <div class="container my-4">
+        <h1 class="display-4 text-center mb-4 font-weight-bold">NPC Gachapon</h1>
         
-        <form action="/" method="post">
-            <button type="submit" name="reroll_attribute" value="character">Reroll Character</button>
-            <button type="submit" name="reroll_attribute" value="first_name">Reroll First Name</button>
-            <button type="submit" name="reroll_attribute" value="last_name">Reroll Last Name</button>
-            <button type="submit" name="reroll_attribute" value="alignment">Reroll Alignment</button>
-            <button type="submit" name="reroll_attribute" value="race">Reroll Race</button>
-        </form>
+           <div class="row mb-3">
+            <div class="col-6">
+                <h5>Character Details</h5>
+            </div>
+            <div class="col-6 text-right">
+                <form action="/" method="post">
+                    <button type="submit" name="reroll_attribute" value="character" class="btn btn-primary btn-sm">Reroll Character</button>
+                </form>
+            </div>
+        </div>
 
-        <p>First Name: {{ character['first_name'] }}</p>
-        <p>Last Name: {{ character['last_name'] }}</p>
-        <p>Alignment: {{ character['alignment'] }}</p>
-        <p>Race: {{ character['race'] }}</p>
+        <div class="card mt-3">
+            <div class="card-body">
+                <div class="row align-items-center my-2">
+                    <div class="col-3">
+                        <span class="font-weight-bold">First Name:</span> {{ character['first_name'] }}
+                    </div>
+                    <div class="col-9">
+                        <form action="/" method="post">
+                            <button type="submit" name="reroll_attribute" value="first_name" class="btn btn-secondary btn-sm">Reroll First Name</button>
+                        </form>
+                    </div>
+                </div>
 
-        <!-- <form action="/" method="post">
-            <button type="submit" name="roll_character" value="roll_character">Reroll Character</button>
-        </form>
+                <div class="row align-items-center my-2">
+                    <div class="col-3">
+                        <span class="font-weight-bold">Last Name:</span> {{ character['last_name'] }}
+                    </div>
+                    <div class="col-9">
+                        <form action="/" method="post">
+                            <button type="submit" name="reroll_attribute" value="last_name" class="btn btn-secondary btn-sm">Reroll Last Name</button>
+                        </form>
+                    </div>
+                </div>
 
-        <p>First Name: {{ character['first_name'] }}</p>
-        <form action="/" method="post">
-            <button type="submit" name="roll_first_name" value="roll_first_name">Reroll First Name</button>
-        </form>
-        
-        <p>Last Name: {{ character['last_name'] }}</p>
-        <form action="/" method="post">
-            <button type="submit" name="roll_last_name" value="roll_last_name">Reroll Last Name</button>
-        </form>
+                <div class="row align-items-center my-2">
+                    <div class="col-3">
+                        <span class="font-weight-bold">Alignment:</span> {{ character['alignment'] }}
+                    </div>
+                    <div class="col-9">
+                        <form action="/" method="post">
+                            <button type="submit" name="reroll_attribute" value="alignment" class="btn btn-secondary btn-sm">Reroll Alignment</button>
+                        </form>
+                    </div>
+                </div>
 
-        <p>Alignment: {{ character['alignment'] }}</p>
-        
-        <p>Race: {{ character['race'] }}</p>
-        <form action="/" method="post">
-            <button type="submit" name="roll_race" value="roll_race">Reroll Race</button>
-        </form> -->
-    </body>
+                <div class="row align-items-center my-2">
+                    <div class="col-3">
+                        <span class="font-weight-bold">Race:</span> {{ character['race'] }}
+                    </div>
+                    <div class="col-9">
+                        <form action="/" method="post">
+                            <button type="submit" name="reroll_attribute" value="race" class="btn btn-secondary btn-sm">Reroll Race</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
 </html>
