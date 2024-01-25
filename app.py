@@ -101,10 +101,18 @@ def index():
     """Generate Character"""
 
     # If a character has not yet been generated, make one
-    if 'character' not in session:
-        session['character'] = roll_character()
+    if character['first_name'] == "None":
+        character['first_name'] = roll_first_name()
+    
+    if character['last_name'] == "None":
+        character['last_name'] = roll_last_name()
+    
+    if character['alignment'] == "None":
+        character['alignment'] = roll_alignment()
 
-    # character = session['character']
+    if character['race'] == "None":
+        character['race'] = roll_race()
+    
 
     # If a button is clicked...
     if request.method == 'POST':
