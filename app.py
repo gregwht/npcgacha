@@ -13,21 +13,46 @@ character = {
 }
 
 ## Roll First Name
-def roll_first_name():
-    # Generate a random uppercase letter for first name
-    ascii = random.randint(ord('A'), ord('Z'))
-    first_name = chr(ascii)
+def roll_first_name(reroll=False, prev_first=None):
+    
+    # If rerolling, ensure the new result is not the same as the previous result
+    if reroll and prev_first is not None:
+        while True:
+            # Generate a random uppercase letter for first name
+            ascii = random.randint(ord('A'), ord('Z'))
+            first_name = chr(ascii)
+            # If new letter is different from the previously rolled letter, convert it to char
+            if first_name != prev_first:
+                break
 
+    else:
+        # Generate a random uppercase letter for first name
+        ascii = random.randint(ord('A'), ord('Z'))
+        first_name = chr(ascii)
+
+  
     # Print name results:
     print("First Name:", first_name)
     return first_name
 
 
 ## Roll Last Name
-def roll_last_name():
-    # Generate a random uppercase letter for last name
-    ascii = random.randint(ord('A'), ord('Z'))
-    last_name = chr(ascii)
+def roll_last_name(reroll=False, prev_last=None):
+
+    # If rerolling, ensure the new result is not the same as the previous result
+    if reroll and prev_last is not None:
+        while True:
+            # Generate a random uppercase letter for first name
+            ascii = random.randint(ord('A'), ord('Z'))
+            last_name = chr(ascii)
+            # If new letter is different from the previously rolled letter, convert it to char
+            if last_name != prev_last:
+                break
+
+    else:
+        # Generate a random uppercase letter for last name
+        ascii = random.randint(ord('A'), ord('Z'))
+        last_name = chr(ascii)
 
     # Print name results:
     print("Last Name: ", last_name)
@@ -35,39 +60,75 @@ def roll_last_name():
 
 
 ## Roll Alignment
-def roll_alignment():
-    # Create a variable for lawful vs chaotic
-    method = random.randint(0, 2)
-    # Create a variable for good vs evil
-    morals = random.randint(0, 2)
+def roll_alignment(reroll=False, prev_alignment=None):
 
-    # Assign method result
-    if method == 0:
-        method = "Lawful"
-    elif method == 1:
-        if morals == 1:
-            method = "True"
-        else:
-            method = "Neutral"
-    elif method == 2:
-        method = "Chaotic"
+    if reroll and prev_alignment is not None:
+        while True:
+            # Create a variable for lawful vs chaotic
+            method = random.randint(0, 2)
+            # Create a variable for good vs evil
+            morals = random.randint(0, 2)
 
-    # Assign morals result
-    if morals == 0:
-        morals = "Good"
-    elif morals == 1:
-        morals = "Neutral"
-    elif morals == 2:
-        morals = "Evil"
+            # Assign method result
+            if method == 0:
+                method = "Lawful"
+            elif method == 1:
+                if morals == 1:
+                    method = "True"
+                else:
+                    method = "Neutral"
+            elif method == 2:
+                method = "Chaotic"
 
+            # Assign morals result
+            if morals == 0:
+                morals = "Good"
+            elif morals == 1:
+                morals = "Neutral"
+            elif morals == 2:
+                morals = "Evil"
+
+            # Set alignment
+            alignment = method + " " + morals
+
+            if alignment != prev_alignment:
+                break
+
+    else:
+        # Create a variable for lawful vs chaotic
+        method = random.randint(0, 2)
+        # Create a variable for good vs evil
+        morals = random.randint(0, 2)
+
+        # Assign method result
+        if method == 0:
+            method = "Lawful"
+        elif method == 1:
+            if morals == 1:
+                method = "True"
+            else:
+                method = "Neutral"
+        elif method == 2:
+            method = "Chaotic"
+
+        # Assign morals result
+        if morals == 0:
+            morals = "Good"
+        elif morals == 1:
+            morals = "Neutral"
+        elif morals == 2:
+            morals = "Evil"
+
+        # Set alignment
+        alignment = method + " " + morals
+    
     # Print alignment
-    alignment = method + " " + morals
     print("Alignment: ", alignment)
     return alignment
 
 
 ## Roll Race
-def roll_race():
+def roll_race(reroll=False, prev_race=None):
     # Create a list of races
     races = ['Dragonborn', 
             'Dwarf', 
@@ -78,8 +139,18 @@ def roll_race():
             'Half-Orc',
             'Human',
             'Tiefling']
-    # Select a race by rolling a number between 0 and the length of the races list
-    race = random.choice(races)
+    
+    if reroll and prev_race is not None:
+        while True:
+            # Select a race by rolling a number between 0 and the length of the races list
+            race = random.choice(races)
+            if race != prev_race:
+                break
+
+    else:
+        # Select a race by rolling a number between 0 and the length of the races list
+        race = random.choice(races)
+
     # Print race
     print("Race:      ", race)
     return race
@@ -113,31 +184,31 @@ def index():
     if character['race'] == "None":
         character['race'] = roll_race()
     
-
+    ## ==== RE-ROLLING ====
     # If a button is clicked...
     if request.method == 'POST':
         # ...check which button was clicked
         if request.form.get('reroll_attribute') == 'character':
-            character['first_name'] = roll_first_name()
-            character['last_name'] = roll_last_name() 
-            character['alignment'] = roll_alignment()
-            character['race'] = roll_race()
+            character['first_name'] = roll_first_name(True, character['first_name'])
+            character['last_name'] = roll_last_name(True, character['last_name']) 
+            character['alignment'] = roll_alignment(True, character['alignment'])
+            character['race'] = roll_race(True, character['race'])
             print(character)
         
         elif request.form.get('reroll_attribute') == 'first_name':
-            character['first_name'] = roll_first_name()
+            character['first_name'] = roll_first_name(True, character['first_name'])
             print(character)
 
         elif request.form.get('reroll_attribute') == 'last_name':
-            character['last_name'] = roll_last_name()    
+            character['last_name'] = roll_last_name(True, character['last_name'])    
             print(character)
 
         elif request.form.get('reroll_attribute') == 'alignment':
-            character['alignment'] = roll_alignment()
+            character['alignment'] = roll_alignment(True, character['alignment'])
             print(character)
 
         elif request.form.get('reroll_attribute') == 'race':
-            character['race'] = roll_race()
+            character['race'] = roll_race(True, character['race'])
             print(character)
 
     return render_template("index.html", character=character)
