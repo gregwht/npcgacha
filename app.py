@@ -171,6 +171,14 @@ def roll_character():
 def index():
     """Generate Character"""
 
+    # Track the state of each checkbox
+    checkbox_states = {
+        'first_name' : 'checked',
+        'last_name' : 'checked',
+        'alignment' : 'checked',
+        'race' : 'checked'
+    }
+
     # If a character has not yet been generated, make one
     if character['first_name'] == "None":
         character['first_name'] = roll_first_name()
@@ -187,14 +195,24 @@ def index():
     ## ==== RE-ROLLING ====
     # If a button is clicked...
     if request.method == 'POST':
-        # ...check which button was clicked
+        # ...determine what needs to be re-rolled.
+
+        ## RE-ROLL CHARACTER
         if request.form.get('reroll_attribute') == 'character':
-            character['first_name'] = roll_first_name(True, character['first_name'])
-            character['last_name'] = roll_last_name(True, character['last_name']) 
-            character['alignment'] = roll_alignment(True, character['alignment'])
-            character['race'] = roll_race(True, character['race'])
-            print(character)
+            # Get the checked attributes and store them in a list
+            reroll_checked = request.form.getlist('reroll_checkbox')
+            print('Checked:', reroll_checked)
+            if 'first_name' in reroll_checked:
+                character['first_name'] = roll_first_name(True, character['first_name'])
+            if 'last_name' in reroll_checked:
+                character['last_name'] = roll_last_name(True, character['last_name'])
+            if 'alignment' in reroll_checked:
+                character['alignment'] = roll_alignment(True, character['alignment'])
+            if 'race' in reroll_checked:
+                character['race'] = roll_race(True, character['race'])
         
+
+        ## RE-ROLL INDIVIDUAL ATTRIBUTES
         elif request.form.get('reroll_attribute') == 'first_name':
             character['first_name'] = roll_first_name(True, character['first_name'])
             print(character)
@@ -211,7 +229,11 @@ def index():
             character['race'] = roll_race(True, character['race'])
             print(character)
 
-    return render_template("index.html", character=character)
+        # Update checkbox_states based on form submission
+        for key in checkbox_states.keys():
+            checkbox_states[key] = 'checked' if key in reroll_checked else ''
+
+    return render_template("index.html", character=character, checkbox_states=checkbox_states)
 
 
 if __name__ == '__main__':
