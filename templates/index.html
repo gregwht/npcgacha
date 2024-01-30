@@ -4,6 +4,7 @@
     <title>NPC Gachapon</title>
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="static/styles.css">
     <!-- Bootstrap JS, Popper.js, and jQuery -->
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
@@ -19,58 +20,114 @@
             </div>
             <div class="col-6 text-right">
                 <form action="/" method="post">
-                    <button type="submit" name="reroll_attribute" value="character" class="btn btn-primary btn-sm">Reroll Character</button>
+                    <!-- Checkbox to select which attributes to reroll -->
+                    <label><input type="checkbox" name="reroll_checkbox" id="checkbox_first_name" value="first_name" {{ checkbox_states['first_name'] }}>First Name</label>
+                    <label><input type="checkbox" name="reroll_checkbox" id="checkbox_last_name" value="last_name" {{ checkbox_states['last_name'] }}>Last Name</label>
+                    <label><input type="checkbox" name="reroll_checkbox" id="checkbox_alignment" value="alignment" {{ checkbox_states['alignment'] }}>Alignment</label>
+                    <label><input type="checkbox" name="reroll_checkbox" id="checkbox_race" value="race" {{ checkbox_states['race'] }}>Race</label>
+                    <!-- Reroll character button -->
+                    <button type="submit" name="reroll_attribute" id="button_reroll_character" value="character" class="btn btn-primary btn-sm">Reroll Character</button>
                 </form>
             </div>
         </div>
 
+        <!-- CHARACTER SHEET -->
         <div class="card mt-3">
             <div class="card-body">
                 <div class="row align-items-center my-2">
                     <div class="col-3">
-                        <span class="font-weight-bold">First Name:</span> {{ character['first_name'] }}
+                        <span class="font-weight-bold clickable-text" onclick="rerollAttribute('first_name')">First Name:</span> {{ character['first_name'] }}
                     </div>
-                    <div class="col-9">
+                    <!-- <div class="col-9">
                         <form action="/" method="post">
                             <button type="submit" name="reroll_attribute" value="first_name" class="btn btn-secondary btn-sm">Reroll First Name</button>
                         </form>
-                    </div>
+                    </div> -->
                 </div>
 
                 <div class="row align-items-center my-2">
                     <div class="col-3">
-                        <span class="font-weight-bold">Last Name:</span> {{ character['last_name'] }}
+                        <span class="font-weight-bold clickable-text" onclick="rerollAttribute('last_name')">Last Name:</span> {{ character['last_name'] }}
                     </div>
-                    <div class="col-9">
+                    <!-- <div class="col-9">
                         <form action="/" method="post">
                             <button type="submit" name="reroll_attribute" value="last_name" class="btn btn-secondary btn-sm">Reroll Last Name</button>
                         </form>
-                    </div>
+                    </div> -->
                 </div>
 
                 <div class="row align-items-center my-2">
                     <div class="col-3">
-                        <span class="font-weight-bold">Alignment:</span> {{ character['alignment'] }}
+                        <span class="font-weight-bold clickable-text" onclick="rerollAttribute('alignment')">Alignment:</span> {{ character['alignment'] }}
                     </div>
-                    <div class="col-9">
+                    <!-- <div class="col-9">
                         <form action="/" method="post">
                             <button type="submit" name="reroll_attribute" value="alignment" class="btn btn-secondary btn-sm">Reroll Alignment</button>
                         </form>
-                    </div>
+                    </div> -->
                 </div>
 
                 <div class="row align-items-center my-2">
                     <div class="col-3">
-                        <span class="font-weight-bold">Race:</span> {{ character['race'] }}
+                        <span class="font-weight-bold clickable-text" onclick="rerollAttribute('race')">Race:</span> {{ character['race'] }}
                     </div>
-                    <div class="col-9">
+                    <!-- <div class="col-9">
                         <form action="/" method="post">
                             <button type="submit" name="reroll_attribute" value="race" class="btn btn-secondary btn-sm">Reroll Race</button>
                         </form>
-                    </div>
+                    </div> -->
                 </div>
             </div>
         </div>
     </div>
+
+
+    <script>
+        // ==== Updating Reroll Character button text depending on checkbox states ====
+        // First get references to checkboxes and button
+        var checkbox_first_name = document.getElementById("checkbox_first_name")
+        var checkbox_last_name = document.getElementById("checkbox_last_name")
+        var checkbox_alignment = document.getElementById("checkbox_alignment")
+        var checkbox_race = document.getElementById("checkbox_race")
+        var button_reroll_character = document.getElementById("button_reroll_character")
+
+        // Then update the button text based on checkbox states
+        function updateRerollButton() {
+            if (checkbox_first_name.checked && checkbox_last_name.checked && checkbox_alignment.checked && checkbox_race.checked) {
+                button_reroll_character.innerHTML = "Re-roll entire character"
+            } else {
+                button_reroll_character.innerHTML = "<i>Re-roll selected</i>"
+            }
+        }
+
+        // Add event listeners to checkboxes to update the button text when checkboxes change state
+        checkbox_first_name.addEventListener("change", updateRerollButton)
+        checkbox_last_name.addEventListener("change", updateRerollButton)
+        checkbox_alignment.addEventListener("change", updateRerollButton)
+        checkbox_race.addEventListener("change", updateRerollButton)
+
+
+        // ==== Re-rolling individual attributes when clicking on them ====
+        function rerollAttribute(attributeName) {
+            // Create a form dynamically
+            var form = document.createElement('form');
+            form.method = 'post';
+            form.action = '/'; 
+
+            // Create a hidden field for the attribute to reroll
+            var hiddenField = document.createElement('input');
+            hiddenField.type = 'hidden';
+            hiddenField.name = 'reroll_attribute';
+            hiddenField.value = attributeName;
+
+            // Append the hidden field to the form and submit it
+            form.appendChild(hiddenField);
+            document.body.appendChild(form);
+            form.submit();
+        }
+
+    </script>
+
+
 </body>
 </html>
