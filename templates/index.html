@@ -38,49 +38,59 @@
                     <div class="col-3">
                         <span class="font-weight-bold clickable-text" onclick="rerollAttribute('first_name')">First Name:</span> {{ character['first_name'] }}
                     </div>
-                    <!-- <div class="col-9">
-                        <form action="/" method="post">
-                            <button type="submit" name="reroll_attribute" value="first_name" class="btn btn-secondary btn-sm">Reroll First Name</button>
-                        </form>
-                    </div> -->
                 </div>
 
                 <div class="row align-items-center my-2">
                     <div class="col-3">
                         <span class="font-weight-bold clickable-text" onclick="rerollAttribute('last_name')">Last Name:</span> {{ character['last_name'] }}
                     </div>
-                    <!-- <div class="col-9">
-                        <form action="/" method="post">
-                            <button type="submit" name="reroll_attribute" value="last_name" class="btn btn-secondary btn-sm">Reroll Last Name</button>
-                        </form>
-                    </div> -->
                 </div>
 
                 <div class="row align-items-center my-2">
                     <div class="col-3">
                         <span class="font-weight-bold clickable-text" onclick="rerollAttribute('alignment')">Alignment:</span> {{ character['alignment'] }}
                     </div>
-                    <!-- <div class="col-9">
-                        <form action="/" method="post">
-                            <button type="submit" name="reroll_attribute" value="alignment" class="btn btn-secondary btn-sm">Reroll Alignment</button>
-                        </form>
-                    </div> -->
                 </div>
 
                 <div class="row align-items-center my-2">
                     <div class="col-3">
                         <span class="font-weight-bold clickable-text" onclick="rerollAttribute('race')">Race:</span> {{ character['race'] }}
                     </div>
-                    <!-- <div class="col-9">
-                        <form action="/" method="post">
-                            <button type="submit" name="reroll_attribute" value="race" class="btn btn-secondary btn-sm">Reroll Race</button>
-                        </form>
-                    </div> -->
                 </div>
             </div>
         </div>
     </div>
 
+
+    <div>
+        <h5>Custom Races</h5>
+        <!-- Race submission -->
+        <p>Write a race in the box to add it to the list of races:</p>
+        <form action="/" method="post">
+            <input type="text" id="custom_race" name="custom_race">
+            <input type="submit" value="Add Race">
+            <input type="submit" id="restore_races" name="restore_races" value="Restore Default Race List">
+        </form>
+        
+        <!-- Race list -->
+        <h6>Current Races:</h6>
+            <ul class="list-unstyled">
+                {% for race in races %}
+                    <li class="d-flex align-items-center">
+                        <span>
+                            <form action="/" method="post">
+                                <input type="checkbox" name="race_checkbox" value="{{ race }}"> {{ race }}
+                            </form>
+                        </span>
+                        <form action="/delete_race" method="post" class="ml-2">
+                            <input type="hidden" name="race" value="{{ race }}">
+                            <button type="submit" class="btn btn-danger btn-sm">x</button>
+                        </form>
+                    </li>
+                {% endfor %}
+            </ul>
+        <!-- </form> -->
+    </div>
 
     <script>
         // ==== Updating Reroll Character button text depending on checkbox states ====

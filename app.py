@@ -1,8 +1,14 @@
 import random
-from flask import Flask, render_template, request, session
+from flask import Flask, render_template, redirect, request, session
+from flask_session import Session
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'
+
+# # Configure session to use filesystem (instead of signed cookies)
+# app.config["SESSION_PERMANENT"] = False
+# app.config["SESSION_TYPE"] = "filesystem"
+# Session(app)
 
 ## Initialise Variables
 character = {
@@ -11,6 +17,27 @@ character = {
     "alignment": "None",
     "race": "None"
 }
+
+# Default list of races - does not change
+races_default = ['Dragonborn', 
+            'Dwarf', 
+            'Elf', 
+            'Gnome', 
+            'Half-Elf', 
+            'Halfling',
+            'Half-Orc',
+            'Human',
+            'Tiefling']
+# Copy races_default into variable called `races`. This is the list of races for the user and can be added to or removed from
+races = list(races_default)
+
+reroll_checked = {
+    "first_name" : "checked",
+    "last_name": "checked",
+    "alignment": "checked",
+    "race": "checked"
+}
+
 
 ## Roll First Name
 def roll_first_name(reroll=False, prev_first=None):
@@ -31,8 +58,8 @@ def roll_first_name(reroll=False, prev_first=None):
         first_name = chr(ascii)
 
   
-    # Print name results:
-    print("First Name:", first_name)
+    # # Print name results:
+    # print("First Name:", first_name)
     return first_name
 
 
@@ -54,8 +81,8 @@ def roll_last_name(reroll=False, prev_last=None):
         ascii = random.randint(ord('A'), ord('Z'))
         last_name = chr(ascii)
 
-    # Print name results:
-    print("Last Name: ", last_name)
+    # # Print name results:
+    # print("Last Name: ", last_name)
     return last_name
 
 
@@ -122,23 +149,13 @@ def roll_alignment(reroll=False, prev_alignment=None):
         # Set alignment
         alignment = method + " " + morals
     
-    # Print alignment
-    print("Alignment: ", alignment)
+    # # Print alignment
+    # print("Alignment: ", alignment)
     return alignment
 
 
 ## Roll Race
 def roll_race(reroll=False, prev_race=None):
-    # Create a list of races
-    races = ['Dragonborn', 
-            'Dwarf', 
-            'Elf', 
-            'Gnome', 
-            'Half-Elf', 
-            'Halfling',
-            'Half-Orc',
-            'Human',
-            'Tiefling']
     
     if reroll and prev_race is not None:
         while True:
@@ -151,8 +168,8 @@ def roll_race(reroll=False, prev_race=None):
         # Select a race by rolling a number between 0 and the length of the races list
         race = random.choice(races)
 
-    # Print race
-    print("Race:      ", race)
+    # # Print race
+    # print("Race:      ", race)
     return race
 
 
@@ -171,14 +188,6 @@ def roll_character():
 def index():
     """Generate Character"""
 
-    # Track the state of each checkbox
-    checkbox_states = {
-        'first_name' : 'checked',
-        'last_name' : 'checked',
-        'alignment' : 'checked',
-        'race' : 'checked'
-    }
-
     # If a character has not yet been generated, make one
     if character['first_name'] == "None":
         character['first_name'] = roll_first_name()
@@ -192,49 +201,78 @@ def index():
     if character['race'] == "None":
         character['race'] = roll_race()
     
-    ## ==== RE-ROLLING ====
+    
     # If a button is clicked...
     if request.method == 'POST':
-        # ...determine what needs to be re-rolled.
+        # ...determine what needs to happen.
 
-        ## RE-ROLL CHARACTER
-        if request.form.get('reroll_attribute') == 'character':
-            # Get the checked attributes and store them in a list
-            reroll_checked = request.form.getlist('reroll_checkbox')
-            print('Checked:', reroll_checked)
-            if 'first_name' in reroll_checked:
-                character['first_name'] = roll_first_name(True, character['first_name'])
-            if 'last_name' in reroll_checked:
-                character['last_name'] = roll_last_name(True, character['last_name'])
-            if 'alignment' in reroll_checked:
-                character['alignment'] = roll_alignment(True, character['alignment'])
-            if 'race' in reroll_checked:
-                character['race'] = roll_race(True, character['race'])
+        # Get the checked attributes and store them in a list
+        # reroll_checked = request.form.getlist('reroll_checkbox')
+        # print('Reroll_checked:', reroll_checked)
+
+        ## ==== RACES ====
+        # ADD CUSTOM RACE
+        global races
+        # If a custom race has been submitted by the user...
+        if 'custom_race' in request.form:
+            # ...store it in the variable new_race
+            new_race = request.form['custom_race']
+            # If this new race is not already in our list of races, add it
+            if new_race and new_race not in races:
+                races.append(new_race)
+
+        # RESTORE DEFAULT RACE LIST
+        if 'restore_races' in request.form:
+            races = list(races_default)
+
+
+        ## ==== RE-ROLLING ====
+        if 'reroll_attribute' in request.form:
+
+            ## RE-ROLL CHARACTER
+            if request.form['reroll_attribute'] == 'character':
+                # Roll the checked attributes
+                if 'first_name' in reroll_checked:
+                    character['first_name'] = roll_first_name(True, character['first_name'])
+                if 'last_name' in reroll_checked:
+                    character['last_name'] = roll_last_name(True, character['last_name'])
+                if 'alignment' in reroll_checked:
+                    character['alignment'] = roll_alignment(True, character['alignment'])
+                if 'race' in reroll_checked:
+                    character['race'] = roll_race(True, character['race'])
         
 
-        ## RE-ROLL INDIVIDUAL ATTRIBUTES
-        elif request.form.get('reroll_attribute') == 'first_name':
-            character['first_name'] = roll_first_name(True, character['first_name'])
-            print(character)
+            ## RE-ROLL INDIVIDUAL ATTRIBUTES
+            elif request.form['reroll_attribute'] == 'first_name':
+                character['first_name'] = roll_first_name(True, character['first_name'])
+                print(character)
 
-        elif request.form.get('reroll_attribute') == 'last_name':
-            character['last_name'] = roll_last_name(True, character['last_name'])    
-            print(character)
+            elif request.form['reroll_attribute'] == 'last_name':
+                character['last_name'] = roll_last_name(True, character['last_name'])    
+                print(character)
 
-        elif request.form.get('reroll_attribute') == 'alignment':
-            character['alignment'] = roll_alignment(True, character['alignment'])
-            print(character)
+            elif request.form['reroll_attribute'] == 'alignment':
+                character['alignment'] = roll_alignment(True, character['alignment'])
+                print(character)
 
-        elif request.form.get('reroll_attribute') == 'race':
-            character['race'] = roll_race(True, character['race'])
-            print(character)
+            elif request.form['reroll_attribute'] == 'race':
+                character['race'] = roll_race(True, character['race'])
+                print(character)
 
-        # Update checkbox_states based on form submission
-        for key in checkbox_states.keys():
-            checkbox_states[key] = 'checked' if key in reroll_checked else ''
 
-    return render_template("index.html", character=character, checkbox_states=checkbox_states)
+    return render_template("index.html", character=character, races=races, checkbox_states=reroll_checked)
 
+
+@app.route('/delete_race', methods=['POST'])
+def delete_race():
+
+    race = request.form.get('race')
+    
+    if race in races:
+        races.remove(race)
+        return redirect("/")
+    else:
+        return redirect("/")
 
 if __name__ == '__main__':
     app.run(debug=True)
