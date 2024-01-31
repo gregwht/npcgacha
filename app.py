@@ -1,3 +1,4 @@
+import os
 import random
 from flask import Flask, render_template, redirect, request, session
 from flask_session import Session
@@ -9,12 +10,11 @@ from decouple import Config
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'
 
-# OpenAI config 
-config = Config()
-config.read('.env') # Read environment variables from a .env file
-API_KEY = config('API_KEY', default='your_api_key')
-
-openai.api.key = API_KEY
+# # OpenAI config 
+# config = Config('.env')
+# # config.read('.env') # Read environment variables from a .env file
+# API_KEY = config('API_KEY', default='your_api_key')
+# openai.api_key = API_KEY
 
 # # Configure session to use filesystem (instead of signed cookies)
 # app.config["SESSION_PERMANENT"] = False
@@ -25,6 +25,7 @@ openai.api.key = API_KEY
 character = {
     "first_name" : "None",
     "last_name": "None",
+    # "gpt_name": "None",
     "alignment": "None",
     "race": "None"
 }
@@ -98,17 +99,17 @@ def roll_last_name(reroll=False, prev_last=None):
 
 
 ## Generate Name using ChatGPT
-def generate_character_name():
-    prompt = "Generate a fantasy character name" # Prompt to ask ChatGPT for a character name
-    response = openai.Completion.create(
-        engine="text-davinci-002", # You can use the appropriate engine
-        prompt=prompt,
-        max_tokens=20, # Adjust the maximum length of the generated name
-        n=1, # Generate a single name
-        stop=None, # You can specify stop words to end the name if needed
-        temperature=0.7  # Adjust the temperature for randomness
-    )
-    return response.choices[0].text.strip() # Get the generated name
+# def generate_character_name():
+#     prompt = "Generate a fantasy character name" # Prompt to ask ChatGPT for a character name
+#     response = openai.Completion.create(
+#         engine="text-davinci-002", # You can use the appropriate engine
+#         prompt=prompt,
+#         max_tokens=20, # Adjust the maximum length of the generated name
+#         n=1, # Generate a single name
+#         stop=None, # You can specify stop words to end the name if needed
+#         temperature=0.7  # Adjust the temperature for randomness
+#     )
+#     return response.choices[0].text.strip() # Get the generated name
     
 
 ## Roll Alignment
@@ -199,15 +200,13 @@ def roll_race(reroll=False, prev_race=None):
 
 
 ## Roll Full Character
-def roll_character():
-
-    return {
-        'first_name': roll_first_name(),
-        'last_name': roll_last_name(),
-        'GPT': generate_character_name(),
-        'alignment': roll_alignment(),
-        'race': roll_race()
-    }
+# def roll_character():
+#     return {
+#         'first_name': roll_first_name(),
+#         'last_name': roll_last_name(),
+#         'alignment': roll_alignment(),
+#         'race': roll_race()
+#     }
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -220,6 +219,9 @@ def index():
     
     if character['last_name'] == "None":
         character['last_name'] = roll_last_name()
+
+    # if character['gpt_name'] == "None":
+    #     character['gpt_name'] = generate_character_name(),
     
     if character['alignment'] == "None":
         character['alignment'] = roll_alignment()
