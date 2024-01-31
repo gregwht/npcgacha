@@ -305,3 +305,16 @@ def delete_race():
 if __name__ == '__main__':
     app.run(debug=True)
 
+
+@app.route('/update-name', methods=['POST'])
+def update_name():
+    data = request.json
+    # Update the name based on 'type' and 'name' in 'data'
+    if data['type'] == 'first':
+        character['first_name'] = data['name']
+        print("First name updated:", character['first_name'])
+    elif data['type'] == 'last':
+        character['last_name'] = data['name']
+        print("Last name updated:", character['last_name'])
+    # Save the update to your character object or database as needed
+    return jsonify(success=True)
