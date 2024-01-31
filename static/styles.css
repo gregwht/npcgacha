@@ -6,3 +6,18 @@
 .clickable-text:hover {
     /* text-decoration: underline; */
 }
+
+.name-underline {
+    color: lightgray;
+}
+
+.row.align-items-center {
+    position: relative;
+}
+
+#race-settings-panel {
+    display: none; /* Initially hidden */
+    /* border: 1px solid #ccc;
+    padding: 10px;
+    background-color: white; */
+}
