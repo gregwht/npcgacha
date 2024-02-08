@@ -20,9 +20,9 @@
                 <div class="row mb-3">
                     <div class="col-10"><h5>Character Details</h5></div>
                     <div class="col-2">
-                        <!-- Reroll character button -->
+                        <!-- Generate Character Button -->
                         <form action="/" method="post">
-                            <button type="submit" name="reroll_attribute" id="button_reroll_character" value="character" class="btn btn-primary btn-sm">Re-Roll Character</button>
+                            <button type="submit" name="generate-attributes" id="button-generate-character" value="generate-character" class="btn btn-primary btn-sm">Generate Character</button>
                         </form>
                     </div>
                 </div>
@@ -63,18 +63,18 @@
                 <div class="card mt-3">
                     <div class="card-body">
 
-                        <!-- RE-ROLLING SETTINGS -->
-                        <h6>Re-Roll Settings
-                            <button id="reroll-settings-button" class="btn btn-info btn-sm m1-2">Show</button>
+                        <!-- CHARACTER GENERATION SETTINGS -->
+                        <h6>Character Generation Settings
+                            <button id="attribute-settings-button" class="btn btn-info btn-sm m1-2">Show</button>
                         </h6>
-                        <div id="reroll-settings-panel" style="display:none;">
-                            <form action="/" method="post">
-                                <!-- Checkbox to select which attributes to reroll -->
-                                <label><input type="checkbox" name="reroll_checkbox" id="checkbox_first_name" value="first_name" {{ checkbox_states['first_name'] }}>First Name</label>
-                                <label><input type="checkbox" name="reroll_checkbox" id="checkbox_last_name" value="last_name" {{ checkbox_states['last_name'] }}>Last Name</label>
-                                <label><input type="checkbox" name="reroll_checkbox" id="checkbox_alignment" value="alignment" {{ checkbox_states['alignment'] }}>Alignment</label>
-                                <label><input type="checkbox" name="reroll_checkbox" id="checkbox_race" value="race" {{ checkbox_states['race'] }}>Race</label>
-                            </form>
+                        <div id="attribute-settings-panel" style="display:block;">
+                            <p>Select which attributes to roll:</p>
+                            <!-- Checkbox to select which attributes to roll -->
+                            <label><input type="checkbox" name="checkbox-attributes" id="checkbox-first-name" value="first-name" {{ checkbox_states['first_name'] }}>First Name</label>
+                            <label><input type="checkbox" name="checkbox-attributes" id="checkbox-last-name" value="last-name" {{ checkbox_states['last_name'] }}>Last Name</label>
+                            <label><input type="checkbox" name="checkbox-attributes" id="checkbox-alignment" value="alignment" {{ checkbox_states['alignment'] }}>Alignment</label>
+                            <label><input type="checkbox" name="checkbox-attributes" id="checkbox-race" value="race" {{ checkbox_states['race'] }}>Race</label>
+                            <label><input type="checkbox" name="checkbox-attributes" id="checkbox-portrait" value="portrait" {{ checkbox_states['portrait'] }}>Portrait</label>
                         </div>
                     
                         <!-- RACE SETTINGS -->
@@ -90,10 +90,10 @@
                                     <li class="d-flex align-items-center">
                                         <span>
                                             <form action="/" method="post">
-                                                <input type="checkbox" name="race_checkbox" value="{{ race }}"> {{ race }}
+                                                <input type="checkbox" name="race-checkbox" value="{{ race }}"> {{ race }}
                                             </form>
                                         </span>
-                                        <form action="/delete_race" method="post" class="ml-2">
+                                        <form action="/delete-race" method="post" class="ml-2">
                                             <input type="hidden" name="race" value="{{ race }}">
                                             <button type="submit" class="btn btn-danger btn-sm">x</button>
                                         </form>
@@ -104,10 +104,10 @@
                             <!-- Race submission -->
                             <p>Write a race in the box to add it to the list of races:</p>
                             <form action="/" method="post">
-                                <input type="text" id="custom_race" name="custom_race">
+                                <input type="text" id="custom-race" name="custom-race">
                                 <input type="submit" value="Add Race">
                 
-                                <input type="submit" id="restore_races" name="restore_races" class="btn-danger" value="Restore Default Race List">
+                                <input type="submit" id="restore-races" name="restore-races" class="btn-danger" value="Restore Default Race List">
                             </form>
                         </div>
                     </div>
@@ -119,6 +119,7 @@
 
     <script>
         // ======== CHARACTER SHEET ========
+
         // ==== Saving names when entered in name boxes ====
         function saveName(type) {
             if (type === 'first') {
@@ -152,14 +153,69 @@
             }
         }
 
+        
+        // ==== Re-rolling individual attributes when clicking on them ====
+        function rerollAttribute(attributeName) {
+            // Create a form dynamically
+            var form = document.createElement('form');
+            form.method = 'post';
+            form.action = '/'; 
+
+            // Create a hidden field for the attribute to reroll
+            var hiddenField = document.createElement('input');
+            hiddenField.type = 'hidden';
+            hiddenField.name = 'reroll-attribute';
+            hiddenField.value = attributeName;
+
+            // Append the hidden field to the form and submit it
+            form.appendChild(hiddenField);
+            document.body.appendChild(form);
+            form.submit();
+        }
+
+
         // ======== GACHAPON SETTINGS ========
 
-        // ==== Collapsible Panels ====
-        // Re-Roll Settings
-        document.getElementById("reroll-settings-button").addEventListener("click", function() {
+        // ==== Generate Character ====
+        document.getElementById("button-generate-character").addEventListener("click", function() {
 
-        var panel = document.getElementById("reroll-settings-panel");
-        var button = document.getElementById("reroll-settings-button");
+            // Create an object to store checkbox states
+            var checkboxStates = {};
+            // Get all checkboxes with name "checkbox-attributes"
+            var checkboxes = document.querySelectorAll('input[name="checkbox-attributes"]');
+            // Loop through each checkbox to gather its state
+            checkboxes.forEach(function(checkbox) {
+                console.log("Checkbox ID:", checkbox.id, ", Checkbox Value:", checkbox.value, ", State:", checkbox.checked);
+                checkboxStates[checkbox.value] = checkbox.checked ? "checked" : "unchecked";
+            });
+
+            // Send AJAX request to Flask backend
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "/generate-character", true);
+            xhr.setRequestHeader("Content-Type", "application/json");
+            xhr.onreadystatechange = function () {
+                if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
+                    console.log("Character generation request sent successfully");
+                    // Update the character details in HTML based on the response
+                    var character = JSON.parse(xhr.responseText);
+                    // Update the character details in your HTML as needed
+                    document.getElementById("first-name").innerText = character.first_name;
+                    document.getElementById("last-name").innerText = character.last_name;
+                    document.getElementById("alignment").innerText = character.alignment;
+                    document.getElementById("race").innerText = character.race;
+                    // Update other character details similarly
+                }
+            };
+            xhr.send(JSON.stringify(checkboxStates));
+        });
+    
+
+        // ==== Collapsible Panels ====
+        // Character Generation Settings
+        document.getElementById("attribute-settings-button").addEventListener("click", function() {
+
+        var panel = document.getElementById("attribute-settings-panel");
+        var button = document.getElementById("attribute-settings-button");
 
         if (panel.style.display === "none") {
             panel.style.display = "block";
@@ -184,48 +240,7 @@
         }
         });
 
-        // ==== Updating Reroll Character button text depending on checkbox states ====
-        // First get references to checkboxes and button
-        var checkbox_first_name = document.getElementById("checkbox_first_name")
-        var checkbox_last_name = document.getElementById("checkbox_last_name")
-        var checkbox_alignment = document.getElementById("checkbox_alignment")
-        var checkbox_race = document.getElementById("checkbox_race")
-        var button_reroll_character = document.getElementById("button_reroll_character")
 
-        // Then update the button text based on checkbox states
-        function updateRerollButton() {
-            if (checkbox_first_name.checked && checkbox_last_name.checked && checkbox_alignment.checked && checkbox_race.checked) {
-                button_reroll_character.innerHTML = "Re-roll Character"
-            } else {
-                button_reroll_character.innerHTML = "<i>Re-roll selected</i>"
-            }
-        }
-
-        // Add event listeners to checkboxes to update the button text when checkboxes change state
-        checkbox_first_name.addEventListener("change", updateRerollButton)
-        checkbox_last_name.addEventListener("change", updateRerollButton)
-        checkbox_alignment.addEventListener("change", updateRerollButton)
-        checkbox_race.addEventListener("change", updateRerollButton)
-
-
-        // ==== Re-rolling individual attributes when clicking on them ====
-        function rerollAttribute(attributeName) {
-            // Create a form dynamically
-            var form = document.createElement('form');
-            form.method = 'post';
-            form.action = '/'; 
-
-            // Create a hidden field for the attribute to reroll
-            var hiddenField = document.createElement('input');
-            hiddenField.type = 'hidden';
-            hiddenField.name = 'reroll_attribute';
-            hiddenField.value = attributeName;
-
-            // Append the hidden field to the form and submit it
-            form.appendChild(hiddenField);
-            document.body.appendChild(form);
-            form.submit();
-        }
     </script>
 </body>
 </html>
