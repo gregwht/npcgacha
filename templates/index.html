@@ -14,109 +14,146 @@
     <div class="container my-4">
         <h1 class="display-4 text-center mb-4 font-weight-bold">NPC Gachapon</h1>
         
-           <div class="row mb-3">
-            <div class="col-6">
-                <h5>Character Details</h5>
-            </div>
-            <div class="col-6 text-right">
-                <form action="/" method="post">
-                    <!-- Checkbox to select which attributes to reroll -->
-                    <label><input type="checkbox" name="reroll_checkbox" id="checkbox_first_name" value="first_name" {{ checkbox_states['first_name'] }}>First Name</label>
-                    <label><input type="checkbox" name="reroll_checkbox" id="checkbox_last_name" value="last_name" {{ checkbox_states['last_name'] }}>Last Name</label>
-                    <label><input type="checkbox" name="reroll_checkbox" id="checkbox_alignment" value="alignment" {{ checkbox_states['alignment'] }}>Alignment</label>
-                    <label><input type="checkbox" name="reroll_checkbox" id="checkbox_race" value="race" {{ checkbox_states['race'] }}>Race</label>
-                    <!-- Reroll character button -->
-                    <button type="submit" name="reroll_attribute" id="button_reroll_character" value="character" class="btn btn-primary btn-sm">Reroll Character</button>
-                </form>
-            </div>
-        </div>
-
-        <!-- CHARACTER SHEET -->
-        <div class="card mt-3">
-            <div class="card-body">
-                <div class="row align-items-center my-2">
-                    <div class="col-3">
-                        <span class="font-weight-bold clickable-text" onclick="rerollAttribute('first_name')">First Name:</span> {{ character['first_name'] }}
-                    </div>
-                </div>
-
-                <div class="row align-items-center my-2">
-                    <div class="col-3">
-                        <span class="font-weight-bold clickable-text" onclick="rerollAttribute('last_name')">Last Name:</span> {{ character['last_name'] }}
-                    </div>
-                </div>
-
-                <div class="row align-items-center my-2">
-                    <div class="col-3">
-                        <span class="font-weight-bold clickable-text" onclick="rerollAttribute('alignment')">Alignment:</span> {{ character['alignment'] }}
-                    </div>
-                </div>
-
-                <div class="row align-items-center my-2">
-                    <div class="col-3">
-                        <span class="font-weight-bold clickable-text" onclick="rerollAttribute('race')">Race:</span> {{ character['race'] }}
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-
-    <div>
-        <h5>Custom Races</h5>
-        <!-- Race submission -->
-        <p>Write a race in the box to add it to the list of races:</p>
-        <form action="/" method="post">
-            <input type="text" id="custom_race" name="custom_race">
-            <input type="submit" value="Add Race">
-            <input type="submit" id="restore_races" name="restore_races" value="Restore Default Race List">
-        </form>
-        
-        <!-- Race list -->
-        <h6>Current Races:</h6>
-            <ul class="list-unstyled">
-                {% for race in races %}
-                    <li class="d-flex align-items-center">
-                        <span>
-                            <form action="/" method="post">
-                                <input type="checkbox" name="race_checkbox" value="{{ race }}"> {{ race }}
-                            </form>
-                        </span>
-                        <form action="/delete_race" method="post" class="ml-2">
-                            <input type="hidden" name="race" value="{{ race }}">
-                            <button type="submit" class="btn btn-danger btn-sm">x</button>
+        <div class="row mb-3">
+            <!-- CHARACTER SHEET -->
+            <div class="col-8">
+                <div class="row mb-3">
+                    <div class="col-10"><h5>Character Details</h5></div>
+                    <div class="col-2">
+                        <!-- Generate Character Button -->
+                        <form action="/" method="post">
+                            <button type="submit" name="generate-attributes" id="button-generate-character" value="generate-character" class="btn btn-primary btn-sm">Generate Character</button>
                         </form>
-                    </li>
-                {% endfor %}
-            </ul>
-        <!-- </form> -->
+                    </div>
+                </div>
+                <div class="card mt-3">
+                    <div class="card-body">
+                        <!-- First Name -->
+                        <div class="row align-items-center my-2">
+                            <div class="col-6">
+                                <span class="font-weight-bold clickable-text" onclick="rerollAttribute('first_name')">First Name:</span> <input type="text" id="first-name-input" value="{{ character['first_name'] }}" onblur="saveName('first')"/>
+                            </div>
+                        
+                        <!-- Last Name -->
+                            <div class="col-6"> 
+                                <span class="font-weight-bold clickable-text" onclick="rerollAttribute('last_name')">Last Name:</span> 
+                                <input type="text" id="last-name-input" value="{{ character['last_name'] }}" onblur="saveName('last')"/>
+                            </div>
+                        </div> 
+
+                        <!-- Alignment  -->
+                        <div class="row align-items-center my-2">
+                            <div class="col-6">
+                                <span class="font-weight-bold clickable-text" onclick="rerollAttribute('alignment')">Alignment:</span> {{ character['alignment'] }}
+                            </div>
+
+                        <!-- Race -->
+                            <div class="col-6">
+                                <span class="font-weight-bold clickable-text" onclick="rerollAttribute('race')">Race:</span> {{ character['race'] }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+            
+            <!-- SETTINGS -->
+            <div class="col-4">
+                <h5>Machine Settings</h5>
+                <div class="card mt-3">
+                    <div class="card-body">
+
+                        <!-- CHARACTER GENERATION SETTINGS -->
+                        <h6>Character Generation Settings
+                            <button id="attribute-settings-button" class="btn btn-info btn-sm m1-2">Show</button>
+                        </h6>
+                        <div id="attribute-settings-panel" style="display:block;">
+                            <p>Select which attributes to roll:</p>
+                            <!-- Checkbox to select which attributes to roll -->
+                            <label><input type="checkbox" name="checkbox-attributes" id="checkbox-first-name" value="first-name" {{ checkbox_states['first_name'] }}>First Name</label>
+                            <label><input type="checkbox" name="checkbox-attributes" id="checkbox-last-name" value="last-name" {{ checkbox_states['last_name'] }}>Last Name</label>
+                            <label><input type="checkbox" name="checkbox-attributes" id="checkbox-alignment" value="alignment" {{ checkbox_states['alignment'] }}>Alignment</label>
+                            <label><input type="checkbox" name="checkbox-attributes" id="checkbox-race" value="race" {{ checkbox_states['race'] }}>Race</label>
+                            <label><input type="checkbox" name="checkbox-attributes" id="checkbox-portrait" value="portrait" {{ checkbox_states['portrait'] }}>Portrait</label>
+                        </div>
+                    
+                        <!-- RACE SETTINGS -->
+                        <h6>Race Settings 
+                            <button id="race-settings-button" class="btn btn-info btn-sm m1-2">Show</button>
+                        </h6>
+                        <!-- Collapsible Panel for Custom Races -->
+                        <div id="race-settings-panel" style="display:none;">
+                            <!-- Race list -->
+                            <h6>Current Races:</h6>
+                            <ul class="list-unstyled">
+                                {% for race in races %}
+                                    <li class="d-flex align-items-center">
+                                        <span>
+                                            <form action="/" method="post">
+                                                <input type="checkbox" name="race-checkbox" value="{{ race }}"> {{ race }}
+                                            </form>
+                                        </span>
+                                        <form action="/delete-race" method="post" class="ml-2">
+                                            <input type="hidden" name="race" value="{{ race }}">
+                                            <button type="submit" class="btn btn-danger btn-sm">x</button>
+                                        </form>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                            <h6>Custom Races:</h6>
+                            <!-- Race submission -->
+                            <p>Write a race in the box to add it to the list of races:</p>
+                            <form action="/" method="post">
+                                <input type="text" id="custom-race" name="custom-race">
+                                <input type="submit" value="Add Race">
+                
+                                <input type="submit" id="restore-races" name="restore-races" class="btn-danger" value="Restore Default Race List">
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
+    
 
     <script>
-        // ==== Updating Reroll Character button text depending on checkbox states ====
-        // First get references to checkboxes and button
-        var checkbox_first_name = document.getElementById("checkbox_first_name")
-        var checkbox_last_name = document.getElementById("checkbox_last_name")
-        var checkbox_alignment = document.getElementById("checkbox_alignment")
-        var checkbox_race = document.getElementById("checkbox_race")
-        var button_reroll_character = document.getElementById("button_reroll_character")
+        // ======== CHARACTER SHEET ========
 
-        // Then update the button text based on checkbox states
-        function updateRerollButton() {
-            if (checkbox_first_name.checked && checkbox_last_name.checked && checkbox_alignment.checked && checkbox_race.checked) {
-                button_reroll_character.innerHTML = "Re-roll entire character"
-            } else {
-                button_reroll_character.innerHTML = "<i>Re-roll selected</i>"
+        // ==== Saving names when entered in name boxes ====
+        function saveName(type) {
+            if (type === 'first') {
+                var firstName = document.getElementById('first-name-input').value;
+                console.log('First Name saved as:', firstName);
+                // AJAX for sending name back to server
+                var xhr = new XMLHttpRequest();
+                xhr.open("POST", "/update-name", true);
+                xhr.setRequestHeader("Content-Type", "application/json");
+                xhr.onreadystatechange = function () {
+                    if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
+                        console.log("Name update successful");
+                    }
+                }
+                xhr.send(JSON.stringify({type: type, name: type === 'first' ? firstName: lastName}));
+
+            } else if (type === 'last') {
+                var lastName = document.getElementById('last-name-input').value;
+                console.log('Last Name saved as:', lastName);
+                // AJAX for sending name back to server
+                var xhr = new XMLHttpRequest();
+                xhr.open("POST", "/update-name", true);
+                xhr.setRequestHeader("Content-Type", "application/json");
+                xhr.onreadystatechange = function () {
+                    if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
+                        console.log("Name update successful");
+                    }
+                }
+                xhr.send(JSON.stringify({type: type, name: type === 'last' ? firstName: lastName}));
+                
             }
         }
 
-        // Add event listeners to checkboxes to update the button text when checkboxes change state
-        checkbox_first_name.addEventListener("change", updateRerollButton)
-        checkbox_last_name.addEventListener("change", updateRerollButton)
-        checkbox_alignment.addEventListener("change", updateRerollButton)
-        checkbox_race.addEventListener("change", updateRerollButton)
-
-
+        
         // ==== Re-rolling individual attributes when clicking on them ====
         function rerollAttribute(attributeName) {
             // Create a form dynamically
@@ -127,7 +164,7 @@
             // Create a hidden field for the attribute to reroll
             var hiddenField = document.createElement('input');
             hiddenField.type = 'hidden';
-            hiddenField.name = 'reroll_attribute';
+            hiddenField.name = 'reroll-attribute';
             hiddenField.value = attributeName;
 
             // Append the hidden field to the form and submit it
@@ -136,8 +173,74 @@
             form.submit();
         }
 
+
+        // ======== GACHAPON SETTINGS ========
+
+        // ==== Generate Character ====
+        document.getElementById("button-generate-character").addEventListener("click", function() {
+
+            // Create an object to store checkbox states
+            var checkboxStates = {};
+            // Get all checkboxes with name "checkbox-attributes"
+            var checkboxes = document.querySelectorAll('input[name="checkbox-attributes"]');
+            // Loop through each checkbox to gather its state
+            checkboxes.forEach(function(checkbox) {
+                console.log("Checkbox ID:", checkbox.id, ", Checkbox Value:", checkbox.value, ", State:", checkbox.checked);
+                checkboxStates[checkbox.value] = checkbox.checked ? "checked" : "unchecked";
+            });
+
+            // Send AJAX request to Flask backend
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "/generate-character", true);
+            xhr.setRequestHeader("Content-Type", "application/json");
+            xhr.onreadystatechange = function () {
+                if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
+                    console.log("Character generation request sent successfully");
+                    // Update the character details in HTML based on the response
+                    var character = JSON.parse(xhr.responseText);
+                    // Update the character details in your HTML as needed
+                    document.getElementById("first-name").innerText = character.first_name;
+                    document.getElementById("last-name").innerText = character.last_name;
+                    document.getElementById("alignment").innerText = character.alignment;
+                    document.getElementById("race").innerText = character.race;
+                    // Update other character details similarly
+                }
+            };
+            xhr.send(JSON.stringify(checkboxStates));
+        });
+    
+
+        // ==== Collapsible Panels ====
+        // Character Generation Settings
+        document.getElementById("attribute-settings-button").addEventListener("click", function() {
+
+        var panel = document.getElementById("attribute-settings-panel");
+        var button = document.getElementById("attribute-settings-button");
+
+        if (panel.style.display === "none") {
+            panel.style.display = "block";
+            button.innerHTML = "<i>Hide</i>";
+        } else {
+            panel.style.display = "none";
+            button.innerHTML = "Show"
+        }
+        });
+        // Race Settings
+        document.getElementById("race-settings-button").addEventListener("click", function() {
+
+        var panel = document.getElementById("race-settings-panel");
+        var button = document.getElementById("race-settings-button");
+
+        if (panel.style.display === "none") {
+            panel.style.display = "block";
+            button.innerHTML = "<i>Hide</i>";
+        } else {
+            panel.style.display = "none";
+            button.innerHTML = "Show"
+        }
+        });
+
+
     </script>
-
-
 </body>
 </html>

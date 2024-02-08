@@ -1,5 +1,6 @@
+import os
 import random
-from flask import Flask, render_template, redirect, request, session
+from flask import Flask, render_template, redirect, request, session, jsonify
 from flask_session import Session
 
 import openai
@@ -9,17 +10,6 @@ from decouple import Config
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'
 
-# OpenAI config 
-config = Config()
-config.read('.env') # Read environment variables from a .env file
-API_KEY = config('API_KEY', default='your_api_key')
-
-openai.api.key = API_KEY
-
-# # Configure session to use filesystem (instead of signed cookies)
-# app.config["SESSION_PERMANENT"] = False
-# app.config["SESSION_TYPE"] = "filesystem"
-# Session(app)
 
 ## Initialise Variables
 character = {
@@ -42,11 +32,12 @@ races_default = ['Dragonborn',
 # Copy races_default into variable called `races`. This is the list of races for the user and can be added to or removed from
 races = list(races_default)
 
-reroll_checked = {
+checked_attributes = {
     "first_name" : "checked",
     "last_name": "checked",
     "alignment": "checked",
-    "race": "checked"
+    "race": "checked",
+    "portrait": "unchecked"
 }
 
 
@@ -95,20 +86,6 @@ def roll_last_name(reroll=False, prev_last=None):
     # # Print name results:
     # print("Last Name: ", last_name)
     return last_name
-
-
-## Generate Name using ChatGPT
-def generate_character_name():
-    prompt = "Generate a fantasy character name" # Prompt to ask ChatGPT for a character name
-    response = openai.Completion.create(
-        engine="text-davinci-002", # You can use the appropriate engine
-        prompt=prompt,
-        max_tokens=20, # Adjust the maximum length of the generated name
-        n=1, # Generate a single name
-        stop=None, # You can specify stop words to end the name if needed
-        temperature=0.7  # Adjust the temperature for randomness
-    )
-    return response.choices[0].text.strip() # Get the generated name
     
 
 ## Roll Alignment
@@ -197,99 +174,53 @@ def roll_race(reroll=False, prev_race=None):
     # print("Race:      ", race)
     return race
 
-
-## Roll Full Character
-def roll_character():
-
-    return {
-        'first_name': roll_first_name(),
-        'last_name': roll_last_name(),
-        'GPT': generate_character_name(),
-        'alignment': roll_alignment(),
-        'race': roll_race()
-    }
+## Generate Portrait
+def generate_portrait():
+    print("Generate portrait")
+    return
 
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    """Generate Character"""
-
-    # If a character has not yet been generated, make one
-    if character['first_name'] == "None":
-        character['first_name'] = roll_first_name()
-    
-    if character['last_name'] == "None":
-        character['last_name'] = roll_last_name()
-    
-    if character['alignment'] == "None":
-        character['alignment'] = roll_alignment()
-
-    if character['race'] == "None":
-        character['race'] = roll_race()
-    
+    # """Generate Character"""
+    # global checked_attributes
     
     # If a button is clicked...
     if request.method == 'POST':
         # ...determine what needs to happen.
 
-        # Get the checked attributes and store them in a list
-        # reroll_checked = request.form.getlist('reroll_checkbox')
-        # print('Reroll_checked:', reroll_checked)
-
         ## ==== RACES ====
         # ADD CUSTOM RACE
         global races
         # If a custom race has been submitted by the user...
-        if 'custom_race' in request.form:
+        if 'custom-race' in request.form:
             # ...store it in the variable new_race
-            new_race = request.form['custom_race']
+            new_race = request.form['custom-race']
             # If this new race is not already in our list of races, add it
             if new_race and new_race not in races:
                 races.append(new_race)
 
         # RESTORE DEFAULT RACE LIST
-        if 'restore_races' in request.form:
+        if 'restore-races' in request.form:
             races = list(races_default)
 
 
         ## ==== RE-ROLLING ====
-        if 'reroll_attribute' in request.form:
-
-            ## RE-ROLL CHARACTER
-            if request.form['reroll_attribute'] == 'character':
-                # Roll the checked attributes
-                if 'first_name' in reroll_checked:
-                    character['first_name'] = roll_first_name(True, character['first_name'])
-                if 'last_name' in reroll_checked:
-                    character['last_name'] = roll_last_name(True, character['last_name'])
-                if 'alignment' in reroll_checked:
-                    character['alignment'] = roll_alignment(True, character['alignment'])
-                if 'race' in reroll_checked:
-                    character['race'] = roll_race(True, character['race'])
-        
-
-            ## RE-ROLL INDIVIDUAL ATTRIBUTES
-            elif request.form['reroll_attribute'] == 'first_name':
+        # If re-rolling a specific attribute:
+        if 'reroll-attribute' in request.form:
+            if request.form['reroll-attribute'] == 'first-name':
                 character['first_name'] = roll_first_name(True, character['first_name'])
-                print(character)
-
-            elif request.form['reroll_attribute'] == 'last_name':
+            elif request.form['reroll-attribute'] == 'last-name':
                 character['last_name'] = roll_last_name(True, character['last_name'])    
-                print(character)
-
-            elif request.form['reroll_attribute'] == 'alignment':
+            elif request.form['reroll-attribute'] == 'alignment':
                 character['alignment'] = roll_alignment(True, character['alignment'])
-                print(character)
-
-            elif request.form['reroll_attribute'] == 'race':
+            elif request.form['reroll-attribute'] == 'race':
                 character['race'] = roll_race(True, character['race'])
-                print(character)
+
+    return render_template("index.html", character=character, races=races, checkbox_states=checked_attributes)
 
 
-    return render_template("index.html", character=character, races=races, checkbox_states=reroll_checked)
-
-
-@app.route('/delete_race', methods=['POST'])
+@app.route('/delete-race', methods=['POST'])
 def delete_race():
 
     race = request.form.get('race')
@@ -300,6 +231,45 @@ def delete_race():
     else:
         return redirect("/")
 
+
+## ==== CHARACTER GENERATION ====
+@app.route('/generate-character', methods=['POST'])
+def generate_character():
+    # Get the checked attributes and store them in a list. 
+    checked_attributes = request.json
+    
+    # Process the checked attributes and generate the character
+    if checked_attributes['first-name'] == 'checked':
+        character['first_name'] = roll_first_name()
+    if checked_attributes['last-name'] == 'checked':
+        character['last_name'] = roll_last_name()
+    if checked_attributes['alignment'] == 'checked':
+        character['alignment'] = roll_alignment()
+    if checked_attributes['race'] == 'checked':
+        character['race'] = roll_race()
+    if checked_attributes['portrait'] == 'checked':
+        generate_portrait()
+
+    print(checked_attributes['first-name'])
+
+    # Return the generated character as JSON response
+    return jsonify(character=character, checkbox_states=checked_attributes)
+
+
+
+@app.route('/update-name', methods=['POST'])
+def update_name():
+    data = request.json
+    # Update the name based on 'type' and 'name' in 'data'
+    if data['type'] == 'first':
+        character['first_name'] = data['name']
+        print("First name updated:", character['first_name'])
+    elif data['type'] == 'last':
+        character['last_name'] = data['name']
+        print("Last name updated:", character['last_name'])
+    # Save the update to your character object or database as needed
+    return jsonify(success=True)
+
+
 if __name__ == '__main__':
     app.run(debug=True)
-
