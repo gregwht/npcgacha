@@ -18,7 +18,7 @@
             <!-- CHARACTER SHEET -->
             <div class="col-8">
                 <div class="row mb-3">
-                    <div class="col-10"><h5>Character Details</h5></div>
+                    <div class="col-10"><h5>Character Details: <span id="gpt-name">{{ character['gpt_name'] }}</span></h5></div>
                     <div class="col-2">
                         <!-- Generate Character Button -->
                         <form action="/" method="post">
@@ -52,6 +52,8 @@
                                 <span class="font-weight-bold clickable-text" onclick="rerollAttribute('race')">Race:</span> {{ character['race'] }}
                             </div>
                         </div>
+
+                        <img src={{ img_url }}>
                     </div>
                 </div>
                 
@@ -118,7 +120,7 @@
     
 
     <script>
-        // ======== CHARACTER SHEET ========
+        // ======== CHARACTER SHEET ========        
 
         // ==== Saving names when entered in name boxes ====
         function saveName(type) {
@@ -204,6 +206,8 @@
                     document.getElementById("alignment").innerText = character.alignment;
                     document.getElementById("race").innerText = character.race;
                     // Update other character details similarly
+                    // Update gpt_name
+                    document.getElementById("gpt-name").innerText = character.gpt_name;
                 }
             };
             xhr.send(JSON.stringify(checkboxStates));
@@ -240,6 +244,7 @@
         }
         });
 
+        
 
     </script>
 </body>
