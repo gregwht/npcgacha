@@ -1,3 +1,8 @@
+.checkbox-label {
+    /* display: inline-block; */
+    /* margin-right: 100px; */
+}
+
 .clickable-text {
     cursor: pointer;
     /* color: blue; */
