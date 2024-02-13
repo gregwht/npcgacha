@@ -3,18 +3,26 @@ import random
 from flask import Flask, render_template, redirect, request, session, jsonify
 from flask_session import Session
 
-import openai
-from decouple import Config
+import openai 
+from openai import OpenAI
+from openai.types import Image, ImagesResponse
+from decouple import config, Config
 
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'
+
+# OpenAI config 
+config = Config('.env')
+API_KEY = config('API_KEY', default='your_api_key')
+client = OpenAI(api_key = API_KEY)
 
 
 ## Initialise Variables
 character = {
     "first_name" : "None",
     "last_name": "None",
+    "gpt_name": "None",
     "alignment": "None",
     "race": "None"
 }
@@ -86,6 +94,23 @@ def roll_last_name(reroll=False, prev_last=None):
     # # Print name results:
     # print("Last Name: ", last_name)
     return last_name
+
+
+## Generate Name using ChatGPT
+def generate_character_name(genre, first_initial, last_initial):
+
+    prompt = f"I am playing a tabletop RPG game with a {genre} theme. Please generate a name for my character. The first name should begin with the letter {first_initial} and the last name should begin with the letter {last_initial}. Please only write the name itself -- do not write 'First Name:' or 'Last Name:'"
+
+    response = client.chat.completions.create(
+        model = "gpt-3.5-turbo",
+        messages = [{"role": "user", "content": prompt}], 
+        stream = False
+    )
+
+    gpt_name = response.choices[0].message.content
+    print("GPT Name:", gpt_name)
+
+    return gpt_name
     
 
 ## Roll Alignment
@@ -175,9 +200,21 @@ def roll_race(reroll=False, prev_race=None):
     return race
 
 ## Generate Portrait
-def generate_portrait():
-    print("Generate portrait")
-    return
+def generate_portrait(genre, gpt_name, alignment, race):
+
+    dalle = client.images.generate(
+        model = "dall-e-3",
+        prompt = f"I am playing a tabletop RPG game with a {genre} theme. Please generate a portrait of a character called {gpt_name}. Their alignment is {alignment} and their race is {race}. The alignment and race should influence how the character looks, but should not be written as text on the image. There should be no text on the image.",
+        size = "1024x1024",
+        quality = "standard",
+        n = 1,
+    )
+
+    image_url = dalle.data[0].url
+
+    print(image_url)
+    
+    return render_template("index.html", character=character, races=races, checkbox_states=checked_attributes, gpt_name=character['gpt_name'], image_url=image_url)
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -217,7 +254,7 @@ def index():
             elif request.form['reroll-attribute'] == 'race':
                 character['race'] = roll_race(True, character['race'])
 
-    return render_template("index.html", character=character, races=races, checkbox_states=checked_attributes)
+    return render_template("index.html", character=character, races=races, checkbox_states=checked_attributes, gpt_name=character['gpt_name'])
 
 
 @app.route('/delete-race', methods=['POST'])
@@ -238,6 +275,8 @@ def generate_character():
     # Get the checked attributes and store them in a list. 
     checked_attributes = request.json
     
+    genre = "horror"
+
     # Process the checked attributes and generate the character
     if checked_attributes['first-name'] == 'checked':
         character['first_name'] = roll_first_name()
@@ -247,16 +286,17 @@ def generate_character():
         character['alignment'] = roll_alignment()
     if checked_attributes['race'] == 'checked':
         character['race'] = roll_race()
-    if checked_attributes['portrait'] == 'checked':
-        generate_portrait()
 
-    print(checked_attributes['first-name'])
+    character['gpt_name'] = generate_character_name(genre, character['first_name'], character['last_name'])
+
+    if checked_attributes['portrait'] == 'checked':
+        generate_portrait(genre, character['gpt_name'], character['alignment'], character['race'])
 
     # Return the generated character as JSON response
     return jsonify(character=character, checkbox_states=checked_attributes)
 
 
-
+# For saving custom names entered by the user on the character sheet
 @app.route('/update-name', methods=['POST'])
 def update_name():
     data = request.json
@@ -270,6 +310,12 @@ def update_name():
     # Save the update to your character object or database as needed
     return jsonify(success=True)
 
+
+# For updating the Character Sheet Title with the GPT generated name
+@app.route('/update-gpt-name')
+def update_gpt_name():
+    # Assume character['gpt_name'] has been updated with the generated name
+    return jsonify(character=character)
 
 if __name__ == '__main__':
     app.run(debug=True)
