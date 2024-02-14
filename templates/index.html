@@ -19,6 +19,19 @@
             <h5>Gachapon Machine Settings</h5>
             <div class="card mt-3 mb-3">
                 <div class="row">
+                    <h5 class="col-8">General Attribute Settings</h5>
+                    <div class="col-4 text-right">
+                        <button name="button-reset-attributes" 
+                                id="button-reset-attributes" 
+                                class="btn btn-primary btn-sm">
+                                Deselect All
+                        </button>
+                    </div>
+                </div>
+                <div class="row">
+                    <p class="col-auto settings-desc">Roll the selected attributes:</p>
+                </div>
+                <div class="row">
                     <div class="col-auto">
                         <label for="checkbox-first-initial" class="checbox-label">First Initial</label>
                         <input type="checkbox" id="checkbox-first-initial" name="checkbox-first-initial" checked>
@@ -40,6 +53,27 @@
                         <input type="checkbox" id="checkbox-class" name="checkbox-class" checked>
                     </div>
                 </div>
+                <div class="row">
+                    <h5 class="col-8">Class Settings</h5>
+                    <div class="col-4 text-right">
+                        <button name="button-reset-classs" 
+                                id="button-reset-classes" 
+                                class="btn btn-primary btn-sm">
+                                Deselect All
+                        </button>
+                    </div>
+                </div>
+                <div class="row">
+                    <p class="col-auto settings-desc">Roll from the selected classes:</p>
+                </div>
+                <div class="row">
+                    {% for class_ in classes %}
+                        <div class="col-auto">
+                            <label for="checkbox-class-{{ class_ }}" class="checkbox-label">{{ class_ }}</label>
+                            <input type="checkbox" id="checkbox-class-{{ class_ }}" name="checkbox-class-{{ class_ }}" checked>
+                        </div>
+                    {% endfor %}
+                </div>
                 <button type="submit"
                         name="generate-attributes"
                         id="button-generate-character" 
@@ -48,6 +82,9 @@
                         Generate Character
                 </button>
             </div>
+         </div>
+         <!-- CHARACTER SHEET -->
+         <div id="character-sheet">
             <h5>Character Sheet</h5>
             <div class="card mt-3 mb-3">
                 <div class="card-body">
@@ -58,22 +95,114 @@
                     <p><span class="font-weight-bold clickable-text" onclick="rerollAttribute('class')">Class:</span> <span id="class"></span></p>
                 </div>
             </div>
+         </div>
     </div>
 
     <script>
+
+        // SELECT ALL / DESELECT ALL CHECKBOXES BUTTONS
+        
+        // General Attributes checkboxes
+        var buttonResetAttributes = document.getElementById('button-reset-attributes')
+        buttonResetAttributes.addEventListener('click', resetAttributes)
+        var attributesSelected = true;
+
+        function resetAttributes() {
+
+            if (attributesSelected === true) {
+                document.getElementById('checkbox-first-initial').checked = false;
+                document.getElementById('checkbox-last-initial').checked = false;
+                document.getElementById('checkbox-alignment').checked = false;
+                document.getElementById('checkbox-race').checked = false;
+                document.getElementById('checkbox-class').checked = false;
+                attributesSelected = false;
+                buttonResetAttributes.innerText = 'Select All';
+            }
+            else {
+                document.getElementById('checkbox-first-initial').checked = true;
+                document.getElementById('checkbox-last-initial').checked = true;
+                document.getElementById('checkbox-alignment').checked = true;
+                document.getElementById('checkbox-race').checked = true;
+                document.getElementById('checkbox-class').checked = true;
+                attributesSelected = true;
+                buttonResetAttributes.innerText = 'Deselect All';
+            };
+        };
+        
+        // Class checkboxes
+        var buttonResetClasses = document.getElementById('button-reset-classes')
+        buttonResetClasses.addEventListener('click', resetClasses)
+        var classesSelected = true;
+
+        function resetClasses() {
+
+            if (classesSelected === true) {
+                document.getElementById('checkbox-class-Barbarian').checked = false;
+                document.getElementById('checkbox-class-Bard').checked = false;
+                document.getElementById('checkbox-class-Cleric').checked = false;
+                document.getElementById('checkbox-class-Druid').checked = false;
+                document.getElementById('checkbox-class-Fighter').checked = false;
+                document.getElementById('checkbox-class-Monk').checked = false;
+                document.getElementById('checkbox-class-Paladin').checked = false;
+                document.getElementById('checkbox-class-Ranger').checked = false;
+                document.getElementById('checkbox-class-Rogue').checked = false;
+                document.getElementById('checkbox-class-Sorcerer').checked = false;
+                document.getElementById('checkbox-class-Warlock').checked = false;
+                document.getElementById('checkbox-class-Wizard').checked = false;
+                classesSelected = false;
+                buttonResetClasses.innerText = 'Select All';
+            }
+            else {
+                document.getElementById('checkbox-class-Barbarian').checked = true;
+                document.getElementById('checkbox-class-Bard').checked = true;
+                document.getElementById('checkbox-class-Cleric').checked = true;
+                document.getElementById('checkbox-class-Druid').checked = true;
+                document.getElementById('checkbox-class-Fighter').checked = true;
+                document.getElementById('checkbox-class-Monk').checked = true;
+                document.getElementById('checkbox-class-Paladin').checked = true;
+                document.getElementById('checkbox-class-Ranger').checked = true;
+                document.getElementById('checkbox-class-Rogue').checked = true;
+                document.getElementById('checkbox-class-Sorcerer').checked = true;
+                document.getElementById('checkbox-class-Warlock').checked = true;
+                document.getElementById('checkbox-class-Wizard').checked = true;
+                classesSelected = true;
+                buttonResetClasses.innerText = 'Deselect All';
+            };
+        };
+
+        
+
+
         // GENERATE CHARACTER BUTTON
         var buttonGenerateCharacter = document.getElementById('button-generate-character')
         buttonGenerateCharacter.addEventListener('click', sendSettings);
 
         function sendSettings() {
 
-            // Get checkbox states
+            // Get checkbox states: Attributes
             var firstInitialChecked = document.getElementById('checkbox-first-initial').checked;
             var lastInitialChecked = document.getElementById('checkbox-last-initial').checked;
             var alignmentChecked = document.getElementById('checkbox-alignment').checked;
             var raceChecked = document.getElementById('checkbox-race').checked;
             var classChecked = document.getElementById('checkbox-class').checked;
             
+            // Get checkbox states: Classes
+            var checkedClasses = [];
+            document.querySelectorAll('input[name^="checkbox-class-"]:checked').forEach(function(checkbox) {
+                // Find the associated label which is immediately before the checkbox
+                var label = checkbox.previousElementSibling;
+                // Ensure that the found element is indeed a label e.g. 'Barbarian'
+                if (label && label.tagName === 'LABEL') {
+                    // Add the label e.g. 'Barbarian' to the list of checked classes
+                    checkedClasses.push(label.textContent || label.innerText);
+                }
+            });
+            console.log("Checked classes:", checkedClasses);
+            // Handle no checked classes
+            if (checkedClasses.length === 0) {
+                checkedClasses.push("None")
+            }
+
             // Send AJAX request to Flask backend
             fetch('/', {
                 method: 'POST',
@@ -85,7 +214,9 @@
                     lastInitialChecked: lastInitialChecked,
                     alignmentChecked: alignmentChecked,
                     raceChecked: raceChecked,
-                    classChecked: classChecked
+                    classChecked: classChecked,
+
+                    checkedClasses: checkedClasses // Include the list of checked classes
                 })
             })
             .then(response => response.json())

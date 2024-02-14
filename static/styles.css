@@ -26,3 +26,8 @@
     padding: 10px;
     background-color: white; */
 }
+
+.settings-desc {
+    font-style: italic;
+    font-size: 1em;
+}

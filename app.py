@@ -168,13 +168,13 @@ def roll_class(previous=None):
     if previous is not None:
         while True:
             # Select a class by rolling a number between 0 and the length of the classes list
-            class_ = random.choice(classes)
+            class_ = random.choice(selected_classes)
             if class_ != previous:
                 break
 
     else:
         # Select a class by rolling a number between 0 and the length of the classes list
-        class_ = random.choice(classes)
+        class_ = random.choice(selected_classes)
 
     return class_
 
@@ -182,11 +182,19 @@ def roll_class(previous=None):
 ### ======== ROUTES ========
 @app.route('/', methods=['GET', 'POST'])
 def index():
-
+    global selected_classes
+    
     if request.method == 'POST':
 
         if request.is_json:
             request_data = request.get_json()
+
+            # Update list of selected classes from frontend
+            if request_data.get('checkedClasses'):
+                selected_classes = request_data.get('checkedClasses')
+                print("Checked classes:", selected_classes)
+                if len(selected_classes) == 0:
+                    selected_classes = ['None']
 
             # Handle attribute generation requests
             if request_data.get('firstInitialChecked'):
@@ -230,7 +238,7 @@ def index():
             return jsonify({'error': 'Invalid request data. Expected JSON data.'}), 400
         
     else:
-        return render_template("index.html")
+        return render_template("index.html", classes=classes)
     
 
 if __name__ == '__main__':
