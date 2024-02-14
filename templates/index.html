@@ -35,6 +35,10 @@
                         <label for="checkbox-race" class="checbox-label">Race</label>
                         <input type="checkbox" id="checkbox-race" name="checkbox-race" checked>
                     </div>
+                    <div class="col-auto">
+                        <label for="checkbox-class" class="checbox-label">Class</label>
+                        <input type="checkbox" id="checkbox-class" name="checkbox-class" checked>
+                    </div>
                 </div>
                 <button type="submit"
                         name="generate-attributes"
@@ -51,6 +55,7 @@
                     <p><span class="font-weight-bold clickable-text" onclick="rerollAttribute('last-initial')">Last Name:</span> <span id="last-initial"></span></p>
                     <p><span class="font-weight-bold clickable-text" onclick="rerollAttribute('alignment')">Alignment:</span> <span id="alignment"></span></p>
                     <p><span class="font-weight-bold clickable-text" onclick="rerollAttribute('race')">Race:</span> <span id="race"></span></p>
+                    <p><span class="font-weight-bold clickable-text" onclick="rerollAttribute('class')">Class:</span> <span id="class"></span></p>
                 </div>
             </div>
     </div>
@@ -67,6 +72,7 @@
             var lastInitialChecked = document.getElementById('checkbox-last-initial').checked;
             var alignmentChecked = document.getElementById('checkbox-alignment').checked;
             var raceChecked = document.getElementById('checkbox-race').checked;
+            var classChecked = document.getElementById('checkbox-class').checked;
             
             // Send AJAX request to Flask backend
             fetch('/', {
@@ -78,7 +84,8 @@
                     firstInitialChecked: firstInitialChecked,
                     lastInitialChecked: lastInitialChecked,
                     alignmentChecked: alignmentChecked,
-                    raceChecked: raceChecked
+                    raceChecked: raceChecked,
+                    classChecked: classChecked
                 })
             })
             .then(response => response.json())
@@ -88,6 +95,7 @@
                 document.getElementById('last-initial').textContent = data.last_initial;
                 document.getElementById('alignment').textContent = data.alignment;
                 document.getElementById('race').textContent = data.race;
+                document.getElementById('class').textContent = data.class;
             })
             .catch(error => {
                 console.error('Error:', error);
@@ -116,6 +124,7 @@
                 document.getElementById('last-initial').textContent = data.last_initial;
                 document.getElementById('alignment').textContent = data.alignment;
                 document.getElementById('race').textContent = data.race;
+                document.getElementById('class').textContent = data.class;
             })
             .catch(error => {
                 console.error('Error:', error);

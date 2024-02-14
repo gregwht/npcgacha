@@ -14,7 +14,8 @@ character = {
     "last_initial": "None",
     "gpt_name": "None",
     "alignment": "None",
-    "race": "None"
+    "race": "None",
+    "class": "None"
 }
 
 # Default list of races - does not change
@@ -30,8 +31,28 @@ races_default = [
     'Tiefling' 
 ]
 
-# Copy races_default into variable called `races`. This is the list of races for the user and can be added to or removed from
+# Copy races_default into variable called 'races'. This is the list of races for the user and can be added to or removed from
 races = list(races_default)
+
+# Default list of races - does not change
+classes_default = [
+    'Barbarian',
+    'Bard',
+    'Cleric',
+    'Druid',
+    'Fighter',
+    'Monk',
+    'Paladin',
+    'Ranger',
+    'Rogue',
+    'Sorcerer',
+    'Warlock',
+    'Wizard' 
+]
+
+# Copy classes_default into variable called 'classes'. This is the list of classes for the user and can be added to or removed from
+classes = list(classes_default)
+
 
 ### ======== FUNCTIONS ========
 # Roll Initial
@@ -141,6 +162,24 @@ def roll_race(previous=None):
     return race
 
 
+#Roll Class
+def roll_class(previous=None):
+
+    if previous is not None:
+        while True:
+            # Select a class by rolling a number between 0 and the length of the classes list
+            class_ = random.choice(classes)
+            if class_ != previous:
+                break
+
+    else:
+        # Select a class by rolling a number between 0 and the length of the classes list
+        class_ = random.choice(classes)
+
+    return class_
+
+
+### ======== ROUTES ========
 @app.route('/', methods=['GET', 'POST'])
 def index():
 
@@ -162,7 +201,10 @@ def index():
             if request_data.get('raceChecked'):
                 character['race'] = roll_race()
                 print("         Race:", character['race'] )
-            
+            if request_data.get('classChecked'):
+                character['class'] = roll_class()
+                print("        Class:", character['class'] )
+
             # Handle rerolling of attributes
             reroll_attribute = request_data.get('reroll-attribute')
             if reroll_attribute:
@@ -178,6 +220,9 @@ def index():
                 elif reroll_attribute == 'race':
                     character['race'] = roll_race(character['race'])
                     print("Race:", character['race'])
+                elif reroll_attribute == 'class':
+                    character['class'] = roll_class(character['class'])
+                    print("Class:", character['class'])
 
             # Return updated character attributes as JSON response
             return jsonify(character)
