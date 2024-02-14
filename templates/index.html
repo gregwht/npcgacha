@@ -21,19 +21,19 @@
                 <div class="row">
                     <div class="col-auto">
                         <label for="checkbox-first-initial" class="checbox-label">First Initial</label>
-                        <input type="checkbox" id="checkbox-first-initial" name="checkbox-first-initial">
+                        <input type="checkbox" id="checkbox-first-initial" name="checkbox-first-initial" checked>
                     </div>
                     <div class="col-auto">
                         <label for="checkbox-last-initial" class="checbox-label">Last Initial</label>
-                        <input type="checkbox" id="checkbox-last-initial" name="checkbox-last-initial">
+                        <input type="checkbox" id="checkbox-last-initial" name="checkbox-last-initial" checked>
                     </div>
                     <div class="col-auto">
                         <label for="checkbox-alignment" class="checbox-label">Alignment</label>
-                        <input type="checkbox" id="checkbox-alignment" name="checkbox-alignment">
+                        <input type="checkbox" id="checkbox-alignment" name="checkbox-alignment" checked>
                     </div>
                     <div class="col-auto">
                         <label for="checkbox-race" class="checbox-label">Race</label>
-                        <input type="checkbox" id="checkbox-race" name="checkbox-race">
+                        <input type="checkbox" id="checkbox-race" name="checkbox-race" checked>
                     </div>
                 </div>
                 <button type="submit"
@@ -47,10 +47,10 @@
             <h5>Character Sheet</h5>
             <div class="card mt-3 mb-3">
                 <div class="card-body">
-                    <p><b>First Name:</b> <span id="first-initial"></span></p>
-                    <p><b>Last Name:</b> <span id="last-initial"></span></p>
-                    <p><b>Alignment:</b> <span id="alignment"></span></p>
-                    <p><b>Race:</b> <span id="race"></span></p>
+                    <p><span class="font-weight-bold clickable-text" onclick="rerollAttribute('first-initial')">First Name:</span> <span id="first-initial"></span></p>
+                    <p><span class="font-weight-bold clickable-text" onclick="rerollAttribute('last-initial')">Last Name:</span> <span id="last-initial"></span></p>
+                    <p><span class="font-weight-bold clickable-text" onclick="rerollAttribute('alignment')">Alignment:</span> <span id="alignment"></span></p>
+                    <p><span class="font-weight-bold clickable-text" onclick="rerollAttribute('race')">Race:</span> <span id="race"></span></p>
                 </div>
             </div>
     </div>
@@ -93,5 +93,34 @@
                 console.error('Error:', error);
             });
         };
+
+        // REROLL ATTRIBUTES
+        function rerollAttribute(attributeName){
+            
+            console.log("Reroll attribute.");
+
+            // Send AJAX request to Flask backend
+            fetch('/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    'reroll-attribute': attributeName
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Update the webpage with the generated initials
+                document.getElementById('first-initial').textContent = data.first_initial;
+                document.getElementById('last-initial').textContent = data.last_initial;
+                document.getElementById('alignment').textContent = data.alignment;
+                document.getElementById('race').textContent = data.race;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+
+        }
     </script>
 </body>
