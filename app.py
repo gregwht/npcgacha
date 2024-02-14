@@ -34,92 +34,156 @@ races_default = [
 races = list(races_default)
 
 ### ======== FUNCTIONS ========
+# Roll Initial
+def roll_initial(previous=None):
 
-# Roll First Initial
-def roll_first_initial():
+    # If rerolling, ensure the new result is not the same as the previous result
+    if previous is not None:
+        while True:
+            # Generate a random uppercase letter
+            ascii = random.randint(ord('A'), ord('Z'))
+            letter = chr(ascii)
+            # If new letter is different from the previously rolled letter, convert it to char
+            if letter != previous:
+                break
 
-    # Generate a random uppercase letter for first name
-    ascii = random.randint(ord('A'), ord('Z'))
-    first_initial = chr(ascii)
-    print("First Initial:", first_initial)
-    return first_initial
+    else:
+        # Generate a random uppercase letter
+        ascii = random.randint(ord('A'), ord('Z'))
+        letter = chr(ascii)
 
-
-# Roll Last Initial
-def roll_last_initial():
-
-    # Generate a random uppercase letter for last name
-    ascii = random.randint(ord('A'), ord('Z'))
-    last_initial = chr(ascii)
-    print("Last Initial: ", last_initial)
-    return last_initial
+    return letter
 
 
 # Roll Alignment
-def roll_alignment():
-    # Create a variable for lawful vs chaotic
-    method = random.randint(0, 2)
-    # Create a variable for good vs evil
-    morals = random.randint(0, 2)
+def roll_alignment(previous=None):
 
-    # Assign method result
-    if method == 0:
-        method = "Lawful"
-    elif method == 1:
-        if morals == 1:
-            method = "True"
-        else:
-            method = "Neutral"
-    elif method == 2:
-        method = "Chaotic"
+    if previous is not None:
 
-    # Assign morals result
-    if morals == 0:
-        morals = "Good"
-    elif morals == 1:
-        morals = "Neutral"
-    elif morals == 2:
-        morals = "Evil"
+        print("Previous:", previous)
+        
+        while True:
+            # Create a variable for lawful vs chaotic
+            method = random.randint(0, 2)
+            # Create a variable for good vs evil
+            morals = random.randint(0, 2)
 
-    # Set alignment
-    alignment = method + " " + morals
-    
-    # Print alignment
-    print("Alignment: ", alignment)
+            # Assign method result
+            if method == 0:
+                method = "Lawful"
+            elif method == 1:
+                if morals == 1:
+                    method = "True"
+                else:
+                    method = "Neutral"
+            elif method == 2:
+                method = "Chaotic"
+
+            # Assign morals result
+            if morals == 0:
+                morals = "Good"
+            elif morals == 1:
+                morals = "Neutral"
+            elif morals == 2:
+                morals = "Evil"
+
+            # Set alignment
+            alignment = method + " " + morals
+
+            if alignment != previous:
+                break
+
+    else:
+        # Create a variable for lawful vs chaotic
+        method = random.randint(0, 2)
+        # Create a variable for good vs evil
+        morals = random.randint(0, 2)
+
+        # Assign method result
+        if method == 0:
+            method = "Lawful"
+        elif method == 1:
+            if morals == 1:
+                method = "True"
+            else:
+                method = "Neutral"
+        elif method == 2:
+            method = "Chaotic"
+
+        # Assign morals result
+        if morals == 0:
+            morals = "Good"
+        elif morals == 1:
+            morals = "Neutral"
+        elif morals == 2:
+            morals = "Evil"
+
+        # Set alignment
+        alignment = method + " " + morals
+
     return alignment
 
 
 #Roll Race
-def roll_race():
-    
-    # Select a race by rolling a number between 0 and the length of the races list
-    race = random.choice(races)
+def roll_race(previous=None):
 
-    # Print race
-    print("Race:      ", race)
+    if previous is not None:
+        while True:
+            # Select a race by rolling a number between 0 and the length of the races list
+            race = random.choice(races)
+            if race != previous:
+                break
+
+    else:
+        # Select a race by rolling a number between 0 and the length of the races list
+        race = random.choice(races)
+
     return race
 
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
 
-    # first_initial = "None"
-    # last_initial = "None"
-
     if request.method == 'POST':
 
+        if request.is_json:
+            request_data = request.get_json()
 
-        if request.json['firstInitialChecked']:
-            character['first_initial'] = roll_first_initial()
-        if request.json['lastInitialChecked']:
-            character['last_initial'] = roll_last_initial()
-        if request.json['alignmentChecked']:
-            character['alignment'] = roll_alignment()
-        if request.json['raceChecked']:
-            character['race'] = roll_race()
+            # Handle attribute generation requests
+            if request_data.get('firstInitialChecked'):
+                character['first_initial'] = roll_initial()
+                print("First Initial:", character['first_initial'])
+            if request_data.get('lastInitialChecked'):
+                character['last_initial'] = roll_initial()
+                print(" Last Initial:", character['last_initial'])
+            if request_data.get('alignmentChecked'):
+                character['alignment'] = roll_alignment()
+                print("    Alignment:", character['alignment'] )
+            if request_data.get('raceChecked'):
+                character['race'] = roll_race()
+                print("         Race:", character['race'] )
+            
+            # Handle rerolling of attributes
+            reroll_attribute = request_data.get('reroll-attribute')
+            if reroll_attribute:
+                if reroll_attribute == 'first-initial':
+                    character['first_initial'] = roll_initial(character['first_initial'])
+                    print("First Initial:", character['first_initial'])
+                elif reroll_attribute == 'last-initial':
+                    character['last_initial'] = roll_initial(character['last_initial'])    
+                    print("Last Initial:", character['last_initial'])
+                elif reroll_attribute == 'alignment':
+                    character['alignment'] = roll_alignment(character['alignment'])
+                    print("Alignment:", character['alignment'])
+                elif reroll_attribute == 'race':
+                    character['race'] = roll_race(character['race'])
+                    print("Race:", character['race'])
 
-        return jsonify(character)
-    
+            # Return updated character attributes as JSON response
+            return jsonify(character)
+        else:
+            return jsonify({'error': 'Invalid request data. Expected JSON data.'}), 400
+        
     else:
         return render_template("index.html")
     
