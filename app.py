@@ -189,6 +189,13 @@ def index():
         if request.is_json:
             request_data = request.get_json()
 
+            # Update list of selected races from frontend
+            if request_data.get('checkedRaces'):
+                selected_races = request_data.get('checkedRaces')
+                print("Checked races:", selected_races)
+                if len(selected_races) == 0:
+                    selected_races = ['None']
+
             # Update list of selected classes from frontend
             if request_data.get('checkedClasses'):
                 selected_classes = request_data.get('checkedClasses')
@@ -238,7 +245,7 @@ def index():
             return jsonify({'error': 'Invalid request data. Expected JSON data.'}), 400
         
     else:
-        return render_template("index.html", classes=classes)
+        return render_template("index.html", races=races, classes=classes)
     
 
 if __name__ == '__main__':

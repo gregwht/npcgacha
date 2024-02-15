@@ -18,67 +18,98 @@
          <div id="gachapon-settings">
             <h5>Gachapon Machine Settings</h5>
             <div class="card mt-3 mb-3">
-                <div class="row">
-                    <h5 class="col-8">General Attribute Settings</h5>
-                    <div class="col-4 text-right">
-                        <button name="button-reset-attributes" 
-                                id="button-reset-attributes" 
-                                class="btn btn-primary btn-sm">
-                                Deselect All
-                        </button>
-                    </div>
-                </div>
-                <div class="row">
-                    <p class="col-auto settings-desc">Roll the selected attributes:</p>
-                </div>
-                <div class="row">
-                    <div class="col-auto">
-                        <label for="checkbox-first-initial" class="checbox-label">First Initial</label>
-                        <input type="checkbox" id="checkbox-first-initial" name="checkbox-first-initial" checked>
-                    </div>
-                    <div class="col-auto">
-                        <label for="checkbox-last-initial" class="checbox-label">Last Initial</label>
-                        <input type="checkbox" id="checkbox-last-initial" name="checkbox-last-initial" checked>
-                    </div>
-                    <div class="col-auto">
-                        <label for="checkbox-alignment" class="checbox-label">Alignment</label>
-                        <input type="checkbox" id="checkbox-alignment" name="checkbox-alignment" checked>
-                    </div>
-                    <div class="col-auto">
-                        <label for="checkbox-race" class="checbox-label">Race</label>
-                        <input type="checkbox" id="checkbox-race" name="checkbox-race" checked>
-                    </div>
-                    <div class="col-auto">
-                        <label for="checkbox-class" class="checbox-label">Class</label>
-                        <input type="checkbox" id="checkbox-class" name="checkbox-class" checked>
-                    </div>
-                </div>
-                <div class="row">
-                    <h5 class="col-8">Class Settings</h5>
-                    <div class="col-4 text-right">
-                        <button name="button-reset-classs" 
-                                id="button-reset-classes" 
-                                class="btn btn-primary btn-sm">
-                                Deselect All
-                        </button>
-                    </div>
-                </div>
-                <div class="row">
-                    <p class="col-auto settings-desc">Roll from the selected classes:</p>
-                </div>
-                <div class="row">
-                    {% for class_ in classes %}
-                        <div class="col-auto">
-                            <label for="checkbox-class-{{ class_ }}" class="checkbox-label">{{ class_ }}</label>
-                            <input type="checkbox" id="checkbox-class-{{ class_ }}" name="checkbox-class-{{ class_ }}" checked>
+                <!-- General Attribute Settings -->
+                <div id="general-attribute-settings" class="mt-3 mb-3 mx-3">
+                    <div class="row">
+                        <h5 class="col-8">General Attribute Settings</h5>
+                        <div class="col-4 text-right">
+                            <button name="button-reset-attributes" 
+                                    id="button-reset-attributes" 
+                                    class="btn btn-primary btn-sm">
+                                    Deselect All
+                            </button>
                         </div>
-                    {% endfor %}
+                    </div>
+                    <div class="row">
+                        <p class="col-auto settings-desc">Roll the selected attributes:</p>
+                    </div>
+                    <div class="row">
+                        <div class="col-auto">
+                            <label for="checkbox-first-initial" class="checbox-label">First Initial</label>
+                            <input type="checkbox" id="checkbox-first-initial" name="checkbox-first-initial" checked>
+                        </div>
+                        <div class="col-auto">
+                            <label for="checkbox-last-initial" class="checbox-label">Last Initial</label>
+                            <input type="checkbox" id="checkbox-last-initial" name="checkbox-last-initial" checked>
+                        </div>
+                        <div class="col-auto">
+                            <label for="checkbox-alignment" class="checbox-label">Alignment</label>
+                            <input type="checkbox" id="checkbox-alignment" name="checkbox-alignment" checked>
+                        </div>
+                        <div class="col-auto">
+                            <label for="checkbox-race" class="checbox-label">Race</label>
+                            <input type="checkbox" id="checkbox-race" name="checkbox-race" checked>
+                        </div>
+                        <div class="col-auto">
+                            <label for="checkbox-class" class="checbox-label">Class</label>
+                            <input type="checkbox" id="checkbox-class" name="checkbox-class" checked>
+                        </div>
+                    </div>
                 </div>
+                <!-- Race Settings -->
+                <div id="race-settings" class="mb-3 mx-3">
+                    <div class="row">
+                        <h5 class="col-8">Race Settings</h5>
+                        <div class="col-4 text-right">
+                            <button name="button-reset-races" 
+                                    id="button-reset-races" 
+                                    class="btn btn-primary btn-sm">
+                                    Deselect All
+                            </button>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <p class="col-auto settings-desc">Roll from the selected races:</p>
+                    </div>
+                    <div class="row">
+                        {% for race in races %}
+                            <div class="col-auto">
+                                <label for="checkbox-race-{{ race }}" class="checkbox-label">{{ race }}</label>
+                                <input type="checkbox" id="checkbox-race-{{ race }}" name="checkbox-race-{{ race }}" checked>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <!-- Class Settings -->
+                <div id="race-settings" class="mb-3 mx-3">
+                    <div class="row">
+                        <h5 class="col-8">Class Settings</h5>
+                        <div class="col-4 text-right">
+                            <button name="button-reset-classes" 
+                                    id="button-reset-classes" 
+                                    class="btn btn-primary btn-sm">
+                                    Deselect All
+                            </button>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <p class="col-auto settings-desc">Roll from the selected classes:</p>
+                    </div>
+                    <div class="row">
+                        {% for class_ in classes %}
+                            <div class="col-auto">
+                                <label for="checkbox-class-{{ class_ }}" class="checkbox-label">{{ class_ }}</label>
+                                <input type="checkbox" id="checkbox-class-{{ class_ }}" name="checkbox-class-{{ class_ }}" checked>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <!-- Generate Character Button -->
                 <button type="submit"
                         name="generate-attributes"
                         id="button-generate-character" 
                         value="generate-character" 
-                        class="btn btn-primary btn-sm my-3">
+                        class="btn btn-primary btn-sm my-3 mx-3">
                         Generate Character
                 </button>
             </div>
@@ -129,6 +160,41 @@
             };
         };
         
+        // Race checkboxes
+        var buttonResetRaces = document.getElementById('button-reset-races')
+        buttonResetRaces.addEventListener('click', resetRaces)
+        var racesSelected = true;
+
+        function resetRaces() {
+
+            if (racesSelected === true) {
+                document.getElementById('checkbox-race-Dragonborn').checked = false;
+                document.getElementById('checkbox-race-Dwarf').checked = false;
+                document.getElementById('checkbox-race-Elf').checked = false;
+                document.getElementById('checkbox-race-Gnome').checked = false;
+                document.getElementById('checkbox-race-Half-Elf').checked = false;
+                document.getElementById('checkbox-race-Halfling').checked = false;
+                document.getElementById('checkbox-race-Half-Orc').checked = false;
+                document.getElementById('checkbox-race-Human').checked = false;
+                document.getElementById('checkbox-race-Tiefling').checked = false;
+                racesSelected = false;
+                buttonResetRaces.innerText = 'Select All';
+            }
+            else {
+                document.getElementById('checkbox-race-Dragonborn').checked = true;
+                document.getElementById('checkbox-race-Dwarf').checked = true;
+                document.getElementById('checkbox-race-Elf').checked = true;
+                document.getElementById('checkbox-race-Gnome').checked = true;
+                document.getElementById('checkbox-race-Half-Elf').checked = true;
+                document.getElementById('checkbox-race-Halfling').checked = true;
+                document.getElementById('checkbox-race-Half-Orc').checked = true;
+                document.getElementById('checkbox-race-Human').checked = true;
+                document.getElementById('checkbox-race-Tiefling').checked = true;
+                racesSelected = true;
+                buttonResetRaces.innerText = 'Deselect All';
+            };
+        };
+
         // Class checkboxes
         var buttonResetClasses = document.getElementById('button-reset-classes')
         buttonResetClasses.addEventListener('click', resetClasses)
@@ -186,6 +252,25 @@
             var raceChecked = document.getElementById('checkbox-race').checked;
             var classChecked = document.getElementById('checkbox-class').checked;
             
+
+            // Get checkbox states: Races
+            var checkedRaces = [];
+            document.querySelectorAll('input[name^="checkbox-race-"]:checked').forEach(function(checkbox) {
+                // Find the associated label which is immediately before the checkbox
+                var label = checkbox.previousElementSibling;
+                // Ensure that the found element is indeed a label e.g. 'Dwarf'
+                if (label && label.tagName === 'LABEL') {
+                    // Add the label e.g. 'Dwarf' to the list of checked classes
+                    checkedRaces.push(label.textContent || label.innerText);
+                }
+            });
+            console.log("Checked races:", checkedRaces);
+            // Handle no checked races
+            if (checkedRaces.length === 0) {
+                checkedRaces.push("None")
+            }
+
+
             // Get checkbox states: Classes
             var checkedClasses = [];
             document.querySelectorAll('input[name^="checkbox-class-"]:checked').forEach(function(checkbox) {
@@ -202,6 +287,7 @@
             if (checkedClasses.length === 0) {
                 checkedClasses.push("None")
             }
+
 
             // Send AJAX request to Flask backend
             fetch('/', {
@@ -232,6 +318,7 @@
                 console.error('Error:', error);
             });
         };
+
 
         // REROLL ATTRIBUTES
         function rerollAttribute(attributeName){
