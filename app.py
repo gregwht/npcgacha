@@ -3,20 +3,41 @@ import random
 from flask import Flask, render_template, redirect, request, session, jsonify
 from flask_session import Session
 
+from openai import OpenAI
+from decouple import config, Config
+
 ### ======== CONFIG ========
 # Configure application
 app = Flask(__name__)
+
+# Configure OpenAI API
+config = Config('.env')
+API_KEY = config('API_KEY', default='your_api_key')
+client = OpenAI(api_key = API_KEY)
+
 
 ### ======== INITIALISE VARIABLES ========
 # Character attributes
 character = {
     "first_initial" : "None",
     "last_initial": "None",
-    "gpt_name": "None",
     "alignment": "None",
     "race": "None",
-    "class": "None"
+    "class": "None",
+    "gpt_name": "None"
 }
+
+# Genres
+genres = [
+    'Fantasy',
+    'Dark Academia',
+    'Eldritch Horror',
+    'Modern day',
+    'Romantasy',
+    'Sci-Fi',
+    'Victorian gothic',
+    'Western'
+]
 
 # Default list of races - does not change
 races_default = [
@@ -145,7 +166,7 @@ def roll_alignment(previous=None):
     return alignment
 
 
-#Roll Race
+# Roll Race
 def roll_race(previous=None):
 
     if previous is not None:
@@ -162,7 +183,7 @@ def roll_race(previous=None):
     return race
 
 
-#Roll Class
+# Roll Class
 def roll_class(previous=None):
 
     if previous is not None:
@@ -177,6 +198,22 @@ def roll_class(previous=None):
         class_ = random.choice(selected_classes)
 
     return class_
+
+
+# Generate Name using ChatGPT
+def generate_gpt_name(genre, first_initial, last_initial):
+
+    prompt = f"I am playing a tabletop RPG game with a {genre} theme. Please generate a name for my character. The first name should begin with the letter {first_initial} and the last name should begin with the letter {last_initial}. Please only write the name itself -- do not write 'First Name:' or 'Last Name:'."
+
+    response = client.chat.completions.create(
+        model = "gpt-3.5-turbo",
+        messages = [{"role": "user", "content": prompt}],
+        stream = False
+    )
+    gpt_name = response.choices[0].message.content
+    print("GPT Name:", gpt_name)
+
+    return gpt_name
 
 
 ### ======== ROUTES ========
@@ -239,13 +276,19 @@ def index():
                     character['class'] = roll_class(character['class'])
                     print("Class:", character['class'])
 
+            # Generate GPT
+            if request_data.get('gptNameChecked'):
+                genre = request_data.get('genreSelected') 
+                print("Genre:", genre)
+                character['gpt_name'] = generate_gpt_name(genre, character['first_initial'], character['last_initial'])
+
             # Return updated character attributes as JSON response
             return jsonify(character)
         else:
             return jsonify({'error': 'Invalid request data. Expected JSON data.'}), 400
         
     else:
-        return render_template("index.html", races=races, classes=classes)
+        return render_template("index.html", races=races, classes=classes, genres=genres)
     
 
 if __name__ == '__main__':

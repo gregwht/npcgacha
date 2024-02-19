@@ -104,6 +104,30 @@
                         {% endfor %}
                     </div>
                 </div>
+                <!-- GPT Settings -->
+                <div id="gpt-settings" class="mb-3 mx-3">
+                    <div class="row">
+                        <h5 class="col-8">GPT Settings</h5>
+                    </div>
+                    <div class="row">
+                        <p class="col-auto settings-desc">Configure ChatGPT settings:</p>
+                    </div>
+                    <div class="row">
+                        <div class="col-auto">
+                            <label for="checkbox-gpt-name" class="checbox-label">Full Name</label>
+                            <input type="checkbox" id="checkbox-gpt-name" name="checkbox-gpt-name" unchecked>
+                        </div>
+                        <div class ="col-auto">
+                            <label for="dropdown-genre">Select your genre:</label>
+                            <select id="dropdown-genre" name="dropdown-genre">
+                                {% for genre in genres %}
+                                    <option value="{{ genre }}">{{ genre }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                
                 <!-- Generate Character Button -->
                 <button type="submit"
                         name="generate-attributes"
@@ -119,11 +143,13 @@
             <h5>Character Sheet</h5>
             <div class="card mt-3 mb-3">
                 <div class="card-body">
-                    <p><span class="font-weight-bold clickable-text" onclick="rerollAttribute('first-initial')">First Name:</span> <span id="first-initial"></span></p>
-                    <p><span class="font-weight-bold clickable-text" onclick="rerollAttribute('last-initial')">Last Name:</span> <span id="last-initial"></span></p>
+                    <p id="p-first-initial" style="display: block;"><span class="font-weight-bold clickable-text" onclick="rerollAttribute('first-initial')">First Name:</span> <span id="first-initial"></span></p>
+                    <p id="p-last-initial" style="display: block;"><span class="font-weight-bold clickable-text" onclick="rerollAttribute('last-initial')">Last Name:</span> <span id="last-initial"></span></p>
+                    <p id="p-gpt-name" style="display: none;"><span class="font-weight-bold clickable-text" )">Full Name:</span> <span id="gpt-name"></span></p>
                     <p><span class="font-weight-bold clickable-text" onclick="rerollAttribute('alignment')">Alignment:</span> <span id="alignment"></span></p>
                     <p><span class="font-weight-bold clickable-text" onclick="rerollAttribute('race')">Race:</span> <span id="race"></span></p>
                     <p><span class="font-weight-bold clickable-text" onclick="rerollAttribute('class')">Class:</span> <span id="class"></span></p>
+                    
                 </div>
             </div>
          </div>
@@ -236,8 +262,6 @@
             };
         };
 
-        
-
 
         // GENERATE CHARACTER BUTTON
         var buttonGenerateCharacter = document.getElementById('button-generate-character')
@@ -252,7 +276,6 @@
             var raceChecked = document.getElementById('checkbox-race').checked;
             var classChecked = document.getElementById('checkbox-class').checked;
             
-
             // Get checkbox states: Races
             var checkedRaces = [];
             document.querySelectorAll('input[name^="checkbox-race-"]:checked').forEach(function(checkbox) {
@@ -269,7 +292,6 @@
             if (checkedRaces.length === 0) {
                 checkedRaces.push("None")
             }
-
 
             // Get checkbox states: Classes
             var checkedClasses = [];
@@ -288,6 +310,9 @@
                 checkedClasses.push("None")
             }
 
+            // Get GPT settings
+            var gptNameChecked = document.getElementById('checkbox-gpt-name').checked;
+            var genreSelected = document.getElementById('dropdown-genre').value;
 
             // Send AJAX request to Flask backend
             fetch('/', {
@@ -302,7 +327,11 @@
                     raceChecked: raceChecked,
                     classChecked: classChecked,
 
-                    checkedClasses: checkedClasses // Include the list of checked classes
+                    checkedRaces: checkedRaces,
+                    checkedClasses: checkedClasses,
+                    
+                    gptNameChecked: gptNameChecked,
+                    genreSelected: genreSelected
                 })
             })
             .then(response => response.json())
@@ -313,6 +342,7 @@
                 document.getElementById('alignment').textContent = data.alignment;
                 document.getElementById('race').textContent = data.race;
                 document.getElementById('class').textContent = data.class;
+                document.getElementById('gpt-name').textContent = data.gpt_name;
             })
             .catch(error => {
                 console.error('Error:', error);
@@ -348,6 +378,31 @@
                 console.error('Error:', error);
             });
 
-        }
+        };
+
+
+        // REACTIVE CHARACTER SHEET BEHAVIOUR
+        var gptNameCheckbox = document.getElementById('checkbox-gpt-name');
+        gptNameCheckbox.addEventListener('click', alterCharacterSheet);
+
+        function alterCharacterSheet(){
+            
+            if (gptNameCheckbox.checked) {
+                // Hide First Initial and Last Initial 
+                document.getElementById('p-first-initial').style.display = 'none';
+                document.getElementById('p-last-initial').style.display = 'none';
+                // Show Full Name
+                document.getElementById('p-gpt-name').style.display = 'block';
+
+            } else {
+                // Show First Initial and Last Initial
+                document.getElementById('p-first-initial').style.display = 'block';
+                document.getElementById('p-last-initial').style.display = 'block';
+
+                // Hide Full Name
+                document.getElementById('p-gpt-name').style.display = 'none';
+            }
+        };
+        
     </script>
 </body>
