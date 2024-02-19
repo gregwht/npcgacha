@@ -18,56 +18,302 @@
          <div id="gachapon-settings">
             <h5>Gachapon Machine Settings</h5>
             <div class="card mt-3 mb-3">
-                <div class="row">
-                    <div class="col-auto">
-                        <label for="checkbox-first-initial" class="checbox-label">First Initial</label>
-                        <input type="checkbox" id="checkbox-first-initial" name="checkbox-first-initial" checked>
+                <!-- General Attribute Settings -->
+                <div id="general-attribute-settings" class="mt-3 mb-3 mx-3">
+                    <div class="row">
+                        <h5 class="col-8">General Attribute Settings</h5>
+                        <div class="col-4 text-right">
+                            <button name="button-reset-attributes" 
+                                    id="button-reset-attributes" 
+                                    class="btn btn-primary btn-sm">
+                                    Deselect All
+                            </button>
+                        </div>
                     </div>
-                    <div class="col-auto">
-                        <label for="checkbox-last-initial" class="checbox-label">Last Initial</label>
-                        <input type="checkbox" id="checkbox-last-initial" name="checkbox-last-initial" checked>
+                    <div class="row">
+                        <p class="col-auto settings-desc">Roll the selected attributes:</p>
                     </div>
-                    <div class="col-auto">
-                        <label for="checkbox-alignment" class="checbox-label">Alignment</label>
-                        <input type="checkbox" id="checkbox-alignment" name="checkbox-alignment" checked>
-                    </div>
-                    <div class="col-auto">
-                        <label for="checkbox-race" class="checbox-label">Race</label>
-                        <input type="checkbox" id="checkbox-race" name="checkbox-race" checked>
+                    <div class="row">
+                        <div class="col-auto">
+                            <label for="checkbox-first-initial" class="checbox-label">First Initial</label>
+                            <input type="checkbox" id="checkbox-first-initial" name="checkbox-first-initial" checked>
+                        </div>
+                        <div class="col-auto">
+                            <label for="checkbox-last-initial" class="checbox-label">Last Initial</label>
+                            <input type="checkbox" id="checkbox-last-initial" name="checkbox-last-initial" checked>
+                        </div>
+                        <div class="col-auto">
+                            <label for="checkbox-alignment" class="checbox-label">Alignment</label>
+                            <input type="checkbox" id="checkbox-alignment" name="checkbox-alignment" checked>
+                        </div>
+                        <div class="col-auto">
+                            <label for="checkbox-race" class="checbox-label">Race</label>
+                            <input type="checkbox" id="checkbox-race" name="checkbox-race" checked>
+                        </div>
+                        <div class="col-auto">
+                            <label for="checkbox-class" class="checbox-label">Class</label>
+                            <input type="checkbox" id="checkbox-class" name="checkbox-class" checked>
+                        </div>
                     </div>
                 </div>
+                <!-- Race Settings -->
+                <div id="race-settings" class="mb-3 mx-3">
+                    <div class="row">
+                        <h5 class="col-8">Race Settings</h5>
+                        <div class="col-4 text-right">
+                            <button name="button-reset-races" 
+                                    id="button-reset-races" 
+                                    class="btn btn-primary btn-sm">
+                                    Deselect All
+                            </button>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <p class="col-auto settings-desc">Roll from the selected races:</p>
+                    </div>
+                    <div class="row">
+                        {% for race in races %}
+                            <div class="col-auto">
+                                <label for="checkbox-race-{{ race }}" class="checkbox-label">{{ race }}</label>
+                                <input type="checkbox" id="checkbox-race-{{ race }}" name="checkbox-race-{{ race }}" checked>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <!-- Class Settings -->
+                <div id="race-settings" class="mb-3 mx-3">
+                    <div class="row">
+                        <h5 class="col-8">Class Settings</h5>
+                        <div class="col-4 text-right">
+                            <button name="button-reset-classes" 
+                                    id="button-reset-classes" 
+                                    class="btn btn-primary btn-sm">
+                                    Deselect All
+                            </button>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <p class="col-auto settings-desc">Roll from the selected classes:</p>
+                    </div>
+                    <div class="row">
+                        {% for class_ in classes %}
+                            <div class="col-auto">
+                                <label for="checkbox-class-{{ class_ }}" class="checkbox-label">{{ class_ }}</label>
+                                <input type="checkbox" id="checkbox-class-{{ class_ }}" name="checkbox-class-{{ class_ }}" checked>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <!-- GPT Settings -->
+                <div id="gpt-settings" class="mb-3 mx-3">
+                    <div class="row">
+                        <h5 class="col-8">GPT Settings</h5>
+                    </div>
+                    <div class="row">
+                        <p class="col-auto settings-desc">Configure ChatGPT settings:</p>
+                    </div>
+                    <div class="row">
+                        <div class="col-auto">
+                            <label for="checkbox-gpt-name" class="checbox-label">Full Name</label>
+                            <input type="checkbox" id="checkbox-gpt-name" name="checkbox-gpt-name" unchecked>
+                        </div>
+                        <div class ="col-auto">
+                            <label for="dropdown-genre">Select your genre:</label>
+                            <select id="dropdown-genre" name="dropdown-genre">
+                                {% for genre in genres %}
+                                    <option value="{{ genre }}">{{ genre }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Generate Character Button -->
                 <button type="submit"
                         name="generate-attributes"
                         id="button-generate-character" 
                         value="generate-character" 
-                        class="btn btn-primary btn-sm my-3">
+                        class="btn btn-primary btn-sm my-3 mx-3">
                         Generate Character
                 </button>
             </div>
+         </div>
+         <!-- CHARACTER SHEET -->
+         <div id="character-sheet">
             <h5>Character Sheet</h5>
             <div class="card mt-3 mb-3">
                 <div class="card-body">
-                    <p><span class="font-weight-bold clickable-text" onclick="rerollAttribute('first-initial')">First Name:</span> <span id="first-initial"></span></p>
-                    <p><span class="font-weight-bold clickable-text" onclick="rerollAttribute('last-initial')">Last Name:</span> <span id="last-initial"></span></p>
+                    <p id="p-first-initial" style="display: block;"><span class="font-weight-bold clickable-text" onclick="rerollAttribute('first-initial')">First Name:</span> <span id="first-initial"></span></p>
+                    <p id="p-last-initial" style="display: block;"><span class="font-weight-bold clickable-text" onclick="rerollAttribute('last-initial')">Last Name:</span> <span id="last-initial"></span></p>
+                    <p id="p-gpt-name" style="display: none;"><span class="font-weight-bold clickable-text" )">Full Name:</span> <span id="gpt-name"></span></p>
                     <p><span class="font-weight-bold clickable-text" onclick="rerollAttribute('alignment')">Alignment:</span> <span id="alignment"></span></p>
                     <p><span class="font-weight-bold clickable-text" onclick="rerollAttribute('race')">Race:</span> <span id="race"></span></p>
+                    <p><span class="font-weight-bold clickable-text" onclick="rerollAttribute('class')">Class:</span> <span id="class"></span></p>
+                    
                 </div>
             </div>
+         </div>
     </div>
 
     <script>
+
+        // SELECT ALL / DESELECT ALL CHECKBOXES BUTTONS
+        
+        // General Attributes checkboxes
+        var buttonResetAttributes = document.getElementById('button-reset-attributes')
+        buttonResetAttributes.addEventListener('click', resetAttributes)
+        var attributesSelected = true;
+
+        function resetAttributes() {
+
+            if (attributesSelected === true) {
+                document.getElementById('checkbox-first-initial').checked = false;
+                document.getElementById('checkbox-last-initial').checked = false;
+                document.getElementById('checkbox-alignment').checked = false;
+                document.getElementById('checkbox-race').checked = false;
+                document.getElementById('checkbox-class').checked = false;
+                attributesSelected = false;
+                buttonResetAttributes.innerText = 'Select All';
+            }
+            else {
+                document.getElementById('checkbox-first-initial').checked = true;
+                document.getElementById('checkbox-last-initial').checked = true;
+                document.getElementById('checkbox-alignment').checked = true;
+                document.getElementById('checkbox-race').checked = true;
+                document.getElementById('checkbox-class').checked = true;
+                attributesSelected = true;
+                buttonResetAttributes.innerText = 'Deselect All';
+            };
+        };
+        
+        // Race checkboxes
+        var buttonResetRaces = document.getElementById('button-reset-races')
+        buttonResetRaces.addEventListener('click', resetRaces)
+        var racesSelected = true;
+
+        function resetRaces() {
+
+            if (racesSelected === true) {
+                document.getElementById('checkbox-race-Dragonborn').checked = false;
+                document.getElementById('checkbox-race-Dwarf').checked = false;
+                document.getElementById('checkbox-race-Elf').checked = false;
+                document.getElementById('checkbox-race-Gnome').checked = false;
+                document.getElementById('checkbox-race-Half-Elf').checked = false;
+                document.getElementById('checkbox-race-Halfling').checked = false;
+                document.getElementById('checkbox-race-Half-Orc').checked = false;
+                document.getElementById('checkbox-race-Human').checked = false;
+                document.getElementById('checkbox-race-Tiefling').checked = false;
+                racesSelected = false;
+                buttonResetRaces.innerText = 'Select All';
+            }
+            else {
+                document.getElementById('checkbox-race-Dragonborn').checked = true;
+                document.getElementById('checkbox-race-Dwarf').checked = true;
+                document.getElementById('checkbox-race-Elf').checked = true;
+                document.getElementById('checkbox-race-Gnome').checked = true;
+                document.getElementById('checkbox-race-Half-Elf').checked = true;
+                document.getElementById('checkbox-race-Halfling').checked = true;
+                document.getElementById('checkbox-race-Half-Orc').checked = true;
+                document.getElementById('checkbox-race-Human').checked = true;
+                document.getElementById('checkbox-race-Tiefling').checked = true;
+                racesSelected = true;
+                buttonResetRaces.innerText = 'Deselect All';
+            };
+        };
+
+        // Class checkboxes
+        var buttonResetClasses = document.getElementById('button-reset-classes')
+        buttonResetClasses.addEventListener('click', resetClasses)
+        var classesSelected = true;
+
+        function resetClasses() {
+
+            if (classesSelected === true) {
+                document.getElementById('checkbox-class-Barbarian').checked = false;
+                document.getElementById('checkbox-class-Bard').checked = false;
+                document.getElementById('checkbox-class-Cleric').checked = false;
+                document.getElementById('checkbox-class-Druid').checked = false;
+                document.getElementById('checkbox-class-Fighter').checked = false;
+                document.getElementById('checkbox-class-Monk').checked = false;
+                document.getElementById('checkbox-class-Paladin').checked = false;
+                document.getElementById('checkbox-class-Ranger').checked = false;
+                document.getElementById('checkbox-class-Rogue').checked = false;
+                document.getElementById('checkbox-class-Sorcerer').checked = false;
+                document.getElementById('checkbox-class-Warlock').checked = false;
+                document.getElementById('checkbox-class-Wizard').checked = false;
+                classesSelected = false;
+                buttonResetClasses.innerText = 'Select All';
+            }
+            else {
+                document.getElementById('checkbox-class-Barbarian').checked = true;
+                document.getElementById('checkbox-class-Bard').checked = true;
+                document.getElementById('checkbox-class-Cleric').checked = true;
+                document.getElementById('checkbox-class-Druid').checked = true;
+                document.getElementById('checkbox-class-Fighter').checked = true;
+                document.getElementById('checkbox-class-Monk').checked = true;
+                document.getElementById('checkbox-class-Paladin').checked = true;
+                document.getElementById('checkbox-class-Ranger').checked = true;
+                document.getElementById('checkbox-class-Rogue').checked = true;
+                document.getElementById('checkbox-class-Sorcerer').checked = true;
+                document.getElementById('checkbox-class-Warlock').checked = true;
+                document.getElementById('checkbox-class-Wizard').checked = true;
+                classesSelected = true;
+                buttonResetClasses.innerText = 'Deselect All';
+            };
+        };
+
+
         // GENERATE CHARACTER BUTTON
         var buttonGenerateCharacter = document.getElementById('button-generate-character')
         buttonGenerateCharacter.addEventListener('click', sendSettings);
 
         function sendSettings() {
 
-            // Get checkbox states
+            // Get checkbox states: Attributes
             var firstInitialChecked = document.getElementById('checkbox-first-initial').checked;
             var lastInitialChecked = document.getElementById('checkbox-last-initial').checked;
             var alignmentChecked = document.getElementById('checkbox-alignment').checked;
             var raceChecked = document.getElementById('checkbox-race').checked;
+            var classChecked = document.getElementById('checkbox-class').checked;
             
+            // Get checkbox states: Races
+            var checkedRaces = [];
+            document.querySelectorAll('input[name^="checkbox-race-"]:checked').forEach(function(checkbox) {
+                // Find the associated label which is immediately before the checkbox
+                var label = checkbox.previousElementSibling;
+                // Ensure that the found element is indeed a label e.g. 'Dwarf'
+                if (label && label.tagName === 'LABEL') {
+                    // Add the label e.g. 'Dwarf' to the list of checked classes
+                    checkedRaces.push(label.textContent || label.innerText);
+                }
+            });
+            console.log("Checked races:", checkedRaces);
+            // Handle no checked races
+            if (checkedRaces.length === 0) {
+                checkedRaces.push("None")
+            }
+
+            // Get checkbox states: Classes
+            var checkedClasses = [];
+            document.querySelectorAll('input[name^="checkbox-class-"]:checked').forEach(function(checkbox) {
+                // Find the associated label which is immediately before the checkbox
+                var label = checkbox.previousElementSibling;
+                // Ensure that the found element is indeed a label e.g. 'Barbarian'
+                if (label && label.tagName === 'LABEL') {
+                    // Add the label e.g. 'Barbarian' to the list of checked classes
+                    checkedClasses.push(label.textContent || label.innerText);
+                }
+            });
+            console.log("Checked classes:", checkedClasses);
+            // Handle no checked classes
+            if (checkedClasses.length === 0) {
+                checkedClasses.push("None")
+            }
+
+            // Get GPT settings
+            var gptNameChecked = document.getElementById('checkbox-gpt-name').checked;
+            var genreSelected = document.getElementById('dropdown-genre').value;
+
             // Send AJAX request to Flask backend
             fetch('/', {
                 method: 'POST',
@@ -78,7 +324,14 @@
                     firstInitialChecked: firstInitialChecked,
                     lastInitialChecked: lastInitialChecked,
                     alignmentChecked: alignmentChecked,
-                    raceChecked: raceChecked
+                    raceChecked: raceChecked,
+                    classChecked: classChecked,
+
+                    checkedRaces: checkedRaces,
+                    checkedClasses: checkedClasses,
+                    
+                    gptNameChecked: gptNameChecked,
+                    genreSelected: genreSelected
                 })
             })
             .then(response => response.json())
@@ -88,11 +341,14 @@
                 document.getElementById('last-initial').textContent = data.last_initial;
                 document.getElementById('alignment').textContent = data.alignment;
                 document.getElementById('race').textContent = data.race;
+                document.getElementById('class').textContent = data.class;
+                document.getElementById('gpt-name').textContent = data.gpt_name;
             })
             .catch(error => {
                 console.error('Error:', error);
             });
         };
+
 
         // REROLL ATTRIBUTES
         function rerollAttribute(attributeName){
@@ -116,11 +372,37 @@
                 document.getElementById('last-initial').textContent = data.last_initial;
                 document.getElementById('alignment').textContent = data.alignment;
                 document.getElementById('race').textContent = data.race;
+                document.getElementById('class').textContent = data.class;
             })
             .catch(error => {
                 console.error('Error:', error);
             });
 
-        }
+        };
+
+
+        // REACTIVE CHARACTER SHEET BEHAVIOUR
+        var gptNameCheckbox = document.getElementById('checkbox-gpt-name');
+        gptNameCheckbox.addEventListener('click', alterCharacterSheet);
+
+        function alterCharacterSheet(){
+            
+            if (gptNameCheckbox.checked) {
+                // Hide First Initial and Last Initial 
+                document.getElementById('p-first-initial').style.display = 'none';
+                document.getElementById('p-last-initial').style.display = 'none';
+                // Show Full Name
+                document.getElementById('p-gpt-name').style.display = 'block';
+
+            } else {
+                // Show First Initial and Last Initial
+                document.getElementById('p-first-initial').style.display = 'block';
+                document.getElementById('p-last-initial').style.display = 'block';
+
+                // Hide Full Name
+                document.getElementById('p-gpt-name').style.display = 'none';
+            }
+        };
+        
     </script>
 </body>
