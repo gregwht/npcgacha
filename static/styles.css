@@ -31,3 +31,9 @@
     font-style: italic;
     font-size: 1em;
 }
+
+.card-body img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}

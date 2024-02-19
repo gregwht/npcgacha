@@ -114,16 +114,20 @@
                     </div>
                     <div class="row">
                         <div class="col-auto">
-                            <label for="checkbox-gpt-name" class="checbox-label">Full Name</label>
+                            <label for="checkbox-gpt-name" class="checkbox-label">Full Name</label>
                             <input type="checkbox" id="checkbox-gpt-name" name="checkbox-gpt-name" unchecked>
                         </div>
-                        <div class ="col-auto">
-                            <label for="dropdown-genre">Select your genre:</label>
-                            <select id="dropdown-genre" name="dropdown-genre">
-                                {% for genre in genres %}
-                                    <option value="{{ genre }}">{{ genre }}</option>
+                        <div class="col-auto">
+                            <label for="dropdown-gender">Select character gender:</label>
+                            <select id="dropdown-gender" name="dropdown-gender">
+                                {% for gender in genders %}
+                                    <option value="{{ gender }}">{{ gender }}</option>
                                 {% endfor %}
                             </select>
+                        </div>
+                        <div class="col-auto">
+                            <label for="checkbox-gpt-image" class="checbox-label">Portrait Image</label>
+                            <input type="checkbox" id="checkbox-gpt-image" name="checkbox-gpt-image" unchecked>
                         </div>
                     </div>
                 </div>
@@ -141,15 +145,28 @@
          <!-- CHARACTER SHEET -->
          <div id="character-sheet">
             <h5>Character Sheet</h5>
-            <div class="card mt-3 mb-3">
-                <div class="card-body">
-                    <p id="p-first-initial" style="display: block;"><span class="font-weight-bold clickable-text" onclick="rerollAttribute('first-initial')">First Name:</span> <span id="first-initial"></span></p>
-                    <p id="p-last-initial" style="display: block;"><span class="font-weight-bold clickable-text" onclick="rerollAttribute('last-initial')">Last Name:</span> <span id="last-initial"></span></p>
-                    <p id="p-gpt-name" style="display: none;"><span class="font-weight-bold clickable-text" )">Full Name:</span> <span id="gpt-name"></span></p>
-                    <p><span class="font-weight-bold clickable-text" onclick="rerollAttribute('alignment')">Alignment:</span> <span id="alignment"></span></p>
-                    <p><span class="font-weight-bold clickable-text" onclick="rerollAttribute('race')">Race:</span> <span id="race"></span></p>
-                    <p><span class="font-weight-bold clickable-text" onclick="rerollAttribute('class')">Class:</span> <span id="class"></span></p>
-                    
+            <div class="row">
+                <div class="card col-6 mt-3 mb-3">
+                    <div class="card-body">
+                        <p id="p-first-initial" style="display: block;"><span class="font-weight-bold clickable-text" onclick="rerollAttribute('first-initial')">First Name:</span> <span id="first-initial"></span></p>
+                        <p id="p-last-initial" style="display: block;"><span class="font-weight-bold clickable-text" onclick="rerollAttribute('last-initial')">Last Name:</span> <span id="last-initial"></span></p>
+                        <p id="p-gpt-name" style="display: none;"><span class="font-weight-bold clickable-text">Full Name:</span> <span id="gpt-name"></span></p>
+                        <p><span class="font-weight-bold clickable-text" onclick="rerollAttribute('alignment')">Alignment:</span> <span id="alignment"></span></p>
+                        <p><span class="font-weight-bold clickable-text" onclick="rerollAttribute('race')">Race:</span> <span id="race"></span></p>
+                        <p><span class="font-weight-bold clickable-text" onclick="rerollAttribute('class')">Class:</span> <span id="class"></span></p>
+                    </div>
+                </div>
+                <div class="card col-6 mt-3 mb-3">
+                    <div class="card-body">
+                        <img id="gpt-image" src="img/placeholder.jpg" alt="Character Portrait">
+                    </div>
+                    <button type="submit"
+                        id="button-generate-image"    
+                        name="generate-image"
+                        value="generate-image" 
+                        class="btn btn-primary btn-sm my-3 mx-3">
+                        Generate Portrait
+                </button>
                 </div>
             </div>
          </div>
@@ -312,7 +329,7 @@
 
             // Get GPT settings
             var gptNameChecked = document.getElementById('checkbox-gpt-name').checked;
-            var genreSelected = document.getElementById('dropdown-genre').value;
+            var genderSelected = document.getElementById('dropdown-gender').value;
 
             // Send AJAX request to Flask backend
             fetch('/', {
@@ -331,7 +348,7 @@
                     checkedClasses: checkedClasses,
                     
                     gptNameChecked: gptNameChecked,
-                    genreSelected: genreSelected
+                    genderSelected: genderSelected
                 })
             })
             .then(response => response.json())
@@ -402,6 +419,63 @@
                 // Hide Full Name
                 document.getElementById('p-gpt-name').style.display = 'none';
             }
+        };
+
+
+        // GENERATE PORTRAIT IMAGE
+        var buttonGeneratePortrait = document.getElementById('button-generate-image')
+        buttonGeneratePortrait.addEventListener('click', generateImage);
+
+        function generateImage() {
+
+            buttonGeneratePortrait.disabled = true;
+            buttonGeneratePortrait.style.backgroundColor = 'grey';
+            buttonGeneratePortrait.textContent = "Generating Portrait...";
+
+            // Get information needed for image generation
+            var genderSelected = document.getElementById('dropdown-gender').value;
+            var gptName = document.getElementById('gpt-name').textContent;
+            var alignment = document.getElementById('alignment').textContent;
+            var race = document.getElementById('race').textContent;
+            var class_ = document.getElementById('class').textContent;
+
+            console.log('genderSelected:', genderSelected);
+            console.log('gptName:', gptName);
+            console.log('alignment:', alignment);
+            console.log('race:', race);
+            console.log('class_:', class_);
+
+
+            fetch('/generate-image', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    // Maybe put gender, full name, alignment, and race here to send to backend
+                    'gender': genderSelected,
+                    'gpt_name': gptName,
+                    'alignment': alignment,
+                    'race': race,
+                    'class': class_
+                }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Success:', data);
+                // Replace src attribute of image 
+                document.getElementById('gpt-image').src = data.imageUrl;
+                buttonGeneratePortrait.disabled = false;
+                buttonGeneratePortrait.style.backgroundColor = '';
+                buttonGeneratePortrait.textContent = "Generate Portrait";
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+                // Handle errors here
+                buttonGeneratePortrait.disabled = false;
+                buttonGeneratePortrait.style.backgroundColor = '';
+                buttonGeneratePortrait.textContent = "Generate Portrait";
+            });
         };
         
     </script>
