@@ -294,7 +294,51 @@ def index():
         
     else:
         return render_template("index.html", races=races, classes=classes, genders=genders)
+
+
+# @app.route('/save-first-name', methods=['POST'])
+# def save_first_name():
     
+#     character["first_initial"] = request.json['data'] # Access the data sent from the frontend
+#     print("Received data:", character["first_initial"])
+
+#     print("Character:", character)
+
+#     return jsonify({'status': 'success', 'message': 'Data received successfully'})
+
+
+# @app.route('/save-last-name', methods=['POST'])
+# def save_last_name():
+    
+#     character["last_initial"] = request.json['data'] # Access the data sent from the frontend
+#     print("Received data:", character["last_initial"])
+
+#     print("Character:", character)
+
+#     return jsonify({'status': 'success', 'message': 'Data received successfully'})
+
+
+@app.route('/save-first-name', methods=['POST'])
+def save_first_name():
+    
+    character["first_initial"] = request.json.get('inputFirstName') # Access the data sent from the frontend
+    print("Received data:", character["first_initial"])
+
+    print("Character:", character)
+
+    return jsonify({'status': 'success', 'message': 'Data received successfully'})
+
+
+@app.route('/save-last-name', methods=['POST'])
+def save_last_name():
+    
+    character["last_initial"] = request.json.get('inputLastName') # Access the data sent from the frontend
+    print("Received data:", character["last_initial"])
+
+    print("Character:", character)
+
+    return jsonify({'status': 'success', 'message': 'Data received successfully'})
+
 
 @app.route('/generate-image', methods=['POST'])
 def generate_image():

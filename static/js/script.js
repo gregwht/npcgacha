@@ -194,34 +194,36 @@ function sendSettings() {
 
 
 // REROLL ATTRIBUTES
-// function rerollAttribute(attributeName){
+function rerollAttribute(attributeName){
     
-//     console.log("Reroll attribute.");
+    console.log("Reroll attribute.");
 
-//     // Send AJAX request to Flask backend
-//     fetch('/', {
-//         method: 'POST',
-//         headers: {
-//             'Content-Type': 'application/json'
-//         },
-//         body: JSON.stringify({
-//             'reroll-attribute': attributeName
-//         })
-//     })
-//     .then(response => response.json())
-//     .then(data => {
-//         // Update the webpage with the generated initials
-//         document.getElementById('first-initial').textContent = data.first_initial;
-//         document.getElementById('last-initial').textContent = data.last_initial;
-//         document.getElementById('alignment').textContent = data.alignment;
-//         document.getElementById('race').textContent = data.race;
-//         document.getElementById('class').textContent = data.class;
-//     })
-//     .catch(error => {
-//         console.error('Error:', error);
-//     });
+    // Send AJAX request to Flask backend
+    fetch('/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            'reroll-attribute': attributeName
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        // Update the webpage with the generated initials
+        // document.getElementById('first-initial').textContent = data.first_initial;
+        // document.getElementById('last-initial').textContent = data.last_initial;
+        document.getElementById('input-first-name').value = data.first_initial;
+        document.getElementById('input-last-name').value = data.last_initial;
+        document.getElementById('alignment').textContent = data.alignment;
+        document.getElementById('race').textContent = data.race;
+        document.getElementById('class').textContent = data.class;
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
 
-// }
+}
 
 
 // REACTIVE CHARACTER SHEET BEHAVIOUR
@@ -247,6 +249,161 @@ function alterCharacterSheet(){
     }
 }
 
+
+// SENDING USER-INPUTTED NAMES TO BACKEND
+document.addEventListener("DOMContentLoaded", function(){
+
+    // var inputFirstName = document.getElementById("input-first-name");
+    // var inputLastName = document.getElementById("input-last-name");
+
+    // // If user clicks off of the text input field, or presses enter when it is hilighted...
+    // inputFirstName.addEventListener("blur", sendFirstName);
+    // inputFirstName.addEventListener("keypress", function(e) {
+    //     if (e.key === "Enter"){
+    //         e.preventDefault(); // Prevent default action to stop form submission
+    //         sendFirstName();
+    //     }
+    // })
+    // inputLastName.addEventListener("blur", sendLastName);
+    // inputLastName.addEventListener("keypress", function(e) {
+    //     if (e.key === "Enter"){
+    //         e.preventDefault(); // Prevent default action to stop form submission
+    //         sendLastName();
+    //     }
+    // })
+
+    // function sendFirstName() {
+
+    //     var userFirstName = inputFirstName.value;
+
+    //     // Create XHR request
+    //     var xhr = new XMLHttpRequest();
+    //     xhr.open("POST", "/save-first-name", true);
+    //     xhr.setRequestHeader("Content-Type", "application/json");
+
+    //     // Define what happens on successful data submission
+    //     xhr.onload = function () {
+    //         if (xhr.status >= 200 && xhr.status < 300) {
+    //             console.log("Data sent successfully");
+    //         } else {
+    //             console.log("Error sending data");
+    //         }
+    //     };
+
+    //     // Define what happens in case of an error
+    //     xhr.onerror = function () {
+    //         console.log("Error sending data");
+    //     };
+
+    //     // Set up our request
+    //     xhr.send(JSON.stringify({data: userFirstName}));
+    // }
+
+    // function sendLastName() {
+
+    //     var userLastName = inputLastName.value;
+
+    //     // Create XHR request
+    //     var xhr = new XMLHttpRequest();
+    //     xhr.open("POST", "/save-last-name", true);
+    //     xhr.setRequestHeader("Content-Type", "application/json");
+
+    //     // Define what happens on successful data submission
+    //     xhr.onload = function () {
+    //         if (xhr.status >= 200 && xhr.status < 300) {
+    //             console.log("Data sent successfully");
+    //         } else {
+    //             console.log("Error sending data");
+    //         }
+    //     };
+
+    //     // Define what happens in case of an error
+    //     xhr.onerror = function () {
+    //         console.log("Error sending data");
+    //     };
+
+    //     // Set up our request
+    //     xhr.send(JSON.stringify({data: userLastName}));
+    // }
+
+    const inputFirstName = document.getElementById("input-first-name");
+    const inputLastName = document.getElementById("input-last-name");
+    let originalFirstName = inputFirstName.value;
+    let originalLastName = inputLastName.value;
+
+    // When the input field gains focus, store the current value 
+    inputFirstName.addEventListener('focus', function(){ 
+        originalFirstName = inputFirstName.value;
+    })
+    inputLastName.addEventListener('focus', function(){ 
+        originalLastName = inputLastName.value;
+    })
+
+    // When focus is lost, check if the value has changed
+    inputFirstName.addEventListener('blur', function() {
+        // If the value has changed, send the data
+        if (inputFirstName.value !== originalFirstName) {
+            sendFirstName(inputFirstName.value);
+        }
+    })
+    inputLastName.addEventListener('blur', function() {
+        // If the value has changed, send the data
+        if (inputLastName.value !== originalLastName) {
+            sendLastName(inputLastName.value);
+        }
+    })
+
+    // If Enter key is pressed, check if the value has changed
+    inputFirstName.addEventListener('keypress', function(event) {
+        if (event.key === 'Enter' && inputFirstName.value !== originalFirstName) {
+            event.preventDefault(); // Prevent the default action to avoid form submission or other unwanted behaviour
+            sendFirstName(inputFirstName.value);
+        }
+    })
+    inputFirstName.addEventListener('keypress', function(event) {
+        if (event.key === 'Enter' && inputLastName.value !== originalLastName) {
+            event.preventDefault(); // Prevent the default action to avoid form submission or other unwanted behaviour
+            sendLastName(inputLastName.value);
+        }
+    })
+
+
+    function sendFirstName(name) {
+
+        console.log("Sending data:", name); // Placeholder for AJAX call
+
+        fetch('/save-first-name', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ inputFirstName: name }),
+        })
+        .then(response => response.json())
+        .then(data => console.log(data))
+        .catch((error) => {
+            console.error('Error:', error);
+        })
+    }
+
+    function sendLastName(name) {
+
+        console.log("Sending data:", name); // Placeholder for AJAX call
+
+        fetch('/save-last-name', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ inputLastName: name }),
+        })
+        .then(response => response.json())
+        .then(data => console.log(data))
+        .catch((error) => {
+            console.error('Error:', error);
+        })
+    }
+})
 
 
 // GENERATE PORTRAIT IMAGE
