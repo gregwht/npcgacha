@@ -28,15 +28,15 @@ character = {
 }
 
 # Genres
-# genres = [
-#     'Fantasy',
-#     'Dark Academia',
-#     'Eldritch Horror',
-#     'Modern Day',
-#     'Sci-Fi',
-#     'Victorian Gothic',
-#     'Western'
-# ]
+genres = [
+    'Fantasy',
+    'Dark Academia',
+    'Eldritch Horror',
+    'Modern Day',
+    'Sci-Fi',
+    'Victorian Gothic',
+    'Western'
+]
 
 genders = [
     'Female',
@@ -177,13 +177,13 @@ def roll_race(previous=None):
     if previous is not None:
         while True:
             # Select a race by rolling a number between 0 and the length of the races list
-            race = random.choice(races)
+            race = random.choice(selected_races)
             if race != previous:
                 break
 
     else:
         # Select a race by rolling a number between 0 and the length of the races list
-        race = random.choice(races)
+        race = random.choice(selected_races)
 
     return race
 
@@ -206,9 +206,9 @@ def roll_class(previous=None):
 
 
 # Generate Name using ChatGPT
-def generate_gpt_name(first_initial, last_initial, gender):
+def generate_gpt_name(genre, first_initial, last_initial, gender):
 
-    prompt = f"I am playing a tabletop RPG game. Please generate a name for my character. The first name should begin with the letter {first_initial} and the last name should begin with the letter {last_initial}. Their gender is {gender}. Please only write the name itself -- do not write 'First Name:' or 'Last Name:'."
+    prompt = f"I am playing a tabletop RPG game in the {genre} genre. Please generate a name for my character. The first name should begin with the letter {first_initial} and the last name should begin with the letter {last_initial}. Their gender is {gender}. Please only write the name itself -- do not write 'First Name:' or 'Last Name:'."
 
     response = client.chat.completions.create(
         model = "gpt-3.5-turbo",
@@ -225,6 +225,7 @@ def generate_gpt_name(first_initial, last_initial, gender):
 @app.route('/', methods=['GET', 'POST'])
 def index():
     global selected_classes
+    global selected_races
     
     if request.method == 'POST':
 
@@ -283,9 +284,11 @@ def index():
 
             # Generate GPT
             if request_data.get('gptNameChecked'):
+                genre = request_data.get('genreSelected')
+                print("Genre:", genre)
                 gender = request_data.get('genderSelected') 
                 print("Gender:", gender)
-                character['gpt_name'] = generate_gpt_name(character['first_initial'], character['last_initial'], gender)
+                character['gpt_name'] = generate_gpt_name(genre, character['first_initial'], character['last_initial'], gender)
 
             # Return updated character attributes as JSON response
             return jsonify(character)
@@ -293,29 +296,7 @@ def index():
             return jsonify({'error': 'Invalid request data. Expected JSON data.'}), 400
         
     else:
-        return render_template("index.html", races=races, classes=classes, genders=genders)
-
-
-# @app.route('/save-first-name', methods=['POST'])
-# def save_first_name():
-    
-#     character["first_initial"] = request.json['data'] # Access the data sent from the frontend
-#     print("Received data:", character["first_initial"])
-
-#     print("Character:", character)
-
-#     return jsonify({'status': 'success', 'message': 'Data received successfully'})
-
-
-# @app.route('/save-last-name', methods=['POST'])
-# def save_last_name():
-    
-#     character["last_initial"] = request.json['data'] # Access the data sent from the frontend
-#     print("Received data:", character["last_initial"])
-
-#     print("Character:", character)
-
-#     return jsonify({'status': 'success', 'message': 'Data received successfully'})
+        return render_template("index.html", races=races, classes=classes, genders=genders, genres=genres)
 
 
 @app.route('/save-first-name', methods=['POST'])
@@ -346,6 +327,7 @@ def generate_image():
     if request.is_json:
         request_data = request.get_json()
 
+        genre = request_data.get('genreSelected')
         gender = request_data.get('genderSelected')
         gpt_name = request_data.get('gptName')
         alignment = request_data.get('alignment')
@@ -357,7 +339,7 @@ def generate_image():
             model = "dall-e-3",
             # prompt = f"I am playing a game with a {genre} theme. Please generate a portrait of a character called {gpt_name}. Their alignment is {alignment} and their race is {race} and their class is {class_}. The alignment and race should influence how the character looks, but should not be written as text on the image. There should be no text on the image.",
             #  
-            prompt = f"Please generate a colour portrait image of a single character from a tabletop RPG. They are a { race } { class_ } called { gpt_name }. Their gender is { gender }.  There should not be any text in the image at all. Please only generate the character and a background, no text. The portrait should be of the character's head and shoulders facing the camera. Make the character be standing in a suitable environment that they might be in during an adventure.",
+            prompt = f"Please generate a colour portrait image of a single character from a tabletop RPG. The genre of the game is { genre }. They are a { race } { class_ } called { gpt_name }. Their gender is { gender }.  There should not be any text in the image at all. Please only generate the character and a background, no text. The portrait should be of the character's head and shoulders facing the camera. Make the character be standing in a suitable environment that they might be in during an adventure.",
             size = "1024x1024",
             quality = "standard",
             n = 1,

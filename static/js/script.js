@@ -154,6 +154,7 @@ function sendSettings() {
     // Get GPT settings
     var gptNameChecked = document.getElementById('checkbox-gpt-name').checked;
     var genderSelected = document.getElementById('dropdown-gender').value;
+    var genreSelected = document.getElementById('dropdown-genre').value;
 
     // Send AJAX request to Flask backend
     fetch('/', {
@@ -172,6 +173,7 @@ function sendSettings() {
             checkedClasses: checkedClasses,
             
             gptNameChecked: gptNameChecked,
+            genreSelected: genreSelected,
             genderSelected: genderSelected
         })
     })
@@ -234,15 +236,15 @@ function alterCharacterSheet(){
     
     if (gptNameCheckbox.checked) {
         // Hide First Initial and Last Initial 
-        document.getElementById('p-first-initial').style.display = 'none';
-        document.getElementById('p-last-initial').style.display = 'none';
+        document.getElementById('first-name').style.display = 'none';
+        document.getElementById('last-name').style.display = 'none';
         // Show Full Name
         document.getElementById('p-gpt-name').style.display = 'block';
 
     } else {
         // Show First Initial and Last Initial
-        document.getElementById('p-first-initial').style.display = 'block';
-        document.getElementById('p-last-initial').style.display = 'block';
+        document.getElementById('first-name').style.display = 'block';
+        document.getElementById('last-name').style.display = 'block';
 
         // Hide Full Name
         document.getElementById('p-gpt-name').style.display = 'none';
@@ -252,79 +254,6 @@ function alterCharacterSheet(){
 
 // SENDING USER-INPUTTED NAMES TO BACKEND
 document.addEventListener("DOMContentLoaded", function(){
-
-    // var inputFirstName = document.getElementById("input-first-name");
-    // var inputLastName = document.getElementById("input-last-name");
-
-    // // If user clicks off of the text input field, or presses enter when it is hilighted...
-    // inputFirstName.addEventListener("blur", sendFirstName);
-    // inputFirstName.addEventListener("keypress", function(e) {
-    //     if (e.key === "Enter"){
-    //         e.preventDefault(); // Prevent default action to stop form submission
-    //         sendFirstName();
-    //     }
-    // })
-    // inputLastName.addEventListener("blur", sendLastName);
-    // inputLastName.addEventListener("keypress", function(e) {
-    //     if (e.key === "Enter"){
-    //         e.preventDefault(); // Prevent default action to stop form submission
-    //         sendLastName();
-    //     }
-    // })
-
-    // function sendFirstName() {
-
-    //     var userFirstName = inputFirstName.value;
-
-    //     // Create XHR request
-    //     var xhr = new XMLHttpRequest();
-    //     xhr.open("POST", "/save-first-name", true);
-    //     xhr.setRequestHeader("Content-Type", "application/json");
-
-    //     // Define what happens on successful data submission
-    //     xhr.onload = function () {
-    //         if (xhr.status >= 200 && xhr.status < 300) {
-    //             console.log("Data sent successfully");
-    //         } else {
-    //             console.log("Error sending data");
-    //         }
-    //     };
-
-    //     // Define what happens in case of an error
-    //     xhr.onerror = function () {
-    //         console.log("Error sending data");
-    //     };
-
-    //     // Set up our request
-    //     xhr.send(JSON.stringify({data: userFirstName}));
-    // }
-
-    // function sendLastName() {
-
-    //     var userLastName = inputLastName.value;
-
-    //     // Create XHR request
-    //     var xhr = new XMLHttpRequest();
-    //     xhr.open("POST", "/save-last-name", true);
-    //     xhr.setRequestHeader("Content-Type", "application/json");
-
-    //     // Define what happens on successful data submission
-    //     xhr.onload = function () {
-    //         if (xhr.status >= 200 && xhr.status < 300) {
-    //             console.log("Data sent successfully");
-    //         } else {
-    //             console.log("Error sending data");
-    //         }
-    //     };
-
-    //     // Define what happens in case of an error
-    //     xhr.onerror = function () {
-    //         console.log("Error sending data");
-    //     };
-
-    //     // Set up our request
-    //     xhr.send(JSON.stringify({data: userLastName}));
-    // }
 
     const inputFirstName = document.getElementById("input-first-name");
     const inputLastName = document.getElementById("input-last-name");
@@ -417,12 +346,14 @@ function generateImage() {
     buttonGeneratePortrait.textContent = "Generating Portrait...";
 
     // Get information needed for image generation
+    var genreSelected = document.getElementById('dropdown-genre').value;
     var genderSelected = document.getElementById('dropdown-gender').value;
     var gptName = document.getElementById('gpt-name').textContent;
     var alignment = document.getElementById('alignment').textContent;
     var race = document.getElementById('race').textContent;
     var class_ = document.getElementById('class').textContent;
 
+    console.log('genreSelected:', genreSelected);
     console.log('genderSelected:', genderSelected);
     console.log('gptName:', gptName);
     console.log('alignment:', alignment);
@@ -436,7 +367,7 @@ function generateImage() {
             'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-            // Maybe put gender, full name, alignment, and race here to send to backend
+            'genre': genreSelected,
             'gender': genderSelected,
             'gpt_name': gptName,
             'alignment': alignment,

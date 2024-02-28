@@ -125,10 +125,14 @@
                                 {% endfor %}
                             </select>
                         </div>
-                        <!-- <div class="col-auto">
-                            <label for="checkbox-gpt-image" class="checbox-label">Portrait Image</label>
-                            <input type="checkbox" id="checkbox-gpt-image" name="checkbox-gpt-image" unchecked>
-                        </div> -->
+                        <div class="col-auto">
+                            <label for="dropdown-genre">Select game genre:</label>
+                            <select id="dropdown-genre" name="dropdown-genre">
+                                {% for genre in genres %}
+                                    <option value="{{ genre }}">{{ genre }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
                     </div>
                 </div>
                 
@@ -152,7 +156,7 @@
                             <span class="font-weight-bold clickable-text" onclick="rerollAttribute('first-initial')">First Name:</span> 
                             <span id="first-initial"></span>
                         </p> -->
-                        <div>
+                        <div id="first-name">
                             <label for="input-first-name">
                                 <span class="font-weight-bold clickable-text" onclick="rerollAttribute('first-initial')">First Name:</span>
                             </label>
@@ -162,7 +166,7 @@
                             <span class="font-weight-bold clickable-text" onclick="rerollAttribute('last-initial')">Last Name:</span> 
                             <span id="last-initial"></span>
                         </p> -->
-                        <div>
+                        <div id="last-name">
                             <label for="input-last-name">
                                 <span class="font-weight-bold clickable-text" onclick="rerollAttribute('last-initial')">Last Name:</span>
                             </label>
