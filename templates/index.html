@@ -5,6 +5,10 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="static/styles.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lilita+One&display=swap" rel="stylesheet">
     <!-- Bootstrap JS, Popper.js, and jQuery -->
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
@@ -12,8 +16,79 @@
 </head>    
 <body>
     <div class="container my-4">
-        <h1 class="display-4 text-center mb-4 font-weight-bold">NPC Gachapon</h1>
-
+        <!-- <h1 class="display-4 text-center mb-4 font-weight-bold">NPC Gachapon</h1> -->
+        <h1 class="display-4 text-center mb-4 font-weight-bold lilita-one-regular">NPC GACHAPON</h1>
+        <!-- CHARACTER SHEET -->
+        <div id="character-sheet">
+            <h5>Character Sheet</h5>
+            <div class="row">
+                <!-- Character Portrait -->
+                <div class="card col-3 mt-3 mb-3">
+                    <div class="card-body">
+                        <img id="gpt-image" src="static/img/placeholder.jpg" alt="Character Portrait">
+                    </div>
+                    <button type="submit"
+                            id="button-generate-image"    
+                            name="generate-image"
+                            value="generate-image" 
+                            class="btn btn-primary btn-sm my-3 mx-3">
+                            Generate Portrait
+                    </button>
+                </div>
+                <!-- Character Attributes -->
+                <div class="card col-9 mt-3 mb-3">
+                    <div class="card-body">
+                        <!-- <p id="p-first-initial" style="display: block;">
+                            <span class="font-weight-bold clickable-text" onclick="rerollAttribute('first-initial')">First Name:</span> 
+                            <span id="first-initial"></span>
+                        </p> -->
+                        <div id="first-name">
+                            <label for="input-first-name">
+                                <span class="font-weight-bold clickable-text" onclick="rerollAttribute('first-initial')">First Name:</span>
+                            </label>
+                            <input type="text" id="input-first-name" placeholder="?">
+                        </div>
+                        <!-- <p id="p-last-initial" style="display: block;">
+                            <span class="font-weight-bold clickable-text" onclick="rerollAttribute('last-initial')">Last Name:</span> 
+                            <span id="last-initial"></span>
+                        </p> -->
+                        <div id="last-name">
+                            <label for="input-last-name">
+                                <span class="font-weight-bold clickable-text" onclick="rerollAttribute('last-initial')">Last Name:</span>
+                            </label>
+                            <input type="text" id="input-last-name" placeholder="?">
+                        </div>
+                        <p id="p-gpt-name" style="display: none;">
+                            <span class="font-weight-bold clickable-text">Full Name:</span> 
+                            <span id="gpt-name"></span>
+                        </p>
+                        <p>
+                            <span class="font-weight-bold clickable-text" onclick="rerollAttribute('alignment')">Alignment:</span> 
+                            <span id="alignment"></span>
+                        </p>
+                        <p>
+                            <span class="font-weight-bold clickable-text" onclick="rerollAttribute('race')">Race:</span> 
+                            <span id="race"></span>
+                        </p>
+                        <p>
+                            <span class="font-weight-bold clickable-text" onclick="rerollAttribute('class')">Class:</span> 
+                            <span id="class"></span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- GENERATE CHARACTER BUTTON -->
+        <div id="generate-button" class="text-center">
+            <button type="submit"
+                    name="generate-attributes"
+                    id="button-generate-character" 
+                    value="generate-character" 
+                    class="button-main">
+                    <!-- btn btn-primary btn-sm my-3 mx-3 -->
+                    GENERATE CHARACTER
+            </button>
+        </div>
          <!-- GACHAPON SETTINGS -->
          <div id="gachapon-settings">
             <h5>Gachapon Machine Settings</h5>
@@ -35,23 +110,29 @@
                     </div>
                     <div class="row">
                         <div class="col-auto">
-                            <label for="checkbox-first-initial" class="checbox-label">First Initial</label>
-                            <input type="checkbox" id="checkbox-first-initial" name="checkbox-first-initial" checked>
+                            <label class="custom-checkbox">
+                                Custom Checkbox
+                                <input type="checkbox" id="customCheckbox" hidden />
+                                <span class="checkmark"></span>
+                            </label>
+                              
+                            <label for="checkbox-first-initial" class="checkbox-label">First Initial</label>
+                            <input type="checkbox" class="checkbox" id="checkbox-first-initial" name="checkbox-first-initial" checked>
                         </div>
                         <div class="col-auto">
-                            <label for="checkbox-last-initial" class="checbox-label">Last Initial</label>
+                            <label for="checkbox-last-initial" class="checkbox-label">Last Initial</label>
                             <input type="checkbox" id="checkbox-last-initial" name="checkbox-last-initial" checked>
                         </div>
                         <div class="col-auto">
-                            <label for="checkbox-alignment" class="checbox-label">Alignment</label>
+                            <label for="checkbox-alignment" class="checkbox-label">Alignment</label>
                             <input type="checkbox" id="checkbox-alignment" name="checkbox-alignment" checked>
                         </div>
                         <div class="col-auto">
-                            <label for="checkbox-race" class="checbox-label">Race</label>
+                            <label for="checkbox-race" class="checkbox-label">Race</label>
                             <input type="checkbox" id="checkbox-race" name="checkbox-race" checked>
                         </div>
                         <div class="col-auto">
-                            <label for="checkbox-class" class="checbox-label">Class</label>
+                            <label for="checkbox-class" class="checkbox-label">Class</label>
                             <input type="checkbox" id="checkbox-class" name="checkbox-class" checked>
                         </div>
                     </div>
@@ -134,73 +215,6 @@
                             </select>
                         </div>
                     </div>
-                </div>
-                
-                <!-- Generate Character Button -->
-                <button type="submit"
-                        name="generate-attributes"
-                        id="button-generate-character" 
-                        value="generate-character" 
-                        class="btn btn-primary btn-sm my-3 mx-3">
-                        Generate Character
-                </button>
-            </div>
-         </div>
-         <!-- CHARACTER SHEET -->
-         <div id="character-sheet">
-            <h5>Character Sheet</h5>
-            <div class="row">
-                <div class="card col-6 mt-3 mb-3">
-                    <div class="card-body">
-                        <!-- <p id="p-first-initial" style="display: block;">
-                            <span class="font-weight-bold clickable-text" onclick="rerollAttribute('first-initial')">First Name:</span> 
-                            <span id="first-initial"></span>
-                        </p> -->
-                        <div id="first-name">
-                            <label for="input-first-name">
-                                <span class="font-weight-bold clickable-text" onclick="rerollAttribute('first-initial')">First Name:</span>
-                            </label>
-                            <input type="text" id="input-first-name" placeholder="?">
-                        </div>
-                        <!-- <p id="p-last-initial" style="display: block;">
-                            <span class="font-weight-bold clickable-text" onclick="rerollAttribute('last-initial')">Last Name:</span> 
-                            <span id="last-initial"></span>
-                        </p> -->
-                        <div id="last-name">
-                            <label for="input-last-name">
-                                <span class="font-weight-bold clickable-text" onclick="rerollAttribute('last-initial')">Last Name:</span>
-                            </label>
-                            <input type="text" id="input-last-name" placeholder="?">
-                        </div>
-                        <p id="p-gpt-name" style="display: none;">
-                            <span class="font-weight-bold clickable-text">Full Name:</span> 
-                            <span id="gpt-name"></span>
-                        </p>
-                        <p>
-                            <span class="font-weight-bold clickable-text" onclick="rerollAttribute('alignment')">Alignment:</span> 
-                            <span id="alignment"></span>
-                        </p>
-                        <p>
-                            <span class="font-weight-bold clickable-text" onclick="rerollAttribute('race')">Race:</span> 
-                            <span id="race"></span>
-                        </p>
-                        <p>
-                            <span class="font-weight-bold clickable-text" onclick="rerollAttribute('class')">Class:</span> 
-                            <span id="class"></span>
-                        </p>
-                    </div>
-                </div>
-                <div class="card col-6 mt-3 mb-3">
-                    <div class="card-body">
-                        <img id="gpt-image" src="static/img/placeholder.jpg" alt="Character Portrait">
-                    </div>
-                    <button type="submit"
-                        id="button-generate-image"    
-                        name="generate-image"
-                        value="generate-image" 
-                        class="btn btn-primary btn-sm my-3 mx-3">
-                        Generate Portrait
-                </button>
                 </div>
             </div>
          </div>
