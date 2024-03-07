@@ -3,15 +3,33 @@
     color: white;
     padding: 10px 50px;
     border-radius: 30px;
-    border: none;
+    border: #E35B5B;
     font-family: "Lilita One", sans-serif;
     font-size: xx-large;
 }
 
 .button-main:hover {
     color: white;
-    box-shadow: 8px 8px 0px #ECC142;
+    box-shadow: 3px 7px 0px #ECC142;
 
+}
+
+.btn-primary-custom {
+  background-color: #E35B5B;
+  border-color: #E35B5B; 
+}
+
+.btn-outline-primary-custom {
+  border-color: #E35B5B; 
+  color: #E35B5B;
+}
+
+.btn-outline-primary-custom:hover,
+.btn-outline-primary-custom:focus,
+.btn-outline-primary-custom:active {
+  background-color: #E35B5B !important;
+  border-color: #E35B5B !important; 
+  color: white !important;
 }
 
 /* Hide the default checkbox */

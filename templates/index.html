@@ -31,7 +31,7 @@
                             id="button-generate-image"    
                             name="generate-image"
                             value="generate-image" 
-                            class="btn btn-primary btn-sm my-3 mx-3">
+                            class="btn btn-primary btn-primary-custom btn-sm my-3 mx-3">
                             Generate Portrait
                     </button>
                 </div>
@@ -100,7 +100,7 @@
                         <div class="col-4 text-right">
                             <button name="button-reset-attributes" 
                                     id="button-reset-attributes" 
-                                    class="btn btn-primary btn-sm">
+                                    class="btn btn-outline-primary btn-outline-primary-custom btn-sm">
                                     Deselect All
                             </button>
                         </div>
@@ -110,30 +110,35 @@
                     </div>
                     <div class="row">
                         <div class="col-auto">
-                            <label class="custom-checkbox">
-                                Custom Checkbox
-                                <input type="checkbox" id="customCheckbox" hidden />
+                            <label for="checkbox-first-initial" class="custom-checkbox">
+                                First Initial
+                                <input type="checkbox" id="checkbox-first-initial" name="checkbox-first-initial" checked hidden>
                                 <span class="checkmark"></span>
                             </label>
-                              
-                            <label for="checkbox-first-initial" class="checkbox-label">First Initial</label>
-                            <input type="checkbox" class="checkbox" id="checkbox-first-initial" name="checkbox-first-initial" checked>
-                        </div>
-                        <div class="col-auto">
-                            <label for="checkbox-last-initial" class="checkbox-label">Last Initial</label>
-                            <input type="checkbox" id="checkbox-last-initial" name="checkbox-last-initial" checked>
-                        </div>
-                        <div class="col-auto">
-                            <label for="checkbox-alignment" class="checkbox-label">Alignment</label>
-                            <input type="checkbox" id="checkbox-alignment" name="checkbox-alignment" checked>
-                        </div>
-                        <div class="col-auto">
-                            <label for="checkbox-race" class="checkbox-label">Race</label>
-                            <input type="checkbox" id="checkbox-race" name="checkbox-race" checked>
-                        </div>
-                        <div class="col-auto">
-                            <label for="checkbox-class" class="checkbox-label">Class</label>
-                            <input type="checkbox" id="checkbox-class" name="checkbox-class" checked>
+
+                            <label for="checkbox-last-initial" class="custom-checkbox">
+                                Last Initial
+                                <input type="checkbox" id="checkbox-last-initial" name="checkbox-last-initial" checked hidden>
+                                <span class="checkmark"></span>
+                            </label>
+
+                            <label for="checkbox-alignment" class="custom-checkbox">
+                                Alignment
+                                <input type="checkbox" id="checkbox-alignment" name="checkbox-alignment" checked hidden>
+                                <span class="checkmark"></span>
+                            </label>
+
+                            <label for="checkbox-race" class="custom-checkbox">
+                                Race
+                                <input type="checkbox" id="checkbox-race" name="checkbox-race" checked hidden>
+                                <span class="checkmark"></span>
+                            </label>
+
+                            <label for="checkbox-class" class="custom-checkbox">
+                                Class
+                                <input type="checkbox" id="checkbox-class" name="checkbox-class" checked hidden>
+                                <span class="checkmark"></span>
+                            </label>
                         </div>
                     </div>
                 </div>
@@ -144,7 +149,7 @@
                         <div class="col-4 text-right">
                             <button name="button-reset-races" 
                                     id="button-reset-races" 
-                                    class="btn btn-primary btn-sm">
+                                    class="btn btn-outline-primary btn-outline-primary-custom btn-sm">
                                     Deselect All
                             </button>
                         </div>
@@ -153,12 +158,15 @@
                         <p class="col-auto settings-desc">Roll from the selected races:</p>
                     </div>
                     <div class="row">
-                        {% for race in races %}
-                            <div class="col-auto">
-                                <label for="checkbox-race-{{ race }}" class="checkbox-label">{{ race }}</label>
-                                <input type="checkbox" id="checkbox-race-{{ race }}" name="checkbox-race-{{ race }}" checked>
-                            </div>
-                        {% endfor %}
+                        <div class="col-auto">
+                            {% for race in races %}
+                                <label for="checkbox-race-{{ race }}" class="custom-checkbox">
+                                    {{ race }}
+                                    <input type="checkbox" id="checkbox-race-{{ race }}" name="checkbox-race-{{ race }}" checked hidden>
+                                    <span class="checkmark"></span>
+                                </label>
+                            {% endfor %}
+                        </div>
                     </div>
                 </div>
                 <!-- Class Settings -->
@@ -168,7 +176,7 @@
                         <div class="col-4 text-right">
                             <button name="button-reset-classes" 
                                     id="button-reset-classes" 
-                                    class="btn btn-primary btn-sm">
+                                    class="btn btn-outline-primary btn-outline-primary-custom btn-sm">
                                     Deselect All
                             </button>
                         </div>
@@ -177,12 +185,15 @@
                         <p class="col-auto settings-desc">Roll from the selected classes:</p>
                     </div>
                     <div class="row">
-                        {% for class_ in classes %}
-                            <div class="col-auto">
-                                <label for="checkbox-class-{{ class_ }}" class="checkbox-label">{{ class_ }}</label>
-                                <input type="checkbox" id="checkbox-class-{{ class_ }}" name="checkbox-class-{{ class_ }}" checked>
-                            </div>
-                        {% endfor %}
+                        <div class="col-auto">
+                            {% for class_ in classes %}
+                                <label for="checkbox-class-{{ class_ }}" class="custom-checkbox">
+                                    {{ class_ }}
+                                    <input type="checkbox" id="checkbox-class-{{ class_ }}" name="checkbox-class-{{ class_ }}" checked hidden>
+                                    <span class="checkmark"></span>
+                                </label>
+                            {% endfor %}
+                        </div>
                     </div>
                 </div>
                 <!-- GPT Settings -->
@@ -195,18 +206,19 @@
                     </div>
                     <div class="row">
                         <div class="col-auto">
-                            <label for="checkbox-gpt-name" class="checkbox-label">Full Name</label>
-                            <input type="checkbox" id="checkbox-gpt-name" name="checkbox-gpt-name" unchecked>
-                        </div>
-                        <div class="col-auto">
+                            <label for="checkbox-gpt-name" class="custom-checkbox">
+                                Full Name
+                                <input type="checkbox" id="checkbox-gpt-name" name="checkbox-gpt-name" unchecked hidden>
+                                <span class="checkmark"></span>
+                            </label>
+                        
                             <label for="dropdown-gender">Select character gender:</label>
                             <select id="dropdown-gender" name="dropdown-gender">
                                 {% for gender in genders %}
                                     <option value="{{ gender }}">{{ gender }}</option>
                                 {% endfor %}
                             </select>
-                        </div>
-                        <div class="col-auto">
+                
                             <label for="dropdown-genre">Select game genre:</label>
                             <select id="dropdown-genre" name="dropdown-genre">
                                 {% for genre in genres %}

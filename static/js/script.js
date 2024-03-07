@@ -120,12 +120,17 @@ function sendSettings() {
     // Get checkbox states: Races
     var checkedRaces = [];
     document.querySelectorAll('input[name^="checkbox-race-"]:checked').forEach(function(checkbox) {
-        // Find the associated label which is immediately before the checkbox
-        var label = checkbox.previousElementSibling;
+        // Find the associated label
+        var label = checkbox.closest('label');
         // Ensure that the found element is indeed a label e.g. 'Dwarf'
-        if (label && label.tagName === 'LABEL') {
-            // Add the label e.g. 'Dwarf' to the list of checked classes
-            checkedRaces.push(label.textContent || label.innerText);
+        if (label) {
+            // The text content includes the race name, but might also include whitespace or other characters due to the checkmark span, so trim it
+            var raceText = label.textContent.trim() || label.innerText.trim();
+            // Exclude the checkmark span text if present
+            // This might need adjustment based on the actual text content and structure within the label
+            var raceName = raceText.replace("checkmark", "").trim();
+            // Add the cleaned-up race name to the list of checked races
+            checkedRaces.push(raceName);
         }
     });
     console.log("Checked races:", checkedRaces);
@@ -137,12 +142,17 @@ function sendSettings() {
     // Get checkbox states: Classes
     var checkedClasses = [];
     document.querySelectorAll('input[name^="checkbox-class-"]:checked').forEach(function(checkbox) {
-        // Find the associated label which is immediately before the checkbox
-        var label = checkbox.previousElementSibling;
+        // Find the associated label
+        var label = checkbox.closest('label');
         // Ensure that the found element is indeed a label e.g. 'Barbarian'
-        if (label && label.tagName === 'LABEL') {
-            // Add the label e.g. 'Barbarian' to the list of checked classes
-            checkedClasses.push(label.textContent || label.innerText);
+        if (label) {
+            // The text content includes the race name, but might also include whitespace or other characters due to the checkmark span, so trim it
+            var classText = label.textContent.trim() || label.innerText.trim();
+            // Exclude the checkmark span text if present
+            // This might need adjustment based on the actual text content and structure within the label
+            var className = classText.replace("checkmark", "").trim();
+            // Add the cleaned-up race name to the list of checked classes
+            checkedClasses.push(className);
         }
     });
     console.log("Checked classes:", checkedClasses);
@@ -155,6 +165,12 @@ function sendSettings() {
     var gptNameChecked = document.getElementById('checkbox-gpt-name').checked;
     var genderSelected = document.getElementById('dropdown-gender').value;
     var genreSelected = document.getElementById('dropdown-genre').value;
+
+    if (gptNameChecked) {
+        buttonGenerateCharacter.disabled = true;
+        buttonGenerateCharacter.style.backgroundColor = 'grey';
+        buttonGenerateCharacter.textContent = "Generating Character...";
+    }
 
     // Send AJAX request to Flask backend
     fetch('/', {
@@ -188,9 +204,17 @@ function sendSettings() {
         document.getElementById('race').textContent = data.race;
         document.getElementById('class').textContent = data.class;
         document.getElementById('gpt-name').textContent = data.gpt_name;
+
+        buttonGenerateCharacter.disabled = false;
+        buttonGenerateCharacter.style.backgroundColor = '';
+        buttonGenerateCharacter.textContent = "GENERATE CHARACTER";
     })
     .catch(error => {
         console.error('Error:', error);
+
+        buttonGenerateCharacter.disabled = false;
+        buttonGenerateCharacter.style.backgroundColor = '';
+        buttonGenerateCharacter.textContent = "GENERATE CHARACTER";
     });
 }
 
