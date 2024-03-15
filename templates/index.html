@@ -38,65 +38,66 @@
                 <!-- Character Attributes -->
                 <div class="card col-9 mt-3 mb-3">
                     <div class="card-body">
-                        <!-- <p id="p-first-initial" style="display: block;">
-                            <span class="font-weight-bold clickable-text" onclick="rerollAttribute('first-initial')">First Name:</span> 
-                            <span id="first-initial"></span>
-                        </p> -->
-                        <div id="first-name">
-                            <label for="input-first-name">
-                                <span class="font-weight-bold clickable-text" onclick="rerollAttribute('first-initial')">First Name:</span>
-                            </label>
-                            <input type="text" id="input-first-name" placeholder="?">
+                        <!-- Names -->
+                        <div class="row">
+                            <div class="col-6">
+                                <label for="input-first-name">
+                                    <span class="font-weight-bold clickable-text" id="label-first-name" onclick="rerollAttribute('first-initial')">First Name:</span>
+                                </label>
+                            </div>
+                            <div class="col-6">
+                                <label for="input-last-name">
+                                    <span class="font-weight-bold clickable-text" id="label-last-name" onclick="rerollAttribute('last-initial')">Last Name:</span>
+                                </label>
+                            </div>
+                            <div id="gpt-name" style="display: none;">
+                                <label for="input-gpt-name">
+                                    <span class="font-weight-bold clickable-text">Full Name:</span>
+                                </label>
+                                <input type="text" id="input-gpt-name" placeholder="?">
+                            </div>
                         </div>
-                        <!-- <p id="p-last-initial" style="display: block;">
-                            <span class="font-weight-bold clickable-text" onclick="rerollAttribute('last-initial')">Last Name:</span> 
-                            <span id="last-initial"></span>
-                        </p> -->
-                        <div id="last-name">
-                            <label for="input-last-name">
-                                <span class="font-weight-bold clickable-text" onclick="rerollAttribute('last-initial')">Last Name:</span>
-                            </label>
-                            <input type="text" id="input-last-name" placeholder="?">
+                        <div class="row">
+                            <div class="col-6">
+                                <input type="text" id="input-first-name" placeholder="?">
+                            </div>
+                            <div class="col-6">
+                                <input type="text" id="input-last-name" placeholder="?">
+                            </div>
                         </div>
-                        <!-- <p id="div-gpt-name" style="display: none;">
-                            <span class="font-weight-bold clickable-text">Full Name:</span> 
-                            <span id="gpt-name"></span>
-                        </p> -->
-                        <div id="gpt-name" style="display: none;">
-                            <label for="input-gpt-name">
-                                <span class="font-weight-bold clickable-text">Full Name:</span>
-                            </label>
-                            <input type="text" id="input-gpt-name" placeholder="?">
+                        <!-- Race & Class -->
+                        <div class="row">
+                            <div class="col-6">
+                                <label for="input-race">
+                                    <span class="font-weight-bold clickable-text" id="race" onclick="rerollAttribute('race')">Race:</span>
+                                </label>
+                            </div>
+                            <div class="col-6">
+                                <label for="input-class">
+                                    <span class="font-weight-bold clickable-text" id="class" onclick="rerollAttribute('class')">Class:</span>
+                                </label>
+                            </div>
                         </div>
-                        <!-- <p>
-                            <span class="font-weight-bold clickable-text" onclick="rerollAttribute('alignment')">Alignment:</span> 
-                            <span id="alignment"></span>
-                        </p> -->
-                        <div id="alignment">
-                            <label for="input-alignment">
-                                <span class="font-weight-bold clickable-text" onclick="rerollAttribute('alignment')">Alignment:</span>
-                            </label>
-                            <input type="text" id="input-alignment" placeholder="?">
+                        <div class="row">
+                            <div class="col-6">
+                                <input type="text" id="input-race" placeholder="?">
+                            </div>
+                            <div class="col-6">
+                                <input type="text" id="input-class" placeholder="?">
+                            </div>
                         </div>
-                        <!-- <p>
-                            <span class="font-weight-bold clickable-text" onclick="rerollAttribute('race')">Race:</span> 
-                            <span id="race"></span>
-                        </p> -->
-                        <div id="race">
-                            <label for="input-race">
-                                <span class="font-weight-bold clickable-text" onclick="rerollAttribute('race')">Race:</span>
-                            </label>
-                            <input type="text" id="input-race" placeholder="?">
+                        <!-- Alignment -->
+                        <div class="row">
+                            <div class="col-12">
+                                <label for="input-alignment">
+                                    <span class="font-weight-bold clickable-text" id="alignment" onclick="rerollAttribute('alignment')">Alignment:</span>
+                                </label>
+                            </div>
                         </div>
-                        <!-- <p>
-                            <span class="font-weight-bold clickable-text" onclick="rerollAttribute('class')">Class:</span> 
-                            <span id="class"></span>
-                        </p> -->
-                        <div id="class">
-                            <label for="input-class">
-                                <span class="font-weight-bold clickable-text" onclick="rerollAttribute('class')">Class:</span>
-                            </label>
-                            <input type="text" id="input-class" placeholder="?">
+                        <div class="row">
+                            <div class="col-12">
+                                <input type="text" id="input-alignment" placeholder="?">
+                            </div>
                         </div>
                     </div>
                 </div>

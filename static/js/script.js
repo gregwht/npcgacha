@@ -256,15 +256,15 @@ function alterCharacterSheet(){
     
     if (gptNameCheckbox.checked) {
         // Hide First Initial and Last Initial 
-        document.getElementById('first-name').style.display = 'none';
-        document.getElementById('last-name').style.display = 'none';
+        document.getElementById('label-first-name').style.display = 'none';
+        document.getElementById('label-last-name').style.display = 'none';
         // Show Full Name
         document.getElementById('gpt-name').style.display = 'block';
 
     } else {
         // Show First Initial and Last Initial
-        document.getElementById('first-name').style.display = 'block';
-        document.getElementById('last-name').style.display = 'block';
+        document.getElementById('label-first-name').style.display = 'block';
+        document.getElementById('label-last-name').style.display = 'block';
 
         // Hide Full Name
         document.getElementById('gpt-name').style.display = 'none';
