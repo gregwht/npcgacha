@@ -292,7 +292,6 @@ def index():
                 print("Genre:", genre)
                 gender = request_data.get('genderSelected') 
                 print("Gender:", gender)
-                # character['gpt_name'] = generate_gpt_name(genre, character['first_name'], character['last_name'], gender)
                 generate_gpt_name(genre, character['first_name'], character['last_name'], gender)
 
             # Return updated character attributes as JSON response

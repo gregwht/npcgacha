@@ -19,101 +19,103 @@
         <!-- <h1 class="display-4 text-center mb-4 font-weight-bold">NPC Gachapon</h1> -->
         <h1 class="display-4 text-center mb-4 font-weight-bold lilita-one-regular">NPC GACHAPON</h1>
         <!-- CHARACTER SHEET -->
-        <div id="character-sheet">
-            <h5>Character Sheet</h5>
-            <div class="row">
-                <!-- Character Portrait -->
-                <div class="card col-3 mt-3 mb-3">
-                    <div class="card-body">
-                        <img id="gpt-image" src="static/img/placeholder.jpg" alt="Character Portrait">
-                    </div>
-                    <button type="submit"
-                            id="button-generate-image"    
-                            name="generate-image"
-                            value="generate-image" 
-                            class="btn btn-primary btn-primary-custom btn-sm my-3 mx-3">
-                            Generate Portrait
-                    </button>
-                </div>
+        <div id="character-sheet" class="card mb-5">
+            <!-- <h5>Character Sheet</h5> -->
+            <div class="card-body">
                 <!-- Character Attributes -->
-                <div class="card col-9 mt-3 mb-3">
-                    <div class="card-body">
+                <div class="row">
+                    <div class="col-7 mt-3">
                         <!-- Names -->
                         <div class="row">
                             <div class="col-6">
-                                <label for="input-first-name">
-                                    <span class="font-weight-bold clickable-text" id="label-first-name" onclick="rerollAttribute('first-initial')">First Name:</span>
+                                <label for="input-first-name" class="font-weight-bold clickable-text w-100" onclick="rerollAttribute('first-initial')">
+                                    First Name:
                                 </label>
                             </div>
                             <div class="col-6">
-                                <label for="input-last-name">
-                                    <span class="font-weight-bold clickable-text" id="label-last-name" onclick="rerollAttribute('last-initial')">Last Name:</span>
+                                <label for="input-last-name" class="font-weight-bold clickable-text w-100"  onclick="rerollAttribute('last-initial')">
+                                    Last Name:
                                 </label>
-                            </div>
-                            <div id="gpt-name" style="display: none;">
-                                <label for="input-gpt-name">
-                                    <span class="font-weight-bold clickable-text">Full Name:</span>
-                                </label>
-                                <input type="text" id="input-gpt-name" placeholder="?">
                             </div>
                         </div>
-                        <div class="row">
+                        <div class="row mb-3">
                             <div class="col-6">
-                                <input type="text" id="input-first-name" placeholder="?">
+                                <input type="text" id="input-first-name" class="form-control form-control-lg" placeholder="?">
                             </div>
                             <div class="col-6">
-                                <input type="text" id="input-last-name" placeholder="?">
+                                <input type="text" id="input-last-name" class="form-control form-control-lg" placeholder="?">
                             </div>
                         </div>
                         <!-- Race & Class -->
                         <div class="row">
                             <div class="col-6">
-                                <label for="input-race">
-                                    <span class="font-weight-bold clickable-text" id="race" onclick="rerollAttribute('race')">Race:</span>
+                                <label for="input-race" class="font-weight-bold clickable-text w-100" onclick="rerollAttribute('race')">
+                                    Race:
                                 </label>
                             </div>
                             <div class="col-6">
-                                <label for="input-class">
-                                    <span class="font-weight-bold clickable-text" id="class" onclick="rerollAttribute('class')">Class:</span>
+                                <label for="input-class" class="font-weight-bold clickable-text w-100" onclick="rerollAttribute('class')">
+                                    Class:
                                 </label>
                             </div>
                         </div>
-                        <div class="row">
+                        <div class="row mb-3">
                             <div class="col-6">
-                                <input type="text" id="input-race" placeholder="?">
+                                <input type="text" id="input-race" class="form-control form-control-lg" placeholder="?">
                             </div>
                             <div class="col-6">
-                                <input type="text" id="input-class" placeholder="?">
+                                <input type="text" id="input-class" class="form-control form-control-lg" placeholder="?">
                             </div>
                         </div>
                         <!-- Alignment -->
                         <div class="row">
                             <div class="col-12">
-                                <label for="input-alignment">
-                                    <span class="font-weight-bold clickable-text" id="alignment" onclick="rerollAttribute('alignment')">Alignment:</span>
+                                <label for="input-alignment" class="font-weight-bold clickable-text w-100" onclick="rerollAttribute('alignment')">
+                                    Alignment:
                                 </label>
                             </div>
                         </div>
-                        <div class="row">
+                        <div class="row mb-4">
                             <div class="col-12">
-                                <input type="text" id="input-alignment" placeholder="?">
+                                <input type="text" id="input-alignment" class="form-control form-control-lg" placeholder="?">
                             </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12 mt-3 ">
+                                <!-- GENERATE CHARACTER BUTTON -->
+                                <div id="generate-button">
+                                <!-- <div id="generate-button" class="text-center mt-3 mb-5"> -->
+                                    <button type="submit"
+                                        name="generate-attributes"
+                                        id="button-generate-character" 
+                                        value="generate-character" 
+                                        class="btn-main w-100">
+                                        <!-- btn btn-primary btn-sm my-3 mx-3 -->
+                                        Generate Character
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Character Portrait -->
+                    <div class="col-5 mt-3">
+                        <div class="card-body">
+                            <img id="img-capsule" src="static/img/capsule-yellow.png" alt="Illustration of a gachapon capsule">
+                            <img id="img-gpt" src="static/img/placeholder.jpg" alt="Character Portrait" style="display:none;">
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <!-- GENERATE CHARACTER BUTTON -->
-        <div id="generate-button" class="text-center">
-            <button type="submit"
-                    name="generate-attributes"
-                    id="button-generate-character" 
-                    value="generate-character" 
-                    class="button-main">
-                    <!-- btn btn-primary btn-sm my-3 mx-3 -->
-                    GENERATE CHARACTER
+        <!-- <div class="col-5 mb-3">
+            <button type="submit"    
+                    name="generate-image"
+                    id="button-generate-image"
+                    value="generate-image" 
+                    class="btn-main w-100">
+                    Generate Portrait
             </button>
-        </div>
+        </div> -->
          <!-- GACHAPON SETTINGS -->
          <div id="gachapon-settings">
             <h5>Gachapon Machine Settings</h5>

@@ -201,18 +201,18 @@ function sendSettings() {
         document.getElementById('input-alignment').value = data.alignment;
         document.getElementById('input-race').value = data.race;
         document.getElementById('input-class').value = data.class;
-        document.getElementById('input-gpt-name').value = data.gpt_name;
+        // document.getElementById('input-gpt-name').value = data.gpt_name;
 
         buttonGenerateCharacter.disabled = false;
         buttonGenerateCharacter.style.backgroundColor = '';
-        buttonGenerateCharacter.textContent = "GENERATE CHARACTER";
+        buttonGenerateCharacter.textContent = "Generate Character";
     })
     .catch(error => {
         console.error('Error:', error);
 
         buttonGenerateCharacter.disabled = false;
         buttonGenerateCharacter.style.backgroundColor = '';
-        buttonGenerateCharacter.textContent = "GENERATE CHARACTER";
+        buttonGenerateCharacter.textContent = "Generate Character";
     });
 }
 
@@ -277,11 +277,11 @@ document.addEventListener("DOMContentLoaded", function(){
 
     const inputFirstName = document.getElementById("input-first-name");
     const inputLastName = document.getElementById("input-last-name");
-    const inputGptName = document.getElementById("input-gpt-name");
+    // const inputGptName = document.getElementById("input-gpt-name");
     const inputAlignment = document.getElementById("input-alignment");
     let originalFirstName = inputFirstName.value;
     let originalLastName = inputLastName.value;
-    let originalGptName = inputGptName.value;
+    // let originalGptName = inputGptName.value;
     let originalAlignment = inputAlignment.value;
 
     // When the input field gains focus, store the current value 
@@ -291,9 +291,9 @@ document.addEventListener("DOMContentLoaded", function(){
     inputLastName.addEventListener('focus', function(){ 
         originalLastName = inputLastName.value;
     })
-    inputGptName.addEventListener('focus', function(){
-        originalGptName = inputGptName.value;
-    })
+    // inputGptName.addEventListener('focus', function(){
+    //     originalGptName = inputGptName.value;
+    //})
     inputAlignment.addEventListener('focus', function(){
         originalAlignment = inputAlignment.value;
     })
@@ -311,12 +311,12 @@ document.addEventListener("DOMContentLoaded", function(){
             sendLastName(inputLastName.value);
         }
     })
-    inputGptName.addEventListener('blur', function(){
-        // If the value has changed, send the data
-        if (inputGptName.value !== originalGptName) {
-            sendGptName(inputGptName.value);
-        }
-    })
+    // inputGptName.addEventListener('blur', function(){
+    //     // If the value has changed, send the data
+    //     if (inputGptName.value !== originalGptName) {
+    //         sendGptName(inputGptName.value);
+    //     }
+    // })
     inputAlignment.addEventListener('blur', function(){
         // If the value has changed, send the data
         if (inputAlignment.value !== originalAlignment) {
@@ -337,12 +337,12 @@ document.addEventListener("DOMContentLoaded", function(){
             sendLastName(inputLastName.value);
         }
     })
-    inputGptName.addEventListener('keypress', function(event) {
-        if (event.key === 'Enter' && inputGptName.value !== originalGptName) {
-            event.preventDefault(); // Prevent the default action to avoid form submission or other unwanted behaviour
-            sendGptName(inputGptName.value);
-        }
-    })
+    // inputGptName.addEventListener('keypress', function(event) {
+    //     if (event.key === 'Enter' && inputGptName.value !== originalGptName) {
+    //         event.preventDefault(); // Prevent the default action to avoid form submission or other unwanted behaviour
+    //         sendGptName(inputGptName.value);
+    //     }
+    // })
     inputAlignment.addEventListener('keypress', function(event) {
         if (event.key === 'Enter' && inputAlignment.value !== originalAlignment) {
             event.preventDefault(); // Prevent the default action to avoid form submission or other unwanted behaviour
@@ -388,23 +388,23 @@ document.addEventListener("DOMContentLoaded", function(){
         })
     }
 
-    function sendGptName(name) {
+    // function sendGptName(name) {
 
-        console.log("Sending data:", name); // Placeholder for AJAX call
+    //     console.log("Sending data:", name); // Placeholder for AJAX call
 
-        fetch('/save-attribute/gpt-name', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ inputGptName: name }),
-        })
-        .then(response => response.json())
-        .then(data => console.log(data))
-        .catch((error) => {
-            console.error('Error:', error);
-        })
-    }
+    //     fetch('/save-attribute/gpt-name', {
+    //         method: 'POST',
+    //         headers: {
+    //             'Content-Type': 'application/json',
+    //         },
+    //         body: JSON.stringify({ inputGptName: name }),
+    //     })
+    //     .then(response => response.json())
+    //     .then(data => console.log(data))
+    //     .catch((error) => {
+    //         console.error('Error:', error);
+    //     })
+    // }
 
     function sendAlignment(alignment) {
 
@@ -427,14 +427,15 @@ document.addEventListener("DOMContentLoaded", function(){
 
 
 // GENERATE PORTRAIT IMAGE
-var buttonGeneratePortrait = document.getElementById('button-generate-image')
-buttonGeneratePortrait.addEventListener('click', generateImage);
+document.getElementById('img-capsule').addEventListener('click', generateImage);
+document.getElementById('img-gpt').addEventListener('click', generateImage);
 
 function generateImage() {
 
-    buttonGeneratePortrait.disabled = true;
-    buttonGeneratePortrait.style.backgroundColor = 'grey';
-    buttonGeneratePortrait.textContent = "Generating Portrait...";
+    // Hide current GPT image if one exists
+    document.getElementById('img-gpt').style.display = 'none';
+    // Show rotating capsule image again
+    document.getElementById('img-capsule').style.display = 'inline-block';
 
     // Get information needed for image generation
     var genreSelected = document.getElementById('dropdown-genre').value;
@@ -466,7 +467,6 @@ function generateImage() {
             'gender': genderSelected,
             'firstName': firstName,
             'lastName': lastName,
-            // 'gpt_name': gptName,
             'alignment': alignment,
             'race': race,
             'class': class_
@@ -475,17 +475,26 @@ function generateImage() {
     .then(response => response.json())
     .then(data => {
         console.log('Success:', data);
-        // Replace src attribute of image 
-        document.getElementById('gpt-image').src = data.imageUrl;
-        buttonGeneratePortrait.disabled = false;
-        buttonGeneratePortrait.style.backgroundColor = '';
-        buttonGeneratePortrait.textContent = "Generate Portrait";
+        // Replace src attribute of image to Dall-E result
+        document.getElementById('img-gpt').src = data.imageUrl;
+        // Hide the gachapon capsule
+        document.getElementById('img-capsule').style.display = 'none';
+        // Display the GPT image
+        document.getElementById('img-gpt').style.display = 'inline-block';
     })
     .catch((error) => {
         console.error('Error:', error);
         // Handle errors here
-        buttonGeneratePortrait.disabled = false;
-        buttonGeneratePortrait.style.backgroundColor = '';
-        buttonGeneratePortrait.textContent = "Generate Portrait";
+        // Replace src attribute of image to placeholder
+        document.getElementById('img-gpt').src = 'static/img/placeholder.jpg';
+        // Hide the gachapon capsule
+        document.getElementById('img-capsule').style.display = 'none';
+        // Display the GPT image
+        document.getElementById('img-gpt').style.display = 'inline-block';
     });
 }
+
+// ROTATING GACHAPON CAPSULE IMAGE
+document.getElementById('img-capsule').addEventListener('click', function() {
+    this.classList.add('rotate-on-click');
+})
