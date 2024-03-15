@@ -249,27 +249,27 @@ function rerollAttribute(attributeName){
 
 
 // REACTIVE CHARACTER SHEET BEHAVIOUR
-var gptNameCheckbox = document.getElementById('checkbox-gpt-name');
-gptNameCheckbox.addEventListener('click', alterCharacterSheet);
+// var gptNameCheckbox = document.getElementById('checkbox-gpt-name');
+// gptNameCheckbox.addEventListener('click', alterCharacterSheet);
 
-function alterCharacterSheet(){
+// function alterCharacterSheet(){
     
-    if (gptNameCheckbox.checked) {
-        // Hide First Initial and Last Initial 
-        document.getElementById('label-first-name').style.display = 'none';
-        document.getElementById('label-last-name').style.display = 'none';
-        // Show Full Name
-        document.getElementById('gpt-name').style.display = 'block';
+//     if (gptNameCheckbox.checked) {
+//         // Hide First Initial and Last Initial 
+//         document.getElementById('label-first-name').style.display = 'none';
+//         document.getElementById('label-last-name').style.display = 'none';
+//         // Show Full Name
+//         document.getElementById('gpt-name').style.display = 'block';
 
-    } else {
-        // Show First Initial and Last Initial
-        document.getElementById('label-first-name').style.display = 'block';
-        document.getElementById('label-last-name').style.display = 'block';
+//     } else {
+//         // Show First Initial and Last Initial
+//         document.getElementById('label-first-name').style.display = 'block';
+//         document.getElementById('label-last-name').style.display = 'block';
 
-        // Hide Full Name
-        document.getElementById('gpt-name').style.display = 'none';
-    }
-}
+//         // Hide Full Name
+//         document.getElementById('gpt-name').style.display = 'none';
+//     }
+// }
 
 
 // SENDING USER-INPUTTED NAMES TO BACKEND
@@ -439,14 +439,18 @@ function generateImage() {
     // Get information needed for image generation
     var genreSelected = document.getElementById('dropdown-genre').value;
     var genderSelected = document.getElementById('dropdown-gender').value;
-    var gptName = document.getElementById('gpt-name').textContent;
-    var alignment = document.getElementById('alignment').textContent;
-    var race = document.getElementById('race').textContent;
-    var class_ = document.getElementById('class').textContent;
+    var firstName = document.getElementById('input-first-name').value;
+    var lastName = document.getElementById('input-last-name').value;
+    // var gptName = document.getElementById('gpt-name').textContent;
+    var alignment = document.getElementById('input-alignment').value;
+    var race = document.getElementById('input-race').value;
+    var class_ = document.getElementById('input-class').value;
 
     console.log('genreSelected:', genreSelected);
     console.log('genderSelected:', genderSelected);
-    console.log('gptName:', gptName);
+    console.log('firstName:', firstName);
+    console.log('lastName:', lastName);
+    // console.log('gptName:', gptName);
     console.log('alignment:', alignment);
     console.log('race:', race);
     console.log('class_:', class_);
@@ -460,7 +464,9 @@ function generateImage() {
         body: JSON.stringify({
             'genre': genreSelected,
             'gender': genderSelected,
-            'gpt_name': gptName,
+            'firstName': firstName,
+            'lastName': lastName,
+            // 'gpt_name': gptName,
             'alignment': alignment,
             'race': race,
             'class': class_

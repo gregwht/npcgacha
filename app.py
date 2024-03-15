@@ -23,8 +23,7 @@ character = {
     "last_name": "None",
     "alignment": "None",
     "race": "None",
-    "class": "None",
-    "gpt_name": "None"
+    "class": "None"
 }
 
 # Genres
@@ -218,6 +217,11 @@ def generate_gpt_name(genre, first_initial, last_initial, gender):
     gpt_name = response.choices[0].message.content
     print("GPT Name:", gpt_name)
 
+    # Split GPT name into first name and last name, and then update character['first_name'] and ['last_name'] values
+    character['first_name'], character['last_name'] = gpt_name.split(' ')
+    print("GPT First Name:", character['first_name'])
+    print("GPT Last Name:", character['last_name'])
+
     return gpt_name
 
 
@@ -288,7 +292,8 @@ def index():
                 print("Genre:", genre)
                 gender = request_data.get('genderSelected') 
                 print("Gender:", gender)
-                character['gpt_name'] = generate_gpt_name(genre, character['first_name'], character['last_name'], gender)
+                # character['gpt_name'] = generate_gpt_name(genre, character['first_name'], character['last_name'], gender)
+                generate_gpt_name(genre, character['first_name'], character['last_name'], gender)
 
             # Return updated character attributes as JSON response
             return jsonify(character)
@@ -310,9 +315,9 @@ def save_attribute(attribute):
     elif attribute == 'last-name':
         character["last_name"] = request.json.get('inputLastName')
         print(f"Received data for Last Name: {character["last_name"]}")
-    elif attribute == 'gpt-name':
-        character["gpt_name"] = request.json.get('inputGptName')
-        print(f"Received data for GPT Name: {character["gpt_name"]}")
+    # elif attribute == 'gpt-name':
+    #     character["gpt_name"] = request.json.get('inputGptName')
+    #     print(f"Received data for GPT Name: {character["gpt_name"]}")
     elif attribute == 'alignment':
         character["alignment"] = request.json.get('inputAlignment')
         print(f"Received data for Alignment: {character["alignment"]}")
@@ -334,23 +339,29 @@ def generate_image():
     if request.is_json:
         request_data = request.get_json()
 
-        genre = request_data.get('genreSelected')
-        gender = request_data.get('genderSelected')
-        gpt_name = request_data.get('gptName')
+        genre = request_data.get('genre')
+        gender = request_data.get('gender')
+        first_name = request_data.get('firstName')
+        last_name = request_data.get('lastName')
+        # gpt_name = request_data.get('gptName')
         alignment = request_data.get('alignment')
         race = request_data.get('race')
-        class_ = request_data.get('class_')
+        class_ = request_data.get('class')
+
+        dalle_prompt = f"Please generate a colour portrait image of a single character from a tabletop RPG. The genre of the game is { genre } and the character should be in a { genre } background. They are a { race } { class_ } called { first_name } { last_name }. Their gender is { gender }. Their personality is { alignment } There should not be any text in the image at all. Please only generate the character and a background, no text."
+        # The portrait should be of the character's head and shoulders facing the camera. Make the character be standing in a suitable environment that they might be in during an adventure.
 
         # Generate image code
         dalle = client.images.generate(
             model = "dall-e-3",
-            # prompt = f"I am playing a game with a {genre} theme. Please generate a portrait of a character called {gpt_name}. Their alignment is {alignment} and their race is {race} and their class is {class_}. The alignment and race should influence how the character looks, but should not be written as text on the image. There should be no text on the image.",
-            #  
-            prompt = f"Please generate a colour portrait image of a single character from a tabletop RPG. The genre of the game is { genre }. They are a { race } { class_ } called { gpt_name }. Their gender is { gender }.  There should not be any text in the image at all. Please only generate the character and a background, no text. The portrait should be of the character's head and shoulders facing the camera. Make the character be standing in a suitable environment that they might be in during an adventure.",
+            prompt = dalle_prompt,
             size = "1024x1024",
             quality = "standard",
             n = 1,
         )
+        # print prompt
+        print("Dall-E Prompt:", dalle_prompt)
+
         image_url = dalle.data[0].url
         print("Image URL:", image_url)
 
