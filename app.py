@@ -19,8 +19,8 @@ client = OpenAI(api_key = API_KEY)
 ### ======== INITIALISE VARIABLES ========
 # Character attributes
 character = {
-    "first_initial" : "None",
-    "last_initial": "None",
+    "first_name" : "None",
+    "last_name": "None",
     "alignment": "None",
     "race": "None",
     "class": "None",
@@ -248,11 +248,11 @@ def index():
 
             # Handle attribute generation requests
             if request_data.get('firstInitialChecked'):
-                character['first_initial'] = roll_initial()
-                print("First Initial:", character['first_initial'])
+                character['first_name'] = roll_initial()
+                print("First Initial:", character['first_name'])
             if request_data.get('lastInitialChecked'):
-                character['last_initial'] = roll_initial()
-                print(" Last Initial:", character['last_initial'])
+                character['last_name'] = roll_initial()
+                print(" Last Initial:", character['last_name'])
             if request_data.get('alignmentChecked'):
                 character['alignment'] = roll_alignment()
                 print("    Alignment:", character['alignment'] )
@@ -267,11 +267,11 @@ def index():
             reroll_attribute = request_data.get('reroll-attribute')
             if reroll_attribute:
                 if reroll_attribute == 'first-initial':
-                    character['first_initial'] = roll_initial(character['first_initial'])
-                    print("First Initial:", character['first_initial'])
+                    character['first_name'] = roll_initial(character['first_name'])
+                    print("First Initial:", character['first_name'])
                 elif reroll_attribute == 'last-initial':
-                    character['last_initial'] = roll_initial(character['last_initial'])    
-                    print("Last Initial:", character['last_initial'])
+                    character['last_name'] = roll_initial(character['last_name'])    
+                    print("Last Initial:", character['last_name'])
                 elif reroll_attribute == 'alignment':
                     character['alignment'] = roll_alignment(character['alignment'])
                     print("Alignment:", character['alignment'])
@@ -288,7 +288,7 @@ def index():
                 print("Genre:", genre)
                 gender = request_data.get('genderSelected') 
                 print("Gender:", gender)
-                character['gpt_name'] = generate_gpt_name(genre, character['first_initial'], character['last_initial'], gender)
+                character['gpt_name'] = generate_gpt_name(genre, character['first_name'], character['last_name'], gender)
 
             # Return updated character attributes as JSON response
             return jsonify(character)
@@ -299,22 +299,29 @@ def index():
         return render_template("index.html", races=races, classes=classes, genders=genders, genres=genres)
 
 
-@app.route('/save-first-name', methods=['POST'])
-def save_first_name():
+# Update character attibutes if user changes them on the frontend 
+@app.route('/save-attribute/<attribute>', methods=['POST'])
+def save_attribute(attribute):
     
-    character["first_initial"] = request.json.get('inputFirstName') # Access the data sent from the frontend
-    print("Received data:", character["first_initial"])
-
-    print("Character:", character)
-
-    return jsonify({'status': 'success', 'message': 'Data received successfully'})
-
-
-@app.route('/save-last-name', methods=['POST'])
-def save_last_name():
-    
-    character["last_initial"] = request.json.get('inputLastName') # Access the data sent from the frontend
-    print("Received data:", character["last_initial"])
+    # Determine what attribute has been changed on the frontend and update our character dictionary with the new value
+    if attribute == 'first-name':
+        character["first_name"] = request.json.get('inputFirstName')
+        print(f"Received data for First Name: {character["first_name"]}")
+    elif attribute == 'last-name':
+        character["last_name"] = request.json.get('inputLastName')
+        print(f"Received data for Last Name: {character["last_name"]}")
+    elif attribute == 'gpt-name':
+        character["gpt_name"] = request.json.get('inputGptName')
+        print(f"Received data for GPT Name: {character["gpt_name"]}")
+    elif attribute == 'alignment':
+        character["alignment"] = request.json.get('inputAlignment')
+        print(f"Received data for Alignment: {character["alignment"]}")
+    elif attribute == 'race':
+        character["race"] = request.json.get('inputRace')
+        print(f"Received data for Race: {character["race"]}")
+    elif attribute == 'class':
+        character["class"] = request.json.get('inputClass')
+        print(f"Received data for Class: {character["class"]}")
 
     print("Character:", character)
 
