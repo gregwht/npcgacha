@@ -1,3 +1,112 @@
+.btn-main {
+    background-color: #E35B5B;
+    color: white;
+    padding: 10px 50px;
+    border-radius: 5px;
+    border: #E35B5B;
+    font-family: sans-serif;
+    font-size: x-large;
+    font-weight: bold;
+}
+
+.btn-main:hover {
+    /* box-shadow: 3px 7px 0px #ECC142; */
+    background-color: #E83E1A;
+}
+
+.btn-primary-custom {
+  background-color: #E35B5B;
+  border-color: #E35B5B; 
+  /* border-radius: 30px; */
+}
+
+.btn-outline-primary-custom {
+  border-color: #E35B5B; 
+  color: #E35B5B;
+}
+
+.btn-outline-primary-custom:hover,
+.btn-outline-primary-custom:focus,
+.btn-outline-primary-custom:active {
+  background-color: #E35B5B !important;
+  border-color: #E35B5B !important; 
+  color: white !important;
+}
+
+.card-body img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 5px;
+}
+
+.card-body img:hover {
+  cursor: pointer;
+}
+
+.card-body label {
+  font-size: x-large;
+}
+
+/* Hide the default checkbox */
+.custom-checkbox input[type="checkbox"] {
+    visibility: hidden;
+    position: absolute;
+  }
+  
+.custom-checkbox {
+  display: inline-flex;
+  align-items: center; /* Aligns items vertically in the center */
+  cursor: pointer;
+}
+
+/* Create a custom checkbox */
+.custom-checkbox .checkmark {
+  position: relative;
+  top: 0;
+  left: 0;
+  height: 15px;
+  width: 15px;
+  background-color: #eee;
+  cursor: pointer;
+  display: inline-block;
+  margin-right: 20px;
+  margin-left: 5px;
+}
+
+/* On mouse-over, add a grey background color */
+.custom-checkbox:hover input ~ .checkmark {
+  background-color: #ccc;
+}
+
+/* When the checkbox is checked, change the background color */
+.custom-checkbox input:checked ~ .checkmark {
+  background-color: #E35B5B;
+}
+
+/* Create the checkmark/indicator (hidden when not checked) */
+.custom-checkbox .checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+/* Show the checkmark when checked */
+.custom-checkbox input:checked ~ .checkmark:after {
+  display: block;
+}
+
+/* Style the checkmark/indicator */
+.custom-checkbox .checkmark:after {
+  left: 5px;
+  top: 2px;
+  width: 5px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 3px 3px 0;
+  transform: rotate(45deg);
+}
+  
 .checkbox-label {
     /* display: inline-block; */
     /* margin-right: 100px; */
@@ -12,8 +121,33 @@
     /* text-decoration: underline; */
 }
 
+.h1 {
+    font-family: "Lilita One", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+}
+
+.lilita-one-regular {
+    font-family: "Lilita One", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+  }
+
 .name-underline {
     color: lightgray;
+}
+
+@keyframes rotateImage{
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.rotate-on-click {
+  animation: rotateImage 1.5s steps(6, end) infinite;
 }
 
 .row.align-items-center {
@@ -32,8 +166,57 @@
     font-size: 1em;
 }
 
-.card-body img {
-    max-width: 100%;
-    height: auto;
-    display: block;
-}
+/* Overlaying text over image */
+    .image-container {
+      position: relative;
+      display: inline-block; /* Or another display property that suits your layout */
+    }
+
+    .image-container img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+      border-radius: 5px;
+    }
+
+    .overlay-text {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 10%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent overlay */
+      color: white; /* Text color */
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      border-radius: 5px; /* Match the image's border-radius */
+    }
+
+    .image-container:hover .overlay-text {
+      opacity: 1;
+    }
+
+    .image-container.disabled .overlay-text {
+      opacity: 0 !important;
+    }
+
+    .refresh-icon {
+      position: absolute;
+      top: 0px; /* 10px Adjust as needed */
+      right: 0px; /* 10px Adjust as needed */
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      font-size: xx-large;
+      cursor: pointer;
+      color: white;
+      background-color: #E35B5B;
+      border-radius: 5px;
+      padding: 7px;
+    }
+    
+    .image-container.icon-active:hover .refresh-icon {
+      opacity: 1;
+    }

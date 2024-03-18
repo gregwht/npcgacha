@@ -5,6 +5,12 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="static/styles.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lilita+One&display=swap" rel="stylesheet">
+    <!-- FontAwesome icon library -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <!-- Bootstrap JS, Popper.js, and jQuery -->
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
@@ -12,20 +18,154 @@
 </head>    
 <body>
     <div class="container my-4">
-        <h1 class="display-4 text-center mb-4 font-weight-bold">NPC Gachapon</h1>
-
+        <!-- <h1 class="display-4 text-center mb-4 font-weight-bold">NPC Gachapon</h1> -->
+        <h1 class="display-4 text-center mb-4 font-weight-bold lilita-one-regular">NPC GACHAPON</h1>
+        <!-- CHARACTER SHEET -->
+        <div id="character-sheet" class="card mb-5">
+            <!-- <h5>Character Sheet</h5> -->
+            <div class="card-body">
+                <!-- Character Attributes -->
+                <div class="row">
+                    <div class="col-7 mt-3">
+                        <!-- Names -->
+                        <div class="row">
+                            <div class="col-6">
+                                <label for="input-first-name" class="font-weight-bold clickable-text w-100" onclick="rerollAttribute('first-initial')">
+                                    First Name:
+                                </label>
+                            </div>
+                            <div class="col-6">
+                                <label for="input-last-name" class="font-weight-bold clickable-text w-100"  onclick="rerollAttribute('last-initial')">
+                                    Last Name:
+                                </label>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-6">
+                                <input type="text" id="input-first-name" class="form-control form-control-lg" placeholder="?">
+                            </div>
+                            <div class="col-6">
+                                <input type="text" id="input-last-name" class="form-control form-control-lg" placeholder="?">
+                            </div>
+                        </div>
+                        <!-- Race & Class -->
+                        <div class="row">
+                            <div class="col-6">
+                                <label for="input-race" class="font-weight-bold clickable-text w-100" onclick="rerollAttribute('race')">
+                                    Race:
+                                </label>
+                            </div>
+                            <div class="col-6">
+                                <label for="input-class" class="font-weight-bold clickable-text w-100" onclick="rerollAttribute('class')">
+                                    Class:
+                                </label>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-6">
+                                <input type="text" id="input-race" class="form-control form-control-lg" placeholder="?">
+                            </div>
+                            <div class="col-6">
+                                <input type="text" id="input-class" class="form-control form-control-lg" placeholder="?">
+                            </div>
+                        </div>
+                        <!-- Alignment -->
+                        <div class="row">
+                            <div class="col-12">
+                                <label for="input-alignment" class="font-weight-bold clickable-text w-100" onclick="rerollAttribute('alignment')">
+                                    Alignment:
+                                </label>
+                            </div>
+                        </div>
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <input type="text" id="input-alignment" class="form-control form-control-lg" placeholder="?">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12 mt-3 ">
+                                <!-- GENERATE CHARACTER BUTTON -->
+                                <div id="generate-button">
+                                <!-- <div id="generate-button" class="text-center mt-3 mb-5"> -->
+                                    <button type="submit"
+                                        name="generate-attributes"
+                                        id="button-generate-character" 
+                                        value="generate-character" 
+                                        class="btn-main w-100">
+                                        <!-- btn btn-primary btn-sm my-3 mx-3 -->
+                                        Generate Character
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Character Portrait -->
+                    <div class="col-5 mt-3">
+                        <div class="card-body">
+                            <div class="image-container" id="image-container">
+                                <img id="img-capsule" src="static/img/capsule-yellow.png" alt="Illustration of a gachapon capsule">
+                                <img id="img-gpt" src="static/img/placeholder.jpg" alt="Character Portrait" style="display:none;">
+                                <div class="overlay-text" id="overlay-text">Click capsule to generate character portrait</div>
+                                <i class="fas fa-sync-alt refresh-icon" id="refresh-icon"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- <div class="col-5 mb-3">
+            <button type="submit"    
+                    name="generate-image"
+                    id="button-generate-image"
+                    value="generate-image" 
+                    class="btn-main w-100">
+                    Generate Portrait
+            </button>
+        </div> -->
          <!-- GACHAPON SETTINGS -->
          <div id="gachapon-settings">
             <h5>Gachapon Machine Settings</h5>
             <div class="card mt-3 mb-3">
+                <!-- GPT Settings -->
+                <div id="gpt-settings" class="mt-3 mb-3 mx-3">
+                    <div class="row">
+                        <h5 class="col-8">GPT Settings</h5>
+                    </div>
+                    <div class="row">
+                        <p class="col-auto settings-desc">Configure ChatGPT settings:</p>
+                    </div>
+                    <div class="row">
+                        <div class="col-auto">
+                            <label for="checkbox-gpt-name" class="custom-checkbox">
+                                Generate Full Names
+                                <input type="checkbox" id="checkbox-gpt-name" name="checkbox-gpt-name" unchecked hidden>
+                                <span class="checkmark"></span>
+                            </label>
+                        
+                            <label for="dropdown-gender">Select Character Gender:</label>
+                            <select id="dropdown-gender" name="dropdown-gender">
+                                {% for gender in genders %}
+                                    <option value="{{ gender }}">{{ gender }}</option>
+                                {% endfor %}
+                            </select>
+                
+                            <label for="dropdown-genre">Select Game Genre:</label>
+                            <select id="dropdown-genre" name="dropdown-genre">
+                                {% for genre in genres %}
+                                    <option value="{{ genre }}">{{ genre }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                </div>
                 <!-- General Attribute Settings -->
-                <div id="general-attribute-settings" class="mt-3 mb-3 mx-3">
+                <div id="general-attribute-settings" class="mb-3 mx-3">
                     <div class="row">
                         <h5 class="col-8">General Attribute Settings</h5>
                         <div class="col-4 text-right">
                             <button name="button-reset-attributes" 
                                     id="button-reset-attributes" 
-                                    class="btn btn-primary btn-sm">
+                                    class="btn btn-outline-primary btn-outline-primary-custom btn-sm">
                                     Deselect All
                             </button>
                         </div>
@@ -35,24 +175,35 @@
                     </div>
                     <div class="row">
                         <div class="col-auto">
-                            <label for="checkbox-first-initial" class="checbox-label">First Initial</label>
-                            <input type="checkbox" id="checkbox-first-initial" name="checkbox-first-initial" checked>
-                        </div>
-                        <div class="col-auto">
-                            <label for="checkbox-last-initial" class="checbox-label">Last Initial</label>
-                            <input type="checkbox" id="checkbox-last-initial" name="checkbox-last-initial" checked>
-                        </div>
-                        <div class="col-auto">
-                            <label for="checkbox-alignment" class="checbox-label">Alignment</label>
-                            <input type="checkbox" id="checkbox-alignment" name="checkbox-alignment" checked>
-                        </div>
-                        <div class="col-auto">
-                            <label for="checkbox-race" class="checbox-label">Race</label>
-                            <input type="checkbox" id="checkbox-race" name="checkbox-race" checked>
-                        </div>
-                        <div class="col-auto">
-                            <label for="checkbox-class" class="checbox-label">Class</label>
-                            <input type="checkbox" id="checkbox-class" name="checkbox-class" checked>
+                            <label for="checkbox-first-initial" class="custom-checkbox">
+                                First Initial
+                                <input type="checkbox" id="checkbox-first-initial" name="checkbox-first-initial" checked hidden>
+                                <span class="checkmark"></span>
+                            </label>
+
+                            <label for="checkbox-last-initial" class="custom-checkbox">
+                                Last Initial
+                                <input type="checkbox" id="checkbox-last-initial" name="checkbox-last-initial" checked hidden>
+                                <span class="checkmark"></span>
+                            </label>
+
+                            <label for="checkbox-alignment" class="custom-checkbox">
+                                Alignment
+                                <input type="checkbox" id="checkbox-alignment" name="checkbox-alignment" checked hidden>
+                                <span class="checkmark"></span>
+                            </label>
+
+                            <label for="checkbox-race" class="custom-checkbox">
+                                Race
+                                <input type="checkbox" id="checkbox-race" name="checkbox-race" checked hidden>
+                                <span class="checkmark"></span>
+                            </label>
+
+                            <label for="checkbox-class" class="custom-checkbox">
+                                Class
+                                <input type="checkbox" id="checkbox-class" name="checkbox-class" checked hidden>
+                                <span class="checkmark"></span>
+                            </label>
                         </div>
                     </div>
                 </div>
@@ -63,7 +214,7 @@
                         <div class="col-4 text-right">
                             <button name="button-reset-races" 
                                     id="button-reset-races" 
-                                    class="btn btn-primary btn-sm">
+                                    class="btn btn-outline-primary btn-outline-primary-custom btn-sm">
                                     Deselect All
                             </button>
                         </div>
@@ -72,12 +223,15 @@
                         <p class="col-auto settings-desc">Roll from the selected races:</p>
                     </div>
                     <div class="row">
-                        {% for race in races %}
-                            <div class="col-auto">
-                                <label for="checkbox-race-{{ race }}" class="checkbox-label">{{ race }}</label>
-                                <input type="checkbox" id="checkbox-race-{{ race }}" name="checkbox-race-{{ race }}" checked>
-                            </div>
-                        {% endfor %}
+                        <div class="col-auto">
+                            {% for race in races %}
+                                <label for="checkbox-race-{{ race }}" class="custom-checkbox">
+                                    {{ race }}
+                                    <input type="checkbox" id="checkbox-race-{{ race }}" name="checkbox-race-{{ race }}" checked hidden>
+                                    <span class="checkmark"></span>
+                                </label>
+                            {% endfor %}
+                        </div>
                     </div>
                 </div>
                 <!-- Class Settings -->
@@ -87,7 +241,7 @@
                         <div class="col-4 text-right">
                             <button name="button-reset-classes" 
                                     id="button-reset-classes" 
-                                    class="btn btn-primary btn-sm">
+                                    class="btn btn-outline-primary btn-outline-primary-custom btn-sm">
                                     Deselect All
                             </button>
                         </div>
@@ -96,111 +250,16 @@
                         <p class="col-auto settings-desc">Roll from the selected classes:</p>
                     </div>
                     <div class="row">
-                        {% for class_ in classes %}
-                            <div class="col-auto">
-                                <label for="checkbox-class-{{ class_ }}" class="checkbox-label">{{ class_ }}</label>
-                                <input type="checkbox" id="checkbox-class-{{ class_ }}" name="checkbox-class-{{ class_ }}" checked>
-                            </div>
-                        {% endfor %}
-                    </div>
-                </div>
-                <!-- GPT Settings -->
-                <div id="gpt-settings" class="mb-3 mx-3">
-                    <div class="row">
-                        <h5 class="col-8">GPT Settings</h5>
-                    </div>
-                    <div class="row">
-                        <p class="col-auto settings-desc">Configure ChatGPT settings:</p>
-                    </div>
-                    <div class="row">
                         <div class="col-auto">
-                            <label for="checkbox-gpt-name" class="checkbox-label">Full Name</label>
-                            <input type="checkbox" id="checkbox-gpt-name" name="checkbox-gpt-name" unchecked>
-                        </div>
-                        <div class="col-auto">
-                            <label for="dropdown-gender">Select character gender:</label>
-                            <select id="dropdown-gender" name="dropdown-gender">
-                                {% for gender in genders %}
-                                    <option value="{{ gender }}">{{ gender }}</option>
-                                {% endfor %}
-                            </select>
-                        </div>
-                        <div class="col-auto">
-                            <label for="dropdown-genre">Select game genre:</label>
-                            <select id="dropdown-genre" name="dropdown-genre">
-                                {% for genre in genres %}
-                                    <option value="{{ genre }}">{{ genre }}</option>
-                                {% endfor %}
-                            </select>
+                            {% for class_ in classes %}
+                                <label for="checkbox-class-{{ class_ }}" class="custom-checkbox">
+                                    {{ class_ }}
+                                    <input type="checkbox" id="checkbox-class-{{ class_ }}" name="checkbox-class-{{ class_ }}" checked hidden>
+                                    <span class="checkmark"></span>
+                                </label>
+                            {% endfor %}
                         </div>
                     </div>
-                </div>
-                
-                <!-- Generate Character Button -->
-                <button type="submit"
-                        name="generate-attributes"
-                        id="button-generate-character" 
-                        value="generate-character" 
-                        class="btn btn-primary btn-sm my-3 mx-3">
-                        Generate Character
-                </button>
-            </div>
-         </div>
-         <!-- CHARACTER SHEET -->
-         <div id="character-sheet">
-            <h5>Character Sheet</h5>
-            <div class="row">
-                <div class="card col-6 mt-3 mb-3">
-                    <div class="card-body">
-                        <!-- <p id="p-first-initial" style="display: block;">
-                            <span class="font-weight-bold clickable-text" onclick="rerollAttribute('first-initial')">First Name:</span> 
-                            <span id="first-initial"></span>
-                        </p> -->
-                        <div id="first-name">
-                            <label for="input-first-name">
-                                <span class="font-weight-bold clickable-text" onclick="rerollAttribute('first-initial')">First Name:</span>
-                            </label>
-                            <input type="text" id="input-first-name" placeholder="?">
-                        </div>
-                        <!-- <p id="p-last-initial" style="display: block;">
-                            <span class="font-weight-bold clickable-text" onclick="rerollAttribute('last-initial')">Last Name:</span> 
-                            <span id="last-initial"></span>
-                        </p> -->
-                        <div id="last-name">
-                            <label for="input-last-name">
-                                <span class="font-weight-bold clickable-text" onclick="rerollAttribute('last-initial')">Last Name:</span>
-                            </label>
-                            <input type="text" id="input-last-name" placeholder="?">
-                        </div>
-                        <p id="p-gpt-name" style="display: none;">
-                            <span class="font-weight-bold clickable-text">Full Name:</span> 
-                            <span id="gpt-name"></span>
-                        </p>
-                        <p>
-                            <span class="font-weight-bold clickable-text" onclick="rerollAttribute('alignment')">Alignment:</span> 
-                            <span id="alignment"></span>
-                        </p>
-                        <p>
-                            <span class="font-weight-bold clickable-text" onclick="rerollAttribute('race')">Race:</span> 
-                            <span id="race"></span>
-                        </p>
-                        <p>
-                            <span class="font-weight-bold clickable-text" onclick="rerollAttribute('class')">Class:</span> 
-                            <span id="class"></span>
-                        </p>
-                    </div>
-                </div>
-                <div class="card col-6 mt-3 mb-3">
-                    <div class="card-body">
-                        <img id="gpt-image" src="static/img/placeholder.jpg" alt="Character Portrait">
-                    </div>
-                    <button type="submit"
-                        id="button-generate-image"    
-                        name="generate-image"
-                        value="generate-image" 
-                        class="btn btn-primary btn-sm my-3 mx-3">
-                        Generate Portrait
-                </button>
                 </div>
             </div>
          </div>

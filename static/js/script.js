@@ -1,5 +1,10 @@
-// SELECT ALL / DESELECT ALL CHECKBOXES BUTTONS
+// var imageContainer = document.querySelector('.image-container');
+var imageContainer = document.getElementById('image-container');
+var overlayText = document.getElementById('overlay-text');
+var refreshIcon = document.getElementById('refresh-icon');
 
+
+// SELECT ALL / DESELECT ALL CHECKBOXES BUTTONS
 // General Attributes checkboxes
 var buttonResetAttributes = document.getElementById('button-reset-attributes')
 buttonResetAttributes.addEventListener('click', resetAttributes)
@@ -105,8 +110,10 @@ function resetClasses() {
 
 
 // GENERATE CHARACTER BUTTON
-var buttonGenerateCharacter = document.getElementById('button-generate-character')
+var buttonGenerateCharacter = document.getElementById('button-generate-character');
 buttonGenerateCharacter.addEventListener('click', sendSettings);
+var imageCapsule = document.getElementById('img-capsule'); 
+var imageGpt = document.getElementById('img-gpt')
 
 function sendSettings() {
 
@@ -120,12 +127,17 @@ function sendSettings() {
     // Get checkbox states: Races
     var checkedRaces = [];
     document.querySelectorAll('input[name^="checkbox-race-"]:checked').forEach(function(checkbox) {
-        // Find the associated label which is immediately before the checkbox
-        var label = checkbox.previousElementSibling;
+        // Find the associated label
+        var label = checkbox.closest('label');
         // Ensure that the found element is indeed a label e.g. 'Dwarf'
-        if (label && label.tagName === 'LABEL') {
-            // Add the label e.g. 'Dwarf' to the list of checked classes
-            checkedRaces.push(label.textContent || label.innerText);
+        if (label) {
+            // The text content includes the race name, but might also include whitespace or other characters due to the checkmark span, so trim it
+            var raceText = label.textContent.trim() || label.innerText.trim();
+            // Exclude the checkmark span text if present
+            // This might need adjustment based on the actual text content and structure within the label
+            var raceName = raceText.replace("checkmark", "").trim();
+            // Add the cleaned-up race name to the list of checked races
+            checkedRaces.push(raceName);
         }
     });
     console.log("Checked races:", checkedRaces);
@@ -137,12 +149,17 @@ function sendSettings() {
     // Get checkbox states: Classes
     var checkedClasses = [];
     document.querySelectorAll('input[name^="checkbox-class-"]:checked').forEach(function(checkbox) {
-        // Find the associated label which is immediately before the checkbox
-        var label = checkbox.previousElementSibling;
+        // Find the associated label
+        var label = checkbox.closest('label');
         // Ensure that the found element is indeed a label e.g. 'Barbarian'
-        if (label && label.tagName === 'LABEL') {
-            // Add the label e.g. 'Barbarian' to the list of checked classes
-            checkedClasses.push(label.textContent || label.innerText);
+        if (label) {
+            // The text content includes the race name, but might also include whitespace or other characters due to the checkmark span, so trim it
+            var classText = label.textContent.trim() || label.innerText.trim();
+            // Exclude the checkmark span text if present
+            // This might need adjustment based on the actual text content and structure within the label
+            var className = classText.replace("checkmark", "").trim();
+            // Add the cleaned-up race name to the list of checked classes
+            checkedClasses.push(className);
         }
     });
     console.log("Checked classes:", checkedClasses);
@@ -155,6 +172,14 @@ function sendSettings() {
     var gptNameChecked = document.getElementById('checkbox-gpt-name').checked;
     var genderSelected = document.getElementById('dropdown-gender').value;
     var genreSelected = document.getElementById('dropdown-genre').value;
+
+    if (gptNameChecked) {
+        buttonGenerateCharacter.disabled = true;
+        buttonGenerateCharacter.style.backgroundColor = '#C2E1DD';
+        buttonGenerateCharacter.style.color = 'black';
+        buttonGenerateCharacter.textContent = "Generating Character...";
+        imageCapsule.classList.add('rotate-on-click');
+    }
 
     // Send AJAX request to Flask backend
     fetch('/', {
@@ -179,18 +204,30 @@ function sendSettings() {
     })
     .then(response => response.json())
     .then(data => {
-        // Update the webpage with the generated initials
-        // document.getElementById('first-initial').textContent = data.first_initial;
-        // document.getElementById('last-initial').textContent = data.last_initial;
-        document.getElementById('input-first-name').value = data.first_initial;
-        document.getElementById('input-last-name').value = data.last_initial;
-        document.getElementById('alignment').textContent = data.alignment;
-        document.getElementById('race').textContent = data.race;
-        document.getElementById('class').textContent = data.class;
-        document.getElementById('gpt-name').textContent = data.gpt_name;
+        // Update the webpage with the generated values
+        document.getElementById('input-first-name').value = data.first_name;
+        document.getElementById('input-last-name').value = data.last_name;
+        document.getElementById('input-alignment').value = data.alignment;
+        document.getElementById('input-race').value = data.race;
+        document.getElementById('input-class').value = data.class;
+
+        buttonGenerateCharacter.disabled = false;
+        buttonGenerateCharacter.style.backgroundColor = '';
+        buttonGenerateCharacter.style.color = '';
+        buttonGenerateCharacter.textContent = "Generate Character";
+        imageCapsule.classList.remove('rotate-on-click');
+        
     })
     .catch(error => {
         console.error('Error:', error);
+
+        buttonGenerateCharacter.disabled = false;
+        buttonGenerateCharacter.style.backgroundColor = '';
+        buttonGenerateCharacter.style.color = '';
+        buttonGenerateCharacter.textContent = "Generate Character";
+        imageCapsule.classList.remove('rotate-on-click');
+        overlayText.textContent = "An error has occurred: " + error;
+        overlayText.style.opacity = '1';
     });
 }
 
@@ -212,14 +249,12 @@ function rerollAttribute(attributeName){
     })
     .then(response => response.json())
     .then(data => {
-        // Update the webpage with the generated initials
-        // document.getElementById('first-initial').textContent = data.first_initial;
-        // document.getElementById('last-initial').textContent = data.last_initial;
-        document.getElementById('input-first-name').value = data.first_initial;
-        document.getElementById('input-last-name').value = data.last_initial;
-        document.getElementById('alignment').textContent = data.alignment;
-        document.getElementById('race').textContent = data.race;
-        document.getElementById('class').textContent = data.class;
+        // Update the webpage with the generated values
+        document.getElementById('input-first-name').value = data.first_name;
+        document.getElementById('input-last-name').value = data.last_name;
+        document.getElementById('input-alignment').value = data.alignment;
+        document.getElementById('input-race').value = data.race;
+        document.getElementById('input-class').value = data.class;
     })
     .catch(error => {
         console.error('Error:', error);
@@ -228,37 +263,15 @@ function rerollAttribute(attributeName){
 }
 
 
-// REACTIVE CHARACTER SHEET BEHAVIOUR
-var gptNameCheckbox = document.getElementById('checkbox-gpt-name');
-gptNameCheckbox.addEventListener('click', alterCharacterSheet);
-
-function alterCharacterSheet(){
-    
-    if (gptNameCheckbox.checked) {
-        // Hide First Initial and Last Initial 
-        document.getElementById('first-name').style.display = 'none';
-        document.getElementById('last-name').style.display = 'none';
-        // Show Full Name
-        document.getElementById('p-gpt-name').style.display = 'block';
-
-    } else {
-        // Show First Initial and Last Initial
-        document.getElementById('first-name').style.display = 'block';
-        document.getElementById('last-name').style.display = 'block';
-
-        // Hide Full Name
-        document.getElementById('p-gpt-name').style.display = 'none';
-    }
-}
-
-
 // SENDING USER-INPUTTED NAMES TO BACKEND
 document.addEventListener("DOMContentLoaded", function(){
 
     const inputFirstName = document.getElementById("input-first-name");
     const inputLastName = document.getElementById("input-last-name");
+    const inputAlignment = document.getElementById("input-alignment");
     let originalFirstName = inputFirstName.value;
     let originalLastName = inputLastName.value;
+    let originalAlignment = inputAlignment.value;
 
     // When the input field gains focus, store the current value 
     inputFirstName.addEventListener('focus', function(){ 
@@ -266,6 +279,9 @@ document.addEventListener("DOMContentLoaded", function(){
     })
     inputLastName.addEventListener('focus', function(){ 
         originalLastName = inputLastName.value;
+    })
+    inputAlignment.addEventListener('focus', function(){
+        originalAlignment = inputAlignment.value;
     })
 
     // When focus is lost, check if the value has changed
@@ -279,6 +295,12 @@ document.addEventListener("DOMContentLoaded", function(){
         // If the value has changed, send the data
         if (inputLastName.value !== originalLastName) {
             sendLastName(inputLastName.value);
+        }
+    })
+    inputAlignment.addEventListener('blur', function(){
+        // If the value has changed, send the data
+        if (inputAlignment.value !== originalAlignment) {
+            sendAlignment(inputAlignment.value);
         }
     })
 
@@ -295,13 +317,20 @@ document.addEventListener("DOMContentLoaded", function(){
             sendLastName(inputLastName.value);
         }
     })
+    inputAlignment.addEventListener('keypress', function(event) {
+        if (event.key === 'Enter' && inputAlignment.value !== originalAlignment) {
+            event.preventDefault(); // Prevent the default action to avoid form submission or other unwanted behaviour
+            sendAlignment(inputAlignment.value);
+        }
+    })
 
 
+    // Sending new values to backend
     function sendFirstName(name) {
 
         console.log("Sending data:", name); // Placeholder for AJAX call
 
-        fetch('/save-first-name', {
+        fetch('/save-attribute/first-name', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -319,7 +348,7 @@ document.addEventListener("DOMContentLoaded", function(){
 
         console.log("Sending data:", name); // Placeholder for AJAX call
 
-        fetch('/save-last-name', {
+        fetch('/save-attribute/last-name', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -332,33 +361,70 @@ document.addEventListener("DOMContentLoaded", function(){
             console.error('Error:', error);
         })
     }
+
+    function sendAlignment(alignment) {
+
+        console.log("Sending data:", alignment); // Placeholder for AJAX call
+
+        fetch('/save-attribute/alignment', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ inputAlignment: alignment }),
+        })
+        .then(response => response.json())
+        .then(data => console.log(data))
+        .catch((error) => {
+            console.error('Error:', error);
+        })
+    }
 })
 
 
 // GENERATE PORTRAIT IMAGE
-var buttonGeneratePortrait = document.getElementById('button-generate-image')
-buttonGeneratePortrait.addEventListener('click', generateImage);
+imageCapsule.addEventListener('click', generateImage);
+imageGpt.addEventListener('click', generateImage);
 
 function generateImage() {
-
-    buttonGeneratePortrait.disabled = true;
-    buttonGeneratePortrait.style.backgroundColor = 'grey';
-    buttonGeneratePortrait.textContent = "Generating Portrait...";
-
+    
     // Get information needed for image generation
     var genreSelected = document.getElementById('dropdown-genre').value;
     var genderSelected = document.getElementById('dropdown-gender').value;
-    var gptName = document.getElementById('gpt-name').textContent;
-    var alignment = document.getElementById('alignment').textContent;
-    var race = document.getElementById('race').textContent;
-    var class_ = document.getElementById('class').textContent;
+    var firstName = document.getElementById('input-first-name').value;
+    var lastName = document.getElementById('input-last-name').value;
+    var alignment = document.getElementById('input-alignment').value;
+    var race = document.getElementById('input-race').value;
+    var class_ = document.getElementById('input-class').value;
 
     console.log('genreSelected:', genreSelected);
     console.log('genderSelected:', genderSelected);
-    console.log('gptName:', gptName);
+    console.log('firstName:', firstName);
+    console.log('lastName:', lastName);
     console.log('alignment:', alignment);
     console.log('race:', race);
     console.log('class_:', class_);
+
+    // Stop listening for clicks on the images
+    imageCapsule.removeEventListener('click', generateImage);
+    imageCapsule.style.cursor = 'default';
+    imageGpt.removeEventListener('click', generateImage);
+    imageGpt.style.cursor = 'default';
+        
+    // Alter Generate Character button appearance
+    buttonGenerateCharacter.disabled = true;
+    buttonGenerateCharacter.style.backgroundColor = '#C2E1DD';
+    buttonGenerateCharacter.style.color = 'black';
+    buttonGenerateCharacter.textContent = "Generating Portrait...";
+    
+    // Hide current GPT image if one exists
+   imageGpt.style.display = 'none';
+    // Show gachapon capsule image
+    imageCapsule.style.display = 'inline-block';
+    // Spin gachapon capsule image
+    imageCapsule.classList.add('rotate-on-click');
+    // Hide overlay text
+    imageContainer.classList.add('disabled');
 
 
     fetch('/generate-image', {
@@ -369,7 +435,8 @@ function generateImage() {
         body: JSON.stringify({
             'genre': genreSelected,
             'gender': genderSelected,
-            'gpt_name': gptName,
+            'firstName': firstName,
+            'lastName': lastName,
             'alignment': alignment,
             'race': race,
             'class': class_
@@ -378,17 +445,76 @@ function generateImage() {
     .then(response => response.json())
     .then(data => {
         console.log('Success:', data);
-        // Replace src attribute of image 
-        document.getElementById('gpt-image').src = data.imageUrl;
-        buttonGeneratePortrait.disabled = false;
-        buttonGeneratePortrait.style.backgroundColor = '';
-        buttonGeneratePortrait.textContent = "Generate Portrait";
+        // Return Generate Character button appearance to normal
+        buttonGenerateCharacter.disabled = false;
+        buttonGenerateCharacter.style.backgroundColor = '';
+        buttonGenerateCharacter.style.color = '';
+        buttonGenerateCharacter.textContent = "Generate Character";
+
+        // Replace src attribute of image to Dall-E result
+        imageGpt.src = data.imageUrl;
+        // Hide the gachapon capsule and stop it spinning
+        imageCapsule.style.display = 'none';
+        imageCapsule.classList.remove('rotate-on-click');
+        // Display the GPT image
+        imageGpt.style.display = 'inline-block';
+        // Change overlay text
+        imageContainer.classList.remove('disabled');
+        overlayText.textContent = "Click to open image in a new tab";
+
+        // Listen for clicks on the images again
+        imageCapsule.style.cursor = '';
+        imageGpt.style.cursor = '';
+        imageGpt.addEventListener('click', function() {
+            // Clicking on image opens it in new window
+            window.open(this.src, '_blank');
+        });
+
+        // Enable hovering over the image reveals refresh icon
+        imageContainer.classList.add('icon-active');
+        // Hovering over refresh icon changes overlay text
+        var originalText = overlayText.textContent;
+        refreshIcon.addEventListener('mouseenter', function(){
+            overlayText.textContent = "Click to generate new portrait";
+        });
+        refreshIcon.addEventListener('mouseleave', function(){
+            overlayText.textContent = originalText;
+        });
+        // Clicking on refresh icon...
+        refreshIcon.addEventListener('click', function(){
+            // ...generates new image...
+            generateImage();
+            // ...and disables refresh icon again
+            imageContainer.classList.remove('icon-active');
+        });
+        
     })
     .catch((error) => {
         console.error('Error:', error);
         // Handle errors here
-        buttonGeneratePortrait.disabled = false;
-        buttonGeneratePortrait.style.backgroundColor = '';
-        buttonGeneratePortrait.textContent = "Generate Portrait";
+        // Return Generate Character button appearance to normal
+        buttonGenerateCharacter.disabled = false;
+        buttonGenerateCharacter.style.backgroundColor = '';
+        buttonGenerateCharacter.style.color = '';
+        buttonGenerateCharacter.textContent = "Generate Character";
+
+        // Replace src attribute of image to placeholder
+        imageGpt.src = 'static/img/placeholder.jpg';
+        // Hide the gachapon capsule and stop it spinning
+        imageCapsule.style.display = 'none';
+        imageCapsule.classList.remove('rotate-on-click');
+        // Display the placeholder image
+        imageGpt.style.display = 'inline-block';
+        // Change overlay text
+        // imageContainer.classList.remove('disabled');
+        overlayText.textContent = "An error has occurred: " + error;
+        overlayText.style.opacity = '1';
+        
+
+        // Listen for clicks on the images again
+        imageCapsule.addEventListener('click', generateImage);
+        imageCapsule.style.cursor = '';
+        imageGpt.addEventListener('click', generateImage);
+        imageGpt.style.cursor = '';
     });
 }
