@@ -9,6 +9,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Lilita+One&display=swap" rel="stylesheet">
+    <!-- FontAwesome icon library -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <!-- Bootstrap JS, Popper.js, and jQuery -->
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
@@ -100,10 +102,11 @@
                     <!-- Character Portrait -->
                     <div class="col-5 mt-3">
                         <div class="card-body">
-                            <div class="image-container">
+                            <div class="image-container" id="image-container">
                                 <img id="img-capsule" src="static/img/capsule-yellow.png" alt="Illustration of a gachapon capsule">
                                 <img id="img-gpt" src="static/img/placeholder.jpg" alt="Character Portrait" style="display:none;">
                                 <div class="overlay-text" id="overlay-text">Click capsule to generate character portrait</div>
+                                <i class="fas fa-sync-alt refresh-icon" id="refresh-icon"></i>
                             </div>
                         </div>
                     </div>

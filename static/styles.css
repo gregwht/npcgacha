@@ -198,3 +198,25 @@
     .image-container:hover .overlay-text {
       opacity: 1;
     }
+
+    .image-container.disabled .overlay-text {
+      opacity: 0 !important;
+    }
+
+    .refresh-icon {
+      position: absolute;
+      top: 0px; /* 10px Adjust as needed */
+      right: 0px; /* 10px Adjust as needed */
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      font-size: xx-large;
+      cursor: pointer;
+      color: white;
+      background-color: #E35B5B;
+      border-radius: 5px;
+      padding: 7px;
+    }
+    
+    .image-container.icon-active:hover .refresh-icon {
+      opacity: 1;
+    }

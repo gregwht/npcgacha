@@ -364,6 +364,8 @@ def generate_image():
         image_url = dalle.data[0].url
         print("Image URL:", image_url)
 
+        # image_url = "static/img/thumb.jpg"
+
         return jsonify({'status': 'success', 'imageUrl': image_url})
 
 

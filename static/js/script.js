@@ -1,5 +1,10 @@
-// SELECT ALL / DESELECT ALL CHECKBOXES BUTTONS
+// var imageContainer = document.querySelector('.image-container');
+var imageContainer = document.getElementById('image-container');
+var overlayText = document.getElementById('overlay-text');
+var refreshIcon = document.getElementById('refresh-icon');
 
+
+// SELECT ALL / DESELECT ALL CHECKBOXES BUTTONS
 // General Attributes checkboxes
 var buttonResetAttributes = document.getElementById('button-reset-attributes')
 buttonResetAttributes.addEventListener('click', resetAttributes)
@@ -221,6 +226,8 @@ function sendSettings() {
         buttonGenerateCharacter.style.color = '';
         buttonGenerateCharacter.textContent = "Generate Character";
         imageCapsule.classList.remove('rotate-on-click');
+        overlayText.textContent = "An error has occurred: " + error;
+        overlayText.style.opacity = '1';
     });
 }
 
@@ -381,12 +388,6 @@ imageGpt.addEventListener('click', generateImage);
 
 function generateImage() {
     
-    // Stop listening for clicks on the images
-    imageCapsule.removeEventListener('click', generateImage);
-    imageCapsule.style.cursor = 'default';
-    imageGpt.removeEventListener('click', generateImage);
-    imageGpt.style.cursor = 'default';
-
     // Get information needed for image generation
     var genreSelected = document.getElementById('dropdown-genre').value;
     var genderSelected = document.getElementById('dropdown-gender').value;
@@ -404,6 +405,12 @@ function generateImage() {
     console.log('race:', race);
     console.log('class_:', class_);
 
+    // Stop listening for clicks on the images
+    imageCapsule.removeEventListener('click', generateImage);
+    imageCapsule.style.cursor = 'default';
+    imageGpt.removeEventListener('click', generateImage);
+    imageGpt.style.cursor = 'default';
+        
     // Alter Generate Character button appearance
     buttonGenerateCharacter.disabled = true;
     buttonGenerateCharacter.style.backgroundColor = '#C2E1DD';
@@ -416,6 +423,8 @@ function generateImage() {
     imageCapsule.style.display = 'inline-block';
     // Spin gachapon capsule image
     imageCapsule.classList.add('rotate-on-click');
+    // Hide overlay text
+    imageContainer.classList.add('disabled');
 
 
     fetch('/generate-image', {
@@ -450,16 +459,35 @@ function generateImage() {
         // Display the GPT image
         imageGpt.style.display = 'inline-block';
         // Change overlay text
-        document.getElementById('overlay-text').textContent = "Click to open image in a new tab";
+        imageContainer.classList.remove('disabled');
+        overlayText.textContent = "Click to open image in a new tab";
 
         // Listen for clicks on the images again
-        // imageCapsule.addEventListener('click', generateImage);
         imageCapsule.style.cursor = '';
-        // imageGpt.addEventListener('click', generateImage);
+        imageGpt.style.cursor = '';
         imageGpt.addEventListener('click', function() {
+            // Clicking on image opens it in new window
             window.open(this.src, '_blank');
         });
-        imageGpt.style.cursor = '';
+
+        // Enable hovering over the image reveals refresh icon
+        imageContainer.classList.add('icon-active');
+        // Hovering over refresh icon changes overlay text
+        var originalText = overlayText.textContent;
+        refreshIcon.addEventListener('mouseenter', function(){
+            overlayText.textContent = "Click to generate new portrait";
+        });
+        refreshIcon.addEventListener('mouseleave', function(){
+            overlayText.textContent = originalText;
+        });
+        // Clicking on refresh icon...
+        refreshIcon.addEventListener('click', function(){
+            // ...generates new image...
+            generateImage();
+            // ...and disables refresh icon again
+            imageContainer.classList.remove('icon-active');
+        });
+        
     })
     .catch((error) => {
         console.error('Error:', error);
@@ -477,7 +505,11 @@ function generateImage() {
         imageCapsule.classList.remove('rotate-on-click');
         // Display the placeholder image
         imageGpt.style.display = 'inline-block';
-        // Overlay error text
+        // Change overlay text
+        // imageContainer.classList.remove('disabled');
+        overlayText.textContent = "An error has occurred: " + error;
+        overlayText.style.opacity = '1';
+        
 
         // Listen for clicks on the images again
         imageCapsule.addEventListener('click', generateImage);
