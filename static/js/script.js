@@ -449,11 +449,16 @@ function generateImage() {
         imageCapsule.classList.remove('rotate-on-click');
         // Display the GPT image
         imageGpt.style.display = 'inline-block';
+        // Change overlay text
+        document.getElementById('overlay-text').textContent = "Click to open image in a new tab";
 
         // Listen for clicks on the images again
-        imageCapsule.addEventListener('click', generateImage);
+        // imageCapsule.addEventListener('click', generateImage);
         imageCapsule.style.cursor = '';
-        imageGpt.addEventListener('click', generateImage);
+        // imageGpt.addEventListener('click', generateImage);
+        imageGpt.addEventListener('click', function() {
+            window.open(this.src, '_blank');
+        });
         imageGpt.style.cursor = '';
     })
     .catch((error) => {
@@ -470,8 +475,9 @@ function generateImage() {
         // Hide the gachapon capsule and stop it spinning
         imageCapsule.style.display = 'none';
         imageCapsule.classList.remove('rotate-on-click');
-        // Display the GPT image
+        // Display the placeholder image
         imageGpt.style.display = 'inline-block';
+        // Overlay error text
 
         // Listen for clicks on the images again
         imageCapsule.addEventListener('click', generateImage);
