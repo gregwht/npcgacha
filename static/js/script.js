@@ -105,8 +105,10 @@ function resetClasses() {
 
 
 // GENERATE CHARACTER BUTTON
-var buttonGenerateCharacter = document.getElementById('button-generate-character')
+var buttonGenerateCharacter = document.getElementById('button-generate-character');
 buttonGenerateCharacter.addEventListener('click', sendSettings);
+var imageCapsule = document.getElementById('img-capsule'); 
+var imageGpt = document.getElementById('img-gpt')
 
 function sendSettings() {
 
@@ -168,8 +170,10 @@ function sendSettings() {
 
     if (gptNameChecked) {
         buttonGenerateCharacter.disabled = true;
-        buttonGenerateCharacter.style.backgroundColor = 'grey';
+        buttonGenerateCharacter.style.backgroundColor = '#C2E1DD';
+        buttonGenerateCharacter.style.color = 'black';
         buttonGenerateCharacter.textContent = "Generating Character...";
+        imageCapsule.classList.add('rotate-on-click');
     }
 
     // Send AJAX request to Flask backend
@@ -201,18 +205,22 @@ function sendSettings() {
         document.getElementById('input-alignment').value = data.alignment;
         document.getElementById('input-race').value = data.race;
         document.getElementById('input-class').value = data.class;
-        // document.getElementById('input-gpt-name').value = data.gpt_name;
 
         buttonGenerateCharacter.disabled = false;
         buttonGenerateCharacter.style.backgroundColor = '';
+        buttonGenerateCharacter.style.color = '';
         buttonGenerateCharacter.textContent = "Generate Character";
+        imageCapsule.classList.remove('rotate-on-click');
+        
     })
     .catch(error => {
         console.error('Error:', error);
 
         buttonGenerateCharacter.disabled = false;
         buttonGenerateCharacter.style.backgroundColor = '';
+        buttonGenerateCharacter.style.color = '';
         buttonGenerateCharacter.textContent = "Generate Character";
+        imageCapsule.classList.remove('rotate-on-click');
     });
 }
 
@@ -248,40 +256,14 @@ function rerollAttribute(attributeName){
 }
 
 
-// REACTIVE CHARACTER SHEET BEHAVIOUR
-// var gptNameCheckbox = document.getElementById('checkbox-gpt-name');
-// gptNameCheckbox.addEventListener('click', alterCharacterSheet);
-
-// function alterCharacterSheet(){
-    
-//     if (gptNameCheckbox.checked) {
-//         // Hide First Initial and Last Initial 
-//         document.getElementById('label-first-name').style.display = 'none';
-//         document.getElementById('label-last-name').style.display = 'none';
-//         // Show Full Name
-//         document.getElementById('gpt-name').style.display = 'block';
-
-//     } else {
-//         // Show First Initial and Last Initial
-//         document.getElementById('label-first-name').style.display = 'block';
-//         document.getElementById('label-last-name').style.display = 'block';
-
-//         // Hide Full Name
-//         document.getElementById('gpt-name').style.display = 'none';
-//     }
-// }
-
-
 // SENDING USER-INPUTTED NAMES TO BACKEND
 document.addEventListener("DOMContentLoaded", function(){
 
     const inputFirstName = document.getElementById("input-first-name");
     const inputLastName = document.getElementById("input-last-name");
-    // const inputGptName = document.getElementById("input-gpt-name");
     const inputAlignment = document.getElementById("input-alignment");
     let originalFirstName = inputFirstName.value;
     let originalLastName = inputLastName.value;
-    // let originalGptName = inputGptName.value;
     let originalAlignment = inputAlignment.value;
 
     // When the input field gains focus, store the current value 
@@ -291,9 +273,6 @@ document.addEventListener("DOMContentLoaded", function(){
     inputLastName.addEventListener('focus', function(){ 
         originalLastName = inputLastName.value;
     })
-    // inputGptName.addEventListener('focus', function(){
-    //     originalGptName = inputGptName.value;
-    //})
     inputAlignment.addEventListener('focus', function(){
         originalAlignment = inputAlignment.value;
     })
@@ -311,12 +290,6 @@ document.addEventListener("DOMContentLoaded", function(){
             sendLastName(inputLastName.value);
         }
     })
-    // inputGptName.addEventListener('blur', function(){
-    //     // If the value has changed, send the data
-    //     if (inputGptName.value !== originalGptName) {
-    //         sendGptName(inputGptName.value);
-    //     }
-    // })
     inputAlignment.addEventListener('blur', function(){
         // If the value has changed, send the data
         if (inputAlignment.value !== originalAlignment) {
@@ -337,12 +310,6 @@ document.addEventListener("DOMContentLoaded", function(){
             sendLastName(inputLastName.value);
         }
     })
-    // inputGptName.addEventListener('keypress', function(event) {
-    //     if (event.key === 'Enter' && inputGptName.value !== originalGptName) {
-    //         event.preventDefault(); // Prevent the default action to avoid form submission or other unwanted behaviour
-    //         sendGptName(inputGptName.value);
-    //     }
-    // })
     inputAlignment.addEventListener('keypress', function(event) {
         if (event.key === 'Enter' && inputAlignment.value !== originalAlignment) {
             event.preventDefault(); // Prevent the default action to avoid form submission or other unwanted behaviour
@@ -388,24 +355,6 @@ document.addEventListener("DOMContentLoaded", function(){
         })
     }
 
-    // function sendGptName(name) {
-
-    //     console.log("Sending data:", name); // Placeholder for AJAX call
-
-    //     fetch('/save-attribute/gpt-name', {
-    //         method: 'POST',
-    //         headers: {
-    //             'Content-Type': 'application/json',
-    //         },
-    //         body: JSON.stringify({ inputGptName: name }),
-    //     })
-    //     .then(response => response.json())
-    //     .then(data => console.log(data))
-    //     .catch((error) => {
-    //         console.error('Error:', error);
-    //     })
-    // }
-
     function sendAlignment(alignment) {
 
         console.log("Sending data:", alignment); // Placeholder for AJAX call
@@ -427,22 +376,22 @@ document.addEventListener("DOMContentLoaded", function(){
 
 
 // GENERATE PORTRAIT IMAGE
-document.getElementById('img-capsule').addEventListener('click', generateImage);
-document.getElementById('img-gpt').addEventListener('click', generateImage);
+imageCapsule.addEventListener('click', generateImage);
+imageGpt.addEventListener('click', generateImage);
 
 function generateImage() {
-
-    // Hide current GPT image if one exists
-    document.getElementById('img-gpt').style.display = 'none';
-    // Show rotating capsule image again
-    document.getElementById('img-capsule').style.display = 'inline-block';
+    
+    // Stop listening for clicks on the images
+    imageCapsule.removeEventListener('click', generateImage);
+    imageCapsule.style.cursor = 'default';
+    imageGpt.removeEventListener('click', generateImage);
+    imageGpt.style.cursor = 'default';
 
     // Get information needed for image generation
     var genreSelected = document.getElementById('dropdown-genre').value;
     var genderSelected = document.getElementById('dropdown-gender').value;
     var firstName = document.getElementById('input-first-name').value;
     var lastName = document.getElementById('input-last-name').value;
-    // var gptName = document.getElementById('gpt-name').textContent;
     var alignment = document.getElementById('input-alignment').value;
     var race = document.getElementById('input-race').value;
     var class_ = document.getElementById('input-class').value;
@@ -451,10 +400,22 @@ function generateImage() {
     console.log('genderSelected:', genderSelected);
     console.log('firstName:', firstName);
     console.log('lastName:', lastName);
-    // console.log('gptName:', gptName);
     console.log('alignment:', alignment);
     console.log('race:', race);
     console.log('class_:', class_);
+
+    // Alter Generate Character button appearance
+    buttonGenerateCharacter.disabled = true;
+    buttonGenerateCharacter.style.backgroundColor = '#C2E1DD';
+    buttonGenerateCharacter.style.color = 'black';
+    buttonGenerateCharacter.textContent = "Generating Portrait...";
+    
+    // Hide current GPT image if one exists
+   imageGpt.style.display = 'none';
+    // Show gachapon capsule image
+    imageCapsule.style.display = 'inline-block';
+    // Spin gachapon capsule image
+    imageCapsule.classList.add('rotate-on-click');
 
 
     fetch('/generate-image', {
@@ -475,26 +436,47 @@ function generateImage() {
     .then(response => response.json())
     .then(data => {
         console.log('Success:', data);
+        // Return Generate Character button appearance to normal
+        buttonGenerateCharacter.disabled = false;
+        buttonGenerateCharacter.style.backgroundColor = '';
+        buttonGenerateCharacter.style.color = '';
+        buttonGenerateCharacter.textContent = "Generate Character";
+
         // Replace src attribute of image to Dall-E result
-        document.getElementById('img-gpt').src = data.imageUrl;
-        // Hide the gachapon capsule
-        document.getElementById('img-capsule').style.display = 'none';
+        imageGpt.src = data.imageUrl;
+        // Hide the gachapon capsule and stop it spinning
+        imageCapsule.style.display = 'none';
+        imageCapsule.classList.remove('rotate-on-click');
         // Display the GPT image
-        document.getElementById('img-gpt').style.display = 'inline-block';
+        imageGpt.style.display = 'inline-block';
+
+        // Listen for clicks on the images again
+        imageCapsule.addEventListener('click', generateImage);
+        imageCapsule.style.cursor = '';
+        imageGpt.addEventListener('click', generateImage);
+        imageGpt.style.cursor = '';
     })
     .catch((error) => {
         console.error('Error:', error);
         // Handle errors here
+        // Return Generate Character button appearance to normal
+        buttonGenerateCharacter.disabled = false;
+        buttonGenerateCharacter.style.backgroundColor = '';
+        buttonGenerateCharacter.style.color = '';
+        buttonGenerateCharacter.textContent = "Generate Character";
+
         // Replace src attribute of image to placeholder
-        document.getElementById('img-gpt').src = 'static/img/placeholder.jpg';
-        // Hide the gachapon capsule
-        document.getElementById('img-capsule').style.display = 'none';
+        imageGpt.src = 'static/img/placeholder.jpg';
+        // Hide the gachapon capsule and stop it spinning
+        imageCapsule.style.display = 'none';
+        imageCapsule.classList.remove('rotate-on-click');
         // Display the GPT image
-        document.getElementById('img-gpt').style.display = 'inline-block';
+        imageGpt.style.display = 'inline-block';
+
+        // Listen for clicks on the images again
+        imageCapsule.addEventListener('click', generateImage);
+        imageCapsule.style.cursor = '';
+        imageGpt.addEventListener('click', generateImage);
+        imageGpt.style.cursor = '';
     });
 }
-
-// ROTATING GACHAPON CAPSULE IMAGE
-document.getElementById('img-capsule').addEventListener('click', function() {
-    this.classList.add('rotate-on-click');
-})
