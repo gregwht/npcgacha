@@ -126,8 +126,40 @@
          <div id="gachapon-settings">
             <h5>Gachapon Machine Settings</h5>
             <div class="card mt-3 mb-3">
+                <!-- GPT Settings -->
+                <div id="gpt-settings" class="mt-3 mb-3 mx-3">
+                    <div class="row">
+                        <h5 class="col-8">GPT Settings</h5>
+                    </div>
+                    <div class="row">
+                        <p class="col-auto settings-desc">Configure ChatGPT settings:</p>
+                    </div>
+                    <div class="row">
+                        <div class="col-auto">
+                            <label for="checkbox-gpt-name" class="custom-checkbox">
+                                Generate Full Names
+                                <input type="checkbox" id="checkbox-gpt-name" name="checkbox-gpt-name" unchecked hidden>
+                                <span class="checkmark"></span>
+                            </label>
+                        
+                            <label for="dropdown-gender">Select Character Gender:</label>
+                            <select id="dropdown-gender" name="dropdown-gender">
+                                {% for gender in genders %}
+                                    <option value="{{ gender }}">{{ gender }}</option>
+                                {% endfor %}
+                            </select>
+                
+                            <label for="dropdown-genre">Select Game Genre:</label>
+                            <select id="dropdown-genre" name="dropdown-genre">
+                                {% for genre in genres %}
+                                    <option value="{{ genre }}">{{ genre }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                </div>
                 <!-- General Attribute Settings -->
-                <div id="general-attribute-settings" class="mt-3 mb-3 mx-3">
+                <div id="general-attribute-settings" class="mb-3 mx-3">
                     <div class="row">
                         <h5 class="col-8">General Attribute Settings</h5>
                         <div class="col-4 text-right">
@@ -226,38 +258,6 @@
                                     <span class="checkmark"></span>
                                 </label>
                             {% endfor %}
-                        </div>
-                    </div>
-                </div>
-                <!-- GPT Settings -->
-                <div id="gpt-settings" class="mb-3 mx-3">
-                    <div class="row">
-                        <h5 class="col-8">GPT Settings</h5>
-                    </div>
-                    <div class="row">
-                        <p class="col-auto settings-desc">Configure ChatGPT settings:</p>
-                    </div>
-                    <div class="row">
-                        <div class="col-auto">
-                            <label for="checkbox-gpt-name" class="custom-checkbox">
-                                Full Name
-                                <input type="checkbox" id="checkbox-gpt-name" name="checkbox-gpt-name" unchecked hidden>
-                                <span class="checkmark"></span>
-                            </label>
-                        
-                            <label for="dropdown-gender">Select character gender:</label>
-                            <select id="dropdown-gender" name="dropdown-gender">
-                                {% for gender in genders %}
-                                    <option value="{{ gender }}">{{ gender }}</option>
-                                {% endfor %}
-                            </select>
-                
-                            <label for="dropdown-genre">Select game genre:</label>
-                            <select id="dropdown-genre" name="dropdown-genre">
-                                {% for genre in genres %}
-                                    <option value="{{ genre }}">{{ genre }}</option>
-                                {% endfor %}
-                            </select>
                         </div>
                     </div>
                 </div>
