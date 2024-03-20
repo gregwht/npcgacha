@@ -143,10 +143,10 @@
 
 @keyframes rotateImage{
   from {
-    transform: rotate(0deg);
+    transform: rotate(0deg) scale(0.8);
   }
   to {
-    transform: rotate(360deg);
+    transform: rotate(360deg) scale(0.8);
   }
 }
 
@@ -188,16 +188,19 @@
       bottom: 0;
       left: 0;
       width: 100%;
-      height: 10%;
+      /* height: 10%; */
+      height: auto;
+      padding: 7px;
       display: flex;
       align-items: center;
       justify-content: center;
+      text-align: center;
       background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent overlay */
       color: white; /* Text color */
-      /* opacity: 0; */
       opacity: 0;
       transition: opacity 0.3s ease;
       border-radius: 5px; /* Match the image's border-radius */
+      cursor: pointer;
     }
 
     .image-container:hover .overlay-text {
@@ -299,6 +302,10 @@ h4 {
   /* text-decoration: underline; */
 }
 
+/* h5 {
+  font-weight: bold;
+} */
+
 a {
   color: black;
   text-decoration: underline;
@@ -306,4 +313,13 @@ a {
 
 a:hover {
   color: #E35B5B;
+}
+
+.settings-title {
+  font-size: 22px;
+  font-weight: bolder;
+}
+
+#img-capsule {
+  transform: scale(0.8);
 }

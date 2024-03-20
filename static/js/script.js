@@ -11,12 +11,6 @@ buttonClose.addEventListener('click', function() {
 });
 
 
-// var imageContainer = document.querySelector('.image-container');
-var imageContainer = document.getElementById('image-container');
-var overlayText = document.getElementById('overlay-text');
-var refreshIcon = document.getElementById('refresh-icon');
-
-
 // SELECT ALL / DESELECT ALL CHECKBOXES BUTTONS
 // General Attributes checkboxes
 var buttonResetAttributes = document.getElementById('button-reset-attributes')
@@ -127,6 +121,7 @@ var buttonGenerateCharacter = document.getElementById('button-generate-character
 buttonGenerateCharacter.addEventListener('click', sendSettings);
 var imageCapsule = document.getElementById('img-capsule'); 
 var imageGpt = document.getElementById('img-gpt')
+var overlayText = document.getElementById('overlay-text');
 
 function sendSettings() {
 
@@ -398,6 +393,7 @@ document.addEventListener("DOMContentLoaded", function(){
 // GENERATE PORTRAIT IMAGE
 imageCapsule.addEventListener('click', generateImage);
 imageGpt.addEventListener('click', generateImage);
+overlayText.addEventListener('click', generateImage);
 
 function generateImage() {
     
@@ -423,6 +419,8 @@ function generateImage() {
     imageCapsule.style.cursor = 'default';
     imageGpt.removeEventListener('click', generateImage);
     imageGpt.style.cursor = 'default';
+    overlayText.removeEventListener('click', generateImage);
+    overlayText.style.cursor = 'default';
         
     // Alter Generate Character button appearance
     buttonGenerateCharacter.disabled = true;
@@ -437,6 +435,7 @@ function generateImage() {
     // Spin gachapon capsule image
     imageCapsule.classList.add('rotate-on-click');
     // Hide overlay text
+    var imageContainer = document.getElementById('image-container');
     imageContainer.classList.add('disabled');
 
 
@@ -478,14 +477,20 @@ function generateImage() {
         // Listen for clicks on the images again
         imageCapsule.style.cursor = '';
         imageGpt.style.cursor = '';
+        overlayText.style.cursor = 'pointer';
         imageGpt.addEventListener('click', function() {
             // Clicking on image opens it in new window
             window.open(this.src, '_blank');
         });
+        overlayText.addEventListener('click', function(){
+            // Clicking on image opens it in new window
+            window.open(imageGpt.src, '_blank');
+        })
 
         // Enable hovering over the image reveals refresh icon
         imageContainer.classList.add('icon-active');
         // Hovering over refresh icon changes overlay text
+        var refreshIcon = document.getElementById('refresh-icon');
         var originalText = overlayText.textContent;
         refreshIcon.addEventListener('mouseenter', function(){
             overlayText.textContent = "Click to generate new portrait";
@@ -529,5 +534,7 @@ function generateImage() {
         imageCapsule.style.cursor = '';
         imageGpt.addEventListener('click', generateImage);
         imageGpt.style.cursor = '';
+        overlayText.addEventListener('click', generateImage);
+        overlayText.style.cursor = '';
     });
 }
