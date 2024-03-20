@@ -2,6 +2,7 @@ import os
 import random
 from flask import Flask, render_template, redirect, request, session, jsonify
 from flask_session import Session
+import json
 
 from openai import OpenAI
 from decouple import config, Config
@@ -367,6 +368,10 @@ def generate_image():
         # image_url = "static/img/thumb.jpg"
 
         return jsonify({'status': 'success', 'imageUrl': image_url})
+
+# @app.route('/download-character', methods=['POST'])
+# def download_character():
+#     character_json = json.dumps(character)
 
 
 if __name__ == '__main__':

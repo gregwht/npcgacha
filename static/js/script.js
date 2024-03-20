@@ -1,3 +1,16 @@
+// HELP PANEL
+var questionMark = document.getElementById('help');
+var helpPanel = document.getElementById('help-panel');
+var buttonClose = document.getElementById('button-close');
+
+questionMark.addEventListener('click', function(){
+    helpPanel.style.display = 'block';
+});
+buttonClose.addEventListener('click', function() {
+    helpPanel.style.display = 'none';
+});
+
+
 // var imageContainer = document.querySelector('.image-container');
 var imageContainer = document.getElementById('image-container');
 var overlayText = document.getElementById('overlay-text');
