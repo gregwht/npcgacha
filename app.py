@@ -15,6 +15,7 @@ app = Flask(__name__)
 # Configure OpenAI API
 config = Config('.env')
 API_KEY = config('API_KEY', default='your_api_key')
+# API_KEY = 'your_api_key'
 client = OpenAI(api_key = API_KEY)
 
 
@@ -233,6 +234,8 @@ def index():
     global selected_classes
     global selected_races
     
+    print(API_KEY)
+
     if request.method == 'POST':
 
         if request.is_json:
@@ -316,9 +319,6 @@ def save_attribute(attribute):
     elif attribute == 'last-name':
         character["last_name"] = request.json.get('inputLastName')
         print(f"Received data for Last Name: {character["last_name"]}")
-    # elif attribute == 'gpt-name':
-    #     character["gpt_name"] = request.json.get('inputGptName')
-    #     print(f"Received data for GPT Name: {character["gpt_name"]}")
     elif attribute == 'alignment':
         character["alignment"] = request.json.get('inputAlignment')
         print(f"Received data for Alignment: {character["alignment"]}")
@@ -328,6 +328,9 @@ def save_attribute(attribute):
     elif attribute == 'class':
         character["class"] = request.json.get('inputClass')
         print(f"Received data for Class: {character["class"]}")
+    # elif attribute == 'api-key':
+    #     API_KEY = request.json.get('inputApiKey')
+    #     print(f"Received data for API Key {API_KEY}")
 
     print("Character:", character)
 
