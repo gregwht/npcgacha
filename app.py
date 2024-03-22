@@ -2,6 +2,8 @@ import os
 import random
 from flask import Flask, render_template, redirect, request, session, jsonify
 from flask_session import Session
+import json
+import time
 
 from openai import OpenAI
 from decouple import config, Config
@@ -363,10 +365,15 @@ def generate_image():
 
         image_url = dalle.data[0].url
         print("Image URL:", image_url)
-
-        # image_url = "static/img/thumb.jpg"
+        
+        # time.sleep(2)
+        # image_url = "static/img/img-F8USKjVXIpT3ZX7P67iGZROD.png"
 
         return jsonify({'status': 'success', 'imageUrl': image_url})
+
+# @app.route('/download-character', methods=['POST'])
+# def download_character():
+#     character_json = json.dumps(character)
 
 
 if __name__ == '__main__':

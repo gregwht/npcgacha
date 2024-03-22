@@ -19,7 +19,35 @@
 <body>
     <div class="container my-4">
         <!-- <h1 class="display-4 text-center mb-4 font-weight-bold">NPC Gachapon</h1> -->
-        <h1 class="display-4 text-center mb-4 font-weight-bold lilita-one-regular">NPC GACHAPON</h1>
+        <div class="header-container">
+            <h1 class="display-4 text-center mb-4 font-weight-bold lilita-one-regular">NPC GACHAPON</h1>
+            <i class="fas fa-question-circle" id="help"></i>
+        </div>
+        <div class="help-panel" id="help-panel">
+            <i class="fas fa-times close-icon" id="button-close"></i>
+            <h2>Welcome to NPC Gachapon!</h2>
+            <br>
+
+            <p>NPC Gachapon can be used to quickly generate non-player characters for tabletop RPG games like Dungeons & Dragons and Pathfinder.</p>
+            <br>
+
+            <h3>How to Use</h3>
+            <p>Simply click the “Generate Character” button and NPC Gachapon will generate initials for the First and Last Names, a Race, a Class, and an Alignment.</p>
+            <p>This is useful for providing you with a starting point for the character you are building. You can fill in the character's full names in the relevant text boxes, and feel free to adjust any of the other generated attributes as necessary.</p>
+            <p>If you would like NPC Gachapon to generate full First and Last Names instead of initials, you must enable the "Generate Full Names" checkbox under GPT Settings. These names will be influenced by the Gender and Genre selected from the dropdown menus.</p>
+            <p>If you want to re-roll a single attribute e.g. Class, simply click on the name of that attribute.</p>
+            <br>
+
+            <h3>Generating Portrait Images</h3>
+            <p>Once you are happy with your character’s attributes, you may click the gachapon capsule to generate a portrait image. Portrait images will also be influenced by the Gender and Genre dropdown menus under GPT Settings.</p>
+            <p>Once the image has been generated, you can click on it to open it in a new browser tab.
+            You can also hover over the portrait image and click on the refresh icon to generate a new portrait image. (The previous image will be lost).</p>
+            <br>
+
+            <h3>More Info</h3>
+            <p>NPC Gachapon was created by Gregory White: <a href="https://www.gregory-white.co.uk" target="_blank" rel="noopener noreferrer">Visit my Website</a> | <a href="https://github.com/gregwht" target="_blank" rel="noopener noreferrer"></i>Visit my GitHub</a></p>
+            <p>It started life as my final project for the <a href="https://pll.harvard.edu/course/cs50-introduction-computer-science" target="_blank" rel="noopener noreferrer">CS50 Introduction to Computer Science</a> course. The full course is available online, totally for free, and is incredible. Thank you to David J. Malan and the CS50 team for your effort and generosity. If you are interested in learning to code, I can recommend no better than the CS50 course.</p>
+        </div>
         <!-- CHARACTER SHEET -->
         <div id="character-sheet" class="card mb-5">
             <!-- <h5>Character Sheet</h5> -->
@@ -42,10 +70,10 @@
                         </div>
                         <div class="row mb-3">
                             <div class="col-6">
-                                <input type="text" id="input-first-name" class="form-control form-control-lg" placeholder="?">
+                                <input type="text" id="input-first-name" class="form-control form-control-lg">
                             </div>
                             <div class="col-6">
-                                <input type="text" id="input-last-name" class="form-control form-control-lg" placeholder="?">
+                                <input type="text" id="input-last-name" class="form-control form-control-lg">
                             </div>
                         </div>
                         <!-- Race & Class -->
@@ -63,10 +91,10 @@
                         </div>
                         <div class="row mb-3">
                             <div class="col-6">
-                                <input type="text" id="input-race" class="form-control form-control-lg" placeholder="?">
+                                <input type="text" id="input-race" class="form-control form-control-lg">
                             </div>
                             <div class="col-6">
-                                <input type="text" id="input-class" class="form-control form-control-lg" placeholder="?">
+                                <input type="text" id="input-class" class="form-control form-control-lg">
                             </div>
                         </div>
                         <!-- Alignment -->
@@ -79,7 +107,7 @@
                         </div>
                         <div class="row mb-4">
                             <div class="col-12">
-                                <input type="text" id="input-alignment" class="form-control form-control-lg" placeholder="?">
+                                <input type="text" id="input-alignment" class="form-control form-control-lg">
                             </div>
                         </div>
                         <div class="row">
@@ -124,10 +152,10 @@
         </div> -->
          <!-- GACHAPON SETTINGS -->
          <div id="gachapon-settings">
-            <h5>Gachapon Machine Settings</h5>
             <div class="card mt-3 mb-3">
                 <!-- GPT Settings -->
                 <div id="gpt-settings" class="mt-3 mb-3 mx-3">
+                    <!-- <p class="settings-title">Gachapon Machine Settings</p> -->
                     <div class="row">
                         <h5 class="col-8">GPT Settings</h5>
                     </div>
@@ -143,7 +171,7 @@
                             </label>
                         
                             <label for="dropdown-gender">Select Character Gender:</label>
-                            <select id="dropdown-gender" name="dropdown-gender">
+                            <select id="dropdown-gender" name="dropdown-gender" class="dropdown">
                                 {% for gender in genders %}
                                     <option value="{{ gender }}">{{ gender }}</option>
                                 {% endfor %}
