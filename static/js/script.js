@@ -271,15 +271,21 @@ function rerollAttribute(attributeName){
 }
 
 
-// SENDING USER-INPUTTED NAMES TO BACKEND
+// SENDING USER-INPUTTED TEXT TO BACKEND
 document.addEventListener("DOMContentLoaded", function(){
 
     const inputFirstName = document.getElementById("input-first-name");
     const inputLastName = document.getElementById("input-last-name");
+    const inputRace = document.getElementById("input-race");
+    const inputClass = document.getElementById("input-class")
     const inputAlignment = document.getElementById("input-alignment");
+    // const inputApiKey = document.getElementById("input-api-key");
     let originalFirstName = inputFirstName.value;
     let originalLastName = inputLastName.value;
+    let originalRace = inputRace.value;
+    let originalClass = inputClass.value;
     let originalAlignment = inputAlignment.value;
+    // let originalApiKey = inputApiKey.value;
 
     // When the input field gains focus, store the current value 
     inputFirstName.addEventListener('focus', function(){ 
@@ -288,9 +294,18 @@ document.addEventListener("DOMContentLoaded", function(){
     inputLastName.addEventListener('focus', function(){ 
         originalLastName = inputLastName.value;
     })
+    inputRace.addEventListener('focus', function(){ 
+        originalRace = inputRace.value;
+    })
+    inputClass.addEventListener('focus', function(){ 
+        originalClass = inputClass.value;
+    })
     inputAlignment.addEventListener('focus', function(){
         originalAlignment = inputAlignment.value;
     })
+    // inputApiKey.addEventListener('focus', function(){
+    //     originalApiKey = inputApiKey.value;
+    // })
 
     // When focus is lost, check if the value has changed
     inputFirstName.addEventListener('blur', function() {
@@ -311,6 +326,24 @@ document.addEventListener("DOMContentLoaded", function(){
             sendAlignment(inputAlignment.value);
         }
     })
+    inputRace.addEventListener('blur', function(){
+        // If the value has changed, send the data
+        if (inputRace.value !== originalRace) {
+            sendRace(inputRace.value);
+        }
+    })
+    inputClass.addEventListener('blur', function(){
+        // If the value has changed, send the data
+        if (inputClass.value !== originalClass) {
+            sendClass(inputClass.value);
+        }
+    })
+    // inputApiKey.addEventListener('blur', function(){
+    //     // If the value has changed, send the data
+    //     if (inputApiKey.value !== originalApiKey) {
+    //         sendApiKey(inputApiKey.value);
+    //     }
+    // })
 
     // If Enter key is pressed, check if the value has changed
     inputFirstName.addEventListener('keypress', function(event) {
@@ -331,6 +364,24 @@ document.addEventListener("DOMContentLoaded", function(){
             sendAlignment(inputAlignment.value);
         }
     })
+    inputRace.addEventListener('keypress', function(event) {
+        if (event.key === 'Enter' && inputRace.value !== originalRace) {
+            event.preventDefault(); // Prevent the default action to avoid form submission or other unwanted behaviour
+            sendRace(inputRace.value);
+        }
+    })
+    inputClass.addEventListener('keypress', function(event) {
+        if (event.key === 'Enter' && inputClass.value !== originalClass) {
+            event.preventDefault(); // Prevent the default action to avoid form submission or other unwanted behaviour
+            sendClass(inputClass.value);
+        }
+    })
+    // inputApiKey.addEventListener('keypress', function(event) {
+    //     if (event.key === 'Enter' && inputApiKey.value !== originalApiKey) {
+    //         event.preventDefault(); // Prevent the default action to avoid form submission or other unwanted behaviour
+    //         sendApiKey(inputApiKey.value);
+    //     }
+    // })
 
 
     // Sending new values to backend
@@ -351,7 +402,6 @@ document.addEventListener("DOMContentLoaded", function(){
             console.error('Error:', error);
         })
     }
-
     function sendLastName(name) {
 
         console.log("Sending data:", name); // Placeholder for AJAX call
@@ -369,7 +419,6 @@ document.addEventListener("DOMContentLoaded", function(){
             console.error('Error:', error);
         })
     }
-
     function sendAlignment(alignment) {
 
         console.log("Sending data:", alignment); // Placeholder for AJAX call
@@ -387,6 +436,57 @@ document.addEventListener("DOMContentLoaded", function(){
             console.error('Error:', error);
         })
     }
+    function sendRace(race) {
+
+        console.log("Sending data:", race); // Placeholder for AJAX call
+
+        fetch('/save-attribute/race', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ inputRace: race }),
+        })
+        .then(response => response.json())
+        .then(data => console.log(data))
+        .catch((error) => {
+            console.error('Error:', error);
+        })
+    }
+    function sendClass(class_) {
+
+        console.log("Sending data:", class_); // Placeholder for AJAX call
+
+        fetch('/save-attribute/class', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ inputClass: class_ }),
+        })
+        .then(response => response.json())
+        .then(data => console.log(data))
+        .catch((error) => {
+            console.error('Error:', error);
+        })
+    }
+    // function sendApiKey(apiKey) {
+
+    //     console.log("Sending data:", apiKey); // Placeholder for AJAX call
+
+    //     fetch('/save-attribute/api-key', {
+    //         method: 'POST',
+    //         headers: {
+    //             'Content-Type': 'application/json',
+    //         },
+    //         body: JSON.stringify({ inputApiKey: apiKey }),
+    //     })
+    //     .then(response => response.json())
+    //     .then(data => console.log(data))
+    //     .catch((error) => {
+    //         console.error('Error:', error);
+    //     })
+    // }
 })
 
 

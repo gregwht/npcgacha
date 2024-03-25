@@ -15,6 +15,7 @@ app = Flask(__name__)
 # Configure OpenAI API
 config = Config('.env')
 API_KEY = config('API_KEY', default='your_api_key')
+# API_KEY = 'your_api_key'
 client = OpenAI(api_key = API_KEY)
 
 
@@ -233,6 +234,8 @@ def index():
     global selected_classes
     global selected_races
     
+    print(API_KEY)
+
     if request.method == 'POST':
 
         if request.is_json:
@@ -316,9 +319,6 @@ def save_attribute(attribute):
     elif attribute == 'last-name':
         character["last_name"] = request.json.get('inputLastName')
         print(f"Received data for Last Name: {character["last_name"]}")
-    # elif attribute == 'gpt-name':
-    #     character["gpt_name"] = request.json.get('inputGptName')
-    #     print(f"Received data for GPT Name: {character["gpt_name"]}")
     elif attribute == 'alignment':
         character["alignment"] = request.json.get('inputAlignment')
         print(f"Received data for Alignment: {character["alignment"]}")
@@ -329,6 +329,7 @@ def save_attribute(attribute):
         character["class"] = request.json.get('inputClass')
         print(f"Received data for Class: {character["class"]}")
 
+
     print("Character:", character)
 
     return jsonify({'status': 'success', 'message': 'Data received successfully'})
@@ -338,36 +339,35 @@ def save_attribute(attribute):
 def generate_image():
 
     if request.is_json:
-        request_data = request.get_json()
+        # request_data = request.get_json()
 
-        genre = request_data.get('genre')
-        gender = request_data.get('gender')
-        first_name = request_data.get('firstName')
-        last_name = request_data.get('lastName')
-        # gpt_name = request_data.get('gptName')
-        alignment = request_data.get('alignment')
-        race = request_data.get('race')
-        class_ = request_data.get('class')
+        # genre = request_data.get('genre')
+        # gender = request_data.get('gender')
+        # first_name = request_data.get('firstName')
+        # last_name = request_data.get('lastName')
+        # alignment = request_data.get('alignment')
+        # race = request_data.get('race')
+        # class_ = request_data.get('class')
 
-        dalle_prompt = f"Please generate a colour portrait image of a single character from a tabletop RPG. The genre of the game is { genre } and the character should be in a { genre } background. They are a { race } { class_ } called { first_name } { last_name }. Their gender is { gender }. Their personality is { alignment } There should not be any text in the image at all. Please only generate the character and a background, no text."
-        # The portrait should be of the character's head and shoulders facing the camera. Make the character be standing in a suitable environment that they might be in during an adventure.
+        # dalle_prompt = f"Please generate a colour portrait image of a single character from a tabletop RPG. The genre of the game is { genre } and the character should be in a { genre } background. They are a { race } { class_ } called { first_name } { last_name }. Their gender is { gender }. Their personality is { alignment } There should not be any text in the image at all. Please only generate the character and a background, no text."
+        # # The portrait should be of the character's head and shoulders facing the camera. Make the character be standing in a suitable environment that they might be in during an adventure.
 
-        # Generate image code
-        dalle = client.images.generate(
-            model = "dall-e-3",
-            prompt = dalle_prompt,
-            size = "1024x1024",
-            quality = "standard",
-            n = 1,
-        )
-        # print prompt
-        print("Dall-E Prompt:", dalle_prompt)
+        # # Generate image code
+        # dalle = client.images.generate(
+        #     model = "dall-e-3",
+        #     prompt = dalle_prompt,
+        #     size = "1024x1024",
+        #     quality = "standard",
+        #     n = 1,
+        # )
+        # # print prompt
+        # print("Dall-E Prompt:", dalle_prompt)
 
-        image_url = dalle.data[0].url
-        print("Image URL:", image_url)
+        # image_url = dalle.data[0].url
+        # print("Image URL:", image_url)
         
-        # time.sleep(2)
-        # image_url = "static/img/img-F8USKjVXIpT3ZX7P67iGZROD.png"
+        time.sleep(2)
+        image_url = "static/img/img-F8USKjVXIpT3ZX7P67iGZROD.png"
 
         return jsonify({'status': 'success', 'imageUrl': image_url})
 

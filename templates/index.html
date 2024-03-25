@@ -54,7 +54,7 @@
             <div class="card-body">
                 <!-- Character Attributes -->
                 <div class="row">
-                    <div class="col-7 mt-3">
+                    <div class="col-lg-7 mt-3 order-1 order-md-1">
                         <!-- Names -->
                         <div class="row">
                             <div class="col-6">
@@ -111,7 +111,7 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-12 mt-3 ">
+                            <div class="col-12 mt-3 order-2 order-md-2 ">
                                 <!-- GENERATE CHARACTER BUTTON -->
                                 <div id="generate-button">
                                 <!-- <div id="generate-button" class="text-center mt-3 mb-5"> -->
@@ -128,10 +128,10 @@
                         </div>
                     </div>
                     <!-- Character Portrait -->
-                    <div class="col-5 mt-3">
-                        <div class="card-body">
+                    <div class="col-lg-5 mt-3 order-3 order-md-3 mt-md-4">
+                        <div class="card-body no-padding" >
                             <div class="image-container" id="image-container">
-                                <img id="img-capsule" src="static/img/capsule-yellow.png" alt="Illustration of a gachapon capsule">
+                                <img id="img-capsule" class="" src="static/img/capsule-yellow.png" alt="Illustration of a gachapon capsule">
                                 <img id="img-gpt" src="static/img/placeholder.jpg" alt="Character Portrait" style="display:none;">
                                 <div class="overlay-text" id="overlay-text">Click capsule to generate character portrait</div>
                                 <i class="fas fa-sync-alt refresh-icon" id="refresh-icon"></i>
@@ -141,21 +141,12 @@
                 </div>
             </div>
         </div>
-        <!-- <div class="col-5 mb-3">
-            <button type="submit"    
-                    name="generate-image"
-                    id="button-generate-image"
-                    value="generate-image" 
-                    class="btn-main w-100">
-                    Generate Portrait
-            </button>
-        </div> -->
          <!-- GACHAPON SETTINGS -->
+         <!-- <p class="settings-title">Gachapon Machine Settings</p> -->
          <div id="gachapon-settings">
             <div class="card mt-3 mb-3">
                 <!-- GPT Settings -->
                 <div id="gpt-settings" class="mt-3 mb-3 mx-3">
-                    <!-- <p class="settings-title">Gachapon Machine Settings</p> -->
                     <div class="row">
                         <h5 class="col-8">GPT Settings</h5>
                     </div>
