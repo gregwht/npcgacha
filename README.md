@@ -1,5 +1,5 @@
 # NPC GACHAPON
-#### Video Demo:  <URL HERE>
+#### Video Demo:  [<URL HERE>](https://youtu.be/rfF0KVVOsiw)
 #### Description: NPC Gachapon is an NPC generator for tabletop gaming.
 #### Project URL: www.npcgachapon.com
 
