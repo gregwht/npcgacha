@@ -233,8 +233,6 @@ def generate_gpt_name(genre, first_initial, last_initial, gender):
 def index():
     global selected_classes
     global selected_races
-    
-    print(API_KEY)
 
     if request.method == 'POST':
 
